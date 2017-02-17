@@ -6,6 +6,9 @@ Shader "Projector/Light" {
 		_Color ("Main Color", Color) = (1,1,1,1)
 		_ShadowTex ("Cookie", 2D) = "" {}
 		_FalloffTex ("FallOff", 2D) = "" {}
+		_greenTH("gTH",Range(0.0,1.0)) = 0.5
+		_blueTH("bTH",Range(0.0,1.0)) = 0.8
+		_redTH	("rTH",Range(0.0,1.0)) = 0.8
 	}
 	
 	Subshader {
@@ -13,7 +16,7 @@ Shader "Projector/Light" {
 		Pass {
 			ZWrite Off
 			ColorMask RGB
-			Blend One Zero
+		Blend  DstAlpha OneMinusSrcAlpha
 			Offset -1, -1
 	
 			CGPROGRAM
@@ -31,7 +34,6 @@ Shader "Projector/Light" {
 			
 			float4x4 unity_Projector;
 			float4x4 unity_ProjectorClip;
-			
 			v2f vert (float4 vertex : POSITION)
 			{
 				v2f o;
@@ -45,23 +47,28 @@ Shader "Projector/Light" {
 			fixed4 _Color;
 			sampler2D _ShadowTex;
 			sampler2D _FalloffTex;
-			
+			float _greenTH, _redTH, _blueTH;
 			fixed4 frag(v2f i) : SV_Target
 			{
 				float4 uv = UNITY_PROJ_COORD(i.uvShadow);
-				if (uv.x / uv.w >= 0.0 && uv.x / uv.w <= 1.0 && uv.y / uv.w >= 0.0 && uv.y / uv.w <= 1.0) {
+				if (uv.x / uv.w > 0.0 && uv.x / uv.w < 1.0 && uv.y / uv.w > 0.0 && uv.y / uv.w < 1.0) {
+					
 					fixed4 texS = tex2Dproj(_ShadowTex, UNITY_PROJ_COORD(i.uvShadow));
-					texS.rgb *= _Color.rgb;
-					texS.a = 1.0 - texS.a;
+					//if (texS.g > _Cutoff && texS.b < 0.8 && texS.r < 0.8)
+					if (texS.g > _greenTH && texS.b < _blueTH && texS.r < _redTH)
+					{
+						texS = float4(0.0, 0.0, 0.0, 0.0);
+					}
+					else
+					{
+						texS.a = 1.00;
+					}
+				
 
-					fixed4 texF = tex2Dproj(_FalloffTex, UNITY_PROJ_COORD(i.uvFalloff));
-					fixed4 res = texS * texF.a;
-
-					UNITY_APPLY_FOG_COLOR(i.fogCoord, res, fixed4(0,0,0,0));
-					return res;
+					return texS;
 				}
 				else {
-					return fixed4(0.0, 0.0, 0.0, 0.0);
+					return float4(0.0, 0.0, 0.0, 0.0);
 				}
 
 			}
