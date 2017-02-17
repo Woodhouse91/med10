@@ -13,7 +13,7 @@ Shader "Projector/Light" {
 		Pass {
 			ZWrite Off
 			ColorMask RGB
-			Blend One Zero
+			Blend SrcAlpha One
 			Offset -1, -1
 	
 			CGPROGRAM
@@ -51,12 +51,11 @@ Shader "Projector/Light" {
 				float4 uv = UNITY_PROJ_COORD(i.uvShadow);
 				if (uv.x / uv.w >= 0.0 && uv.x / uv.w <= 1.0 && uv.y / uv.w >= 0.0 && uv.y / uv.w <= 1.0) {
 					fixed4 texS = tex2Dproj(_ShadowTex, UNITY_PROJ_COORD(i.uvShadow));
-					texS.rgb *= _Color.rgb;
-					texS.a = 1.0 - texS.a;
+					 texS.rgb *= _Color.rgb;
+					 texS.a = 1.0 - texS.a;
 
 					fixed4 texF = tex2Dproj(_FalloffTex, UNITY_PROJ_COORD(i.uvFalloff));
 					fixed4 res = texS * texF.a;
-
 					UNITY_APPLY_FOG_COLOR(i.fogCoord, res, fixed4(0,0,0,0));
 					return res;
 				}
