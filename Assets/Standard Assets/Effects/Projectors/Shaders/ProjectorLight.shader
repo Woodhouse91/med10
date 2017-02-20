@@ -9,6 +9,9 @@ Shader "Projector/Light" {
 		_greenTH("gTH",Range(0.0,1.0)) = 0.5
 		_blueTH("bTH",Range(0.0,1.0)) = 0.8
 		_redTH	("rTH",Range(0.0,1.0)) = 0.8
+
+		
+
 	}
 	
 	Subshader {
@@ -50,18 +53,18 @@ Shader "Projector/Light" {
 			float _greenTH, _redTH, _blueTH;
 			fixed4 frag(v2f i) : SV_Target
 			{
-				float4 uv = UNITY_PROJ_COORD(i.uvShadow);
+				float4 uv = UNITY_PROJ_COORD(i.uvShadow); //239 208 207
 				if (uv.x / uv.w > 0.0 && uv.x / uv.w < 1.0 && uv.y / uv.w > 0.0 && uv.y / uv.w < 1.0) {
 					
 					fixed4 texS = tex2Dproj(_ShadowTex, UNITY_PROJ_COORD(i.uvShadow));
-					//if (texS.g > _Cutoff && texS.b < 0.8 && texS.r < 0.8)
-					if (texS.g > _greenTH && texS.b < _blueTH && texS.r < _redTH)
+					float avg = (texS.r + texS.g + texS.b) / 3.0f;
+					if (abs(texS.r-239.0/255.0)>_greenTH && abs(texS.g-208.0/255.0)>_greenTH && abs(texS.b-207.0/255.0)>_greenTH)
 					{
-						texS = float4(0.0, 0.0, 0.0, 0.0);
+						texS = texS;
 					}
 					else
 					{
-						texS.a = 1.00;
+						texS = float4(0.0, 0.0, 0.0, 0.0);
 					}
 				
 
