@@ -6,7 +6,7 @@ Shader "Projector/Light" {
 		_Color ("Main Color", Color) = (1,1,1,1)
 		_ShadowTex ("Cookie", 2D) = "" {}
 		_FalloffTex ("FallOff", 2D) = "" {}
-		_TH("Threshold",Range(0.0,16.0)) = 0.8
+		_TH("Threshold",Range(0.0,1.0)) = 0.8
 		_slope("Slope",Range(0.0,1.0)) = 0.2
 		_keyingColor("Keying Color", Color) = (1,1,1,1)
 	}
@@ -71,7 +71,7 @@ Shader "Projector/Light" {
 					}
 					*/
 
-					return fixed4 (texS.rgb,alpha);
+					return fixed4 (texS.r, texS.g, texS.b ,alpha);
 				}
 				else {
 					return float4(0.0, 0.0, 0.0, 0.0);
