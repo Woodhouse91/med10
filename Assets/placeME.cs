@@ -7,13 +7,14 @@ public class placeME : MonoBehaviour
 	// Use this for initialization
 
 	public SteamVR_TrackedController _controllerL, _controllerR;
+    public Vector2 ScreenSizeCm;
 
-    public Vector3[] placement = new Vector3[4]; //up, down, left, right
+    public Vector3[] placement = new Vector3[4]; //upLeft, downLeft, upRight, downRight
     public int xPlace = 0;
     public void Start()
     {
         transform.position = new Vector3(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"), PlayerPrefs.GetFloat("PosZ"));
-        transform.localScale = new Vector3(PlayerPrefs.GetFloat("ScaleX"), PlayerPrefs.GetFloat("ScaleY"), 0);
+        transform.localScale = new Vector3(ScreenSizeCm.y, ScreenSizeCm.x, 0);
     }
 
     private void OnEnable ()
@@ -24,10 +25,19 @@ public class placeME : MonoBehaviour
 
 		//_controllerR = GetComponent<SteamVR_TrackedController> ();
 		_controllerR.TriggerClicked += RightHandleTriggerClicked;
-	
 
+        _controllerL.Gripped += ResetPlacement;
+        _controllerR.Gripped += ResetPlacement;
 	}
-
+    private void ResetPlacement(object controller, ClickedEventArgs e)
+    {
+        xPlace = 0;
+        GameObject[] s = GameObject.FindGameObjectsWithTag("s");
+        for(int ss = 0; ss<s.Length; ++ss)
+        {
+            Destroy(s[ss]);
+        }
+    }
 	private void OnDisable ()
 	{
 		_controllerL.TriggerClicked -= LeftHandleTriggerClicked;
@@ -40,34 +50,48 @@ public class placeME : MonoBehaviour
 
     private void LeftHandleTriggerClicked(object controller, ClickedEventArgs e)
     {
-        placement[xPlace] = _controllerL.transform.position + _controllerL.transform.forward * 0.05f + _controllerL.transform.up * -0.1f;
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.position = _controllerL.transform.position + _controllerL.transform.forward * 0.05f + _controllerL.transform.up * -0.1f;
-        sphere.transform.localScale = Vector3.one * 0.1f;
-        xPlace++;
-        if (xPlace == 4)
-            Placed();
+        if(xPlace < 4)
+        {
+            placement[xPlace] = _controllerL.transform.position + _controllerL.transform.forward * 0.05f + _controllerL.transform.up * -0.1f;
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.tag = "s";
+            sphere.transform.position = _controllerL.transform.position + _controllerL.transform.forward * 0.05f + _controllerL.transform.up * -0.1f;
+            sphere.transform.localScale = Vector3.one * 0.1f;
+            xPlace++;
+            if (xPlace == 4)
+                Placed();
+        }
     }
     private void RightHandleTriggerClicked(object controller, ClickedEventArgs e)
     {
-        placement[xPlace] = _controllerR.transform.position + _controllerR.transform.forward * 0.05f + _controllerR.transform.up * -0.1f;
-        GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.position = _controllerR.transform.position + _controllerR.transform.forward * 0.05f + _controllerR.transform.up * -0.1f;
-        sphere.transform.localScale = Vector3.one * 0.1f;
-        xPlace++;
-        if (xPlace == 4)
-            Placed();
+        if(xPlace < 4)
+        {
+            placement[xPlace] = _controllerR.transform.position + _controllerR.transform.forward * 0.05f + _controllerR.transform.up * -0.1f;
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            sphere.tag = "s";
+            sphere.transform.position = _controllerR.transform.position + _controllerR.transform.forward * 0.05f + _controllerR.transform.up * -0.1f;
+            sphere.transform.localScale = Vector3.one * 0.1f;
+            xPlace++;
+            if (xPlace == 4)
+                Placed();
+        }
     }
     private void Placed()
     {
+        GameObject[] s = GameObject.FindGameObjectsWithTag("s");
+        for (int ss = 0; ss < s.Length; ++ss)
+        {
+            Destroy(s[ss]);
+        }
         float z = placement[0].z + ( (placement[1].z - placement[0].z) / 2 );
         float x = placement[2].x + ((placement[3].x - placement[2].x) / 2);
         float y = (placement[0].y + placement[1].y+ placement[2].y+ placement[3].y) / 4;
         transform.position = new Vector3(x, y, z);
+        Vector3 normT = (Vector3.Cross(placement[0], placement[1]) + Vector3.Cross(placement[2], placement[3])) / 2f;
+        Vector3 normP = (Vector3.Cross(placement[0], placement[2]) + Vector3.Cross(placement[1], placement[3])) / 2f;
+        transform.LookAt(transform.position + ((normP + normT) / 2f));
         // transform.localRotation = new Quaternion(90, 0, 0, 1);
-        transform.localScale = new Vector3(Mathf.Abs(placement[2].x - placement[3].x), Mathf.Abs(placement[0].z - placement[1].z),0 );
-        PlayerPrefs.SetFloat("ScaleX", Mathf.Abs(placement[2].x - placement[3].x));
-        PlayerPrefs.SetFloat("ScaleY", Mathf.Abs(placement[0].z - placement[1].z));
+        //transform.localScale = new Vector3(Mathf.Abs(placement[2].x - placement[3].x), Mathf.Abs(placement[0].z - placement[1].z),0 );
         PlayerPrefs.SetFloat("PosZ", z);
         PlayerPrefs.SetFloat("PosX", x);
         PlayerPrefs.SetFloat("PosY", y);
