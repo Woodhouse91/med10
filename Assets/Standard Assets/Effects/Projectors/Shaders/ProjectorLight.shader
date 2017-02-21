@@ -6,9 +6,9 @@ Shader "Projector/Light" {
 		_Color ("Main Color", Color) = (1,1,1,1)
 		_ShadowTex ("Cookie", 2D) = "" {}
 		_FalloffTex ("FallOff", 2D) = "" {}
-		_greenTH("gTH",Range(0.0,1.0)) = 0.5
-		_blueTH("bTH",Range(0.0,1.0)) = 0.8
-		_redTH	("rTH",Range(0.0,1.0)) = 0.8
+		_TH("Threshold",Range(0.0,16.0)) = 0.8
+		_slope("Slope",Range(0.0,1.0)) = 0.2
+		_keyingColor("Keying Color", Color) = (1,1,1,1)
 	}
 	
 	Subshader {
@@ -47,14 +47,20 @@ Shader "Projector/Light" {
 			fixed4 _Color;
 			sampler2D _ShadowTex;
 			sampler2D _FalloffTex;
-			float _greenTH, _redTH, _blueTH;
-			fixed4 frag(v2f i) : SV_Target
-			{
+			float4 _keyingColor;
+			float _TH, _slope;
+			float4 frag(v2f i) : SV_Target
+			{ 
 				float4 uv = UNITY_PROJ_COORD(i.uvShadow);
 				if (uv.x / uv.w > 0.0 && uv.x / uv.w < 1.0 && uv.y / uv.w > 0.0 && uv.y / uv.w < 1.0) {
+					  
+					float4 texS = tex2Dproj(_ShadowTex, uv);
 					
-					fixed4 texS = tex2Dproj(_ShadowTex, UNITY_PROJ_COORD(i.uvShadow));
-					//if (texS.g > _Cutoff && texS.b < 0.8 && texS.r < 0.8)
+					float d = abs(length(abs(_keyingColor.rgb - texS.rgb)));
+					float edge0 = _TH*(1 - _slope);
+					float alpha = smoothstep(edge0, _TH, d);
+
+					/*
 					if (texS.g > _greenTH && texS.b < _blueTH && texS.r < _redTH)
 					{
 						texS = float4(0.0, 0.0, 0.0, 0.0);
@@ -63,9 +69,9 @@ Shader "Projector/Light" {
 					{
 						texS.a = 1.00;
 					}
-				
+					*/
 
-					return texS;
+					return fixed4 (texS.rgb,alpha);
 				}
 				else {
 					return float4(0.0, 0.0, 0.0, 0.0);
