@@ -57,7 +57,13 @@ Shader "Projector/Light" {
 				if (uv.x / uv.w > 0.0 && uv.x / uv.w < 1.0 && uv.y / uv.w > 0.0 && uv.y / uv.w < 1.0) {
 					
 					fixed4 texS = tex2Dproj(_ShadowTex, UNITY_PROJ_COORD(i.uvShadow));
-					float avg = (texS.r + texS.g + texS.b) / 3.0f;
+					if (texS.r > _redTH) {
+						texS = texS;
+					}
+					else {
+						texS = float4(0.0, 0.0, 0.0, 0.0);
+					}
+					/*float avg = (texS.r + texS.g + texS.b) / 3.0f;
 					if (abs(texS.r-239.0/255.0)>_greenTH && abs(texS.g-208.0/255.0)>_greenTH && abs(texS.b-207.0/255.0)>_greenTH)
 					{
 						texS = texS;
@@ -65,7 +71,7 @@ Shader "Projector/Light" {
 					else
 					{
 						texS = float4(0.0, 0.0, 0.0, 0.0);
-					}
+					}*/
 				
 
 					return texS;
