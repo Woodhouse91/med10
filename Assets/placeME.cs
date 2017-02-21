@@ -14,6 +14,7 @@ public class placeME : MonoBehaviour
     public void Start()
     {
         transform.position = new Vector3(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"), PlayerPrefs.GetFloat("PosZ"));
+        transform.LookAt(new Vector3(PlayerPrefs.GetFloat("normX"), PlayerPrefs.GetFloat("normY"), PlayerPrefs.GetFloat("normZ")));
         transform.localScale = new Vector3(ScreenSizeCm.x, ScreenSizeCm.y, 0);
     }
 
@@ -78,28 +79,23 @@ public class placeME : MonoBehaviour
     }
     private void Placed()
     {
-        GameObject[] s = GameObject.FindGameObjectsWithTag("s");
-        for (int ss = 0; ss < s.Length; ++ss)
-        {
-            Destroy(s[ss]);
-        }
-        float z = (placement[0].z + placement[1].z + placement[2].z + placement[3].z) / 4.0f;
-        float x = (placement[0].x + placement[1].x + placement[2].x + placement[3].x) / 4.0f;
-        float y = (placement[0].y + placement[1].y + placement[2].y + placement[3].y) / 4.0f;
-        print(placement[0] + ((placement[0] - placement[3]).normalized * ((placement[0] - placement[3]).magnitude / 2.0f)));
-        transform.position = placement[0] + ((placement[0] - placement[3]).normalized * ((placement[0] - placement[3]).magnitude / 2.0f));
-        GameObject fuck = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        Destroy(fuck, 2f);
-        fuck.transform.position = transform.position;
-        fuck.transform.localScale = Vector3.one;
-        Vector3 normT = (Vector3.Cross(placement[1], placement[0]) + Vector3.Cross(placement[3], placement[2])) / 2f;
-        Vector3 normP = (Vector3.Cross(placement[0], placement[2]) + Vector3.Cross(placement[1], placement[3])) / 2f;
-        transform.LookAt(transform.position + ((normP + normT) / 2f));
+        //GameObject[] s = GameObject.FindGameObjectsWithTag("s");
+        //for (int ss = 0; ss < s.Length; ++ss)
+        //{
+        //    Destroy(s[ss]);
+        //}
+        Vector3 mid = placement[0] + (placement[3] - placement[0]) / 2.0f;
+        transform.position = mid;
+        Vector3 norm = transform.position + Vector3.Cross(placement[1] - placement[0], placement[3] - placement[0]);
+        transform.LookAt(norm);
         // transform.localRotation = new Quaternion(90, 0, 0, 1);
         //transform.localScale = new Vector3(Mathf.Abs(placement[2].x - placement[3].x), Mathf.Abs(placement[0].z - placement[1].z),0 );
-        PlayerPrefs.SetFloat("PosZ", z);
-        PlayerPrefs.SetFloat("PosX", x);
-        PlayerPrefs.SetFloat("PosY", y);
+        PlayerPrefs.SetFloat("PosZ", mid.z);
+        PlayerPrefs.SetFloat("PosX", mid.x);
+        PlayerPrefs.SetFloat("PosY", mid.y);
+        PlayerPrefs.SetFloat("normZ", norm.z);
+        PlayerPrefs.SetFloat("normX", norm.x);
+        PlayerPrefs.SetFloat("normY", norm.y);
     }
     // Update is called once per frame
     void Update ()
