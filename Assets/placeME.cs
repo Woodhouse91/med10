@@ -14,7 +14,7 @@ public class placeME : MonoBehaviour
     public void Start()
     {
         transform.position = new Vector3(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"), PlayerPrefs.GetFloat("PosZ"));
-        transform.localScale = new Vector3(ScreenSizeCm.y, ScreenSizeCm.x, 0);
+        transform.localScale = new Vector3(ScreenSizeCm.x, ScreenSizeCm.y, 0);
     }
 
     private void OnEnable ()
@@ -83,11 +83,16 @@ public class placeME : MonoBehaviour
         {
             Destroy(s[ss]);
         }
-        float z = placement[0].z + ( (placement[1].z - placement[0].z) / 2 );
-        float x = placement[2].x + ((placement[3].x - placement[2].x) / 2);
-        float y = (placement[0].y + placement[1].y+ placement[2].y+ placement[3].y) / 4;
-        transform.position = new Vector3(x, y, z);
-        Vector3 normT = (Vector3.Cross(placement[0], placement[1]) + Vector3.Cross(placement[2], placement[3])) / 2f;
+        float z = (placement[0].z + placement[1].z + placement[2].z + placement[3].z) / 4.0f;
+        float x = (placement[0].x + placement[1].x + placement[2].x + placement[3].x) / 4.0f;
+        float y = (placement[0].y + placement[1].y + placement[2].y + placement[3].y) / 4.0f;
+        print(placement[0] + ((placement[0] - placement[3]).normalized * ((placement[0] - placement[3]).magnitude / 2.0f)));
+        transform.position = placement[0] + ((placement[0] - placement[3]).normalized * ((placement[0] - placement[3]).magnitude / 2.0f));
+        GameObject fuck = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        Destroy(fuck, 2f);
+        fuck.transform.position = transform.position;
+        fuck.transform.localScale = Vector3.one;
+        Vector3 normT = (Vector3.Cross(placement[1], placement[0]) + Vector3.Cross(placement[3], placement[2])) / 2f;
         Vector3 normP = (Vector3.Cross(placement[0], placement[2]) + Vector3.Cross(placement[1], placement[3])) / 2f;
         transform.LookAt(transform.position + ((normP + normT) / 2f));
         // transform.localRotation = new Quaternion(90, 0, 0, 1);
