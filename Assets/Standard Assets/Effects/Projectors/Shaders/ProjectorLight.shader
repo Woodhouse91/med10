@@ -3,12 +3,13 @@
 
 Shader "Projector/Light" {
 	Properties {
-		_Color ("Main Color", Color) = (1,1,1,1)
+		
 		_ShadowTex ("Cookie", 2D) = "" {}
-		_FalloffTex ("FallOff", 2D) = "" {}
+		
 		_TH("Threshold",Range(0.0,1.0)) = 0.8
 		_slope("Slope",Range(0.0,1.0)) = 0.2
 		_keyingColor("Keying Color", Color) = (1,1,1,1)
+		_Wvalue("W value changer", Range(0.0,1.0)) = 1.0
 	}
 	
 	Subshader {
@@ -48,7 +49,7 @@ Shader "Projector/Light" {
 			sampler2D _ShadowTex;
 			sampler2D _FalloffTex;
 			float4 _keyingColor;
-			float _TH, _slope;
+			float _TH, _slope, _Wvalue;
 			float4 frag(v2f i) : SV_Target
 			{ 
 				float4 uv = UNITY_PROJ_COORD(i.uvShadow);
@@ -71,7 +72,14 @@ Shader "Projector/Light" {
 					}
 					*/
 
-					return fixed4 (texS.r, texS.g, texS.b ,alpha);
+					if (uv.w < _Wvalue)
+					{
+						return fixed4(1.0, 0.0, 0.0, 1.0);
+					}
+					else
+					{
+						return fixed4 (texS.r, texS.g, texS.b ,alpha);
+					}
 				}
 				else {
 					return float4(0.0, 0.0, 0.0, 0.0);
