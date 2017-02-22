@@ -1,7 +1,7 @@
 // Upgrade NOTE: replaced '_Projector' with 'unity_Projector'
 // Upgrade NOTE: replaced '_ProjectorClip' with 'unity_ProjectorClip'
 
-Shader "Projector/Light" {
+Shader "En/Fin/Shader" {
 	Properties {
 		
 		_ShadowTex ("Cookie", 2D) = "" {}
@@ -28,20 +28,20 @@ Shader "Projector/Light" {
 			
 			struct v2f {
 				float4 uvShadow : TEXCOORD0;
-				float4 uvFalloff : TEXCOORD1;
+				
 				UNITY_FOG_COORDS(2)
 				float4 pos : SV_POSITION;
 			};
 			
 			float4x4 unity_Projector;
 			float4x4 unity_ProjectorClip;
-			v2f vert (float4 vertex : POSITION)
+			v2f vert (float4 vertex : POSITION) 
 			{
 				v2f o;
 				o.pos = mul (UNITY_MATRIX_MVP, vertex);
 				o.uvShadow = mul (unity_Projector, vertex);
-				o.uvFalloff = mul (unity_ProjectorClip, vertex);
-				UNITY_TRANSFER_FOG(o,o.pos);
+				
+				//UNITY_TRANSFER_FOG(o,o.pos);
 				return o;
 			}
 			

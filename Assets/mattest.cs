@@ -19,6 +19,8 @@ public class mattest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        WebCamDevice[] devices = WebCamTexture.devices;
+
         myTex = SteamVR_TrackedCamera.Source(UnDistorted).texture;
         myTex.wrapMode = TextureWrapMode.Clamp;
         //for(int y = 0; y<myTex.height; ++y)
