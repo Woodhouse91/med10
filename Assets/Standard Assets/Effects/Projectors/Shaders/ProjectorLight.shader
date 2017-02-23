@@ -8,6 +8,8 @@ Shader "Projector/Light" {
 		_THa("Threshold_a",Range(0.0,1.0)) = 0.8
 		_THb("Threshold_b",Range(0.0,1.0)) = 0.8
 		_keyingColor("Keying Color", Color) = (1,1,1,1)
+		_Target("Target color", Color) = (0.93725490196, 0.81568627451, 0.81176470588, 1)
+
 	}
 	
 	Subshader {
@@ -24,10 +26,11 @@ Shader "Projector/Light" {
 			#pragma multi_compile_fog
 			#include "UnityCG.cginc"
 
-
 			sampler2D _ShadowTex;
-			float4 _keyingColor;
+			float4 _keyingColor, _Target;
 			float _THa, _THb;
+			float4x4 unity_Projector;
+			float4x4 unity_ProjectorClip;
 
 
 			struct v2f {
@@ -35,8 +38,6 @@ Shader "Projector/Light" {
 				float4 pos : SV_POSITION;
 			};
 			
-			float4x4 unity_Projector;
-			float4x4 unity_ProjectorClip;
 			v2f vert (float4 vertex : POSITION)
 			{
 				v2f o;
@@ -63,7 +64,8 @@ Shader "Projector/Light" {
 						mask = (temp - _THa) / (_THb - _THa);
 					else
 						mask = 1.0;
-					return float4(texS.r * mask, texS.g * mask, texS.b* mask, mask);
+					return float4(texS.r * mask, texS.g * mask, texS.b * mask, mask);
+				/*	return float4(_Target.r * mask, _Target.g * mask, _Target.b * mask, mask);*/
 				}
 				else {
 					return float4(0.0, 0.0, 0.0, 0.0);

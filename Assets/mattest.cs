@@ -2,12 +2,9 @@
 using System.Collections;
 
 public class mattest : MonoBehaviour {
-    Texture2D myTex;
-    public bool UnDistorted = false;
+    private Texture2D myTex;
     [SerializeField]
-    private float Cutoff;
-    [SerializeField]
-    Color handCol, cutCol;
+    private bool UnDistorted = false;
 
 	// Use this for initialization
 	void Start () {
@@ -21,16 +18,6 @@ public class mattest : MonoBehaviour {
 	void Update () {
         myTex = SteamVR_TrackedCamera.Source(UnDistorted).texture;
         myTex.wrapMode = TextureWrapMode.Clamp;
-        //for(int y = 0; y<myTex.height; ++y)
-        //{
-        //    for(int x = 0; x<myTex.width; ++x)
-        //    {
-        //        if (myTex.GetPixel(x, y).b < Cutoff)
-        //            myTex.SetPixel(x, y, cutCol);
-        //        else
-        //            myTex.SetPixel(x, y, handCol);
-        //    }
-        //}
         GetComponent<Projector>().material.SetTexture("_ShadowTex",myTex);
         
     }
