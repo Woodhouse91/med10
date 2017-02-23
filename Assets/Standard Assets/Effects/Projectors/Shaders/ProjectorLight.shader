@@ -7,9 +7,7 @@ Shader "Projector/Light" {
 		_ShadowTex ("Cookie", 2D) = "" {}
 		_THa("Threshold_a",Range(0.0,1.0)) = 0.8
 		_THb("Threshold_b",Range(0.0,1.0)) = 0.8
-		_slope("Slope",Range(0.0,1.0)) = 0.2
 		_keyingColor("Keying Color", Color) = (1,1,1,1)
-		_Wvalue("W value changer", Range(0.0,1.0)) = 1.0
 	}
 	
 	Subshader {
@@ -17,7 +15,7 @@ Shader "Projector/Light" {
 		Pass {
 			ZWrite Off
 			ColorMask RGB
-		Blend  DstAlpha OneMinusSrcAlpha
+			Blend  DstAlpha OneMinusSrcAlpha
 			Offset -1, -1
 
 			CGPROGRAM
@@ -25,6 +23,13 @@ Shader "Projector/Light" {
 			#pragma fragment frag
 			#pragma multi_compile_fog
 			#include "UnityCG.cginc"
+
+
+			sampler2D _ShadowTex;
+			float4 _keyingColor;
+			float _THa, _THb;
+
+
 			struct v2f {
 				float4 uvShadow : TEXCOORD0;
 				float4 pos : SV_POSITION;
@@ -40,10 +45,7 @@ Shader "Projector/Light" {
 				return o;
 			}
 			
-			fixed4 _Color;
-			sampler2D _ShadowTex;
-			float4 _keyingColor, _bg = float4(0.0, 0.0, 0.0, 0.0);
-			float _THa, _THb, _slope, _Wvalue;
+
 			float4 frag(v2f i) : SV_Target
 			{ 
 				float4 uv = UNITY_PROJ_COORD(i.uvShadow);
@@ -57,7 +59,7 @@ Shader "Projector/Light" {
 					float mask = 0.0;
 					if (temp < _THa)
 						mask = 0.0;
-					else if (temp < _THb)
+					else if (temp < _THb) //Handle "unknown" by giving it partial alpha
 						mask = (temp - _THa) / (_THb - _THa);
 					else
 						mask = 1.0;
