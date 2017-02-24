@@ -1,0 +1,15 @@
+Event	ID	Name			Wwise Object Path	Notes
+	720171548	playSoundOnPC			\Default Work Unit\playSoundOnPC	
+	951616562	playSoundOnHeadphones			\Default Work Unit\playSoundOnHeadphones	
+
+Game Parameter	ID	Name			Wwise Object Path	Notes
+	129	MIDI note velocity			\MIDI note velocity	
+
+Modulator Envelope	ID	Name			Wwise Object Path	Notes
+	773663610	Modulator Envelope (Custom)				
+	914599797	Modulator Envelope (Custom)				
+
+Source plug-ins	ID	Name	Type		Wwise Object Path	Notes
+	690379693	CONFIRM 01	Wwise Synth One		\Actor-Mixer Hierarchy\SoundTest\PlaySoundHeadphones\CONFIRM 01\CONFIRM 01	Audiokinetic Inc. All rights reserved. Content provided by Vincent Gagnon © 2014 Vincent Gagnon
+	970241952	CONFIRM 01	Wwise Synth One		\Actor-Mixer Hierarchy\SoundTest\PlaySoundPC\CONFIRM 01\CONFIRM 01	Audiokinetic Inc. All rights reserved. Content provided by Vincent Gagnon © 2014 Vincent Gagnon
+
