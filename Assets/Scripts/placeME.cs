@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-
 public class placeME : MonoBehaviour
 {
 
@@ -8,7 +7,7 @@ public class placeME : MonoBehaviour
 
 	public SteamVR_TrackedController _controllerL, _controllerR;
     public Vector2 ScreenSizeCm;
-
+    private Virtualscreen vc;
     public Vector3[] placement = new Vector3[4]; //upLeft, downLeft, upRight, downRight
     public int xPlace = 0;
     public void Start()
@@ -16,6 +15,8 @@ public class placeME : MonoBehaviour
         transform.position = new Vector3(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"), PlayerPrefs.GetFloat("PosZ"));
         transform.LookAt(new Vector3(PlayerPrefs.GetFloat("normX"), PlayerPrefs.GetFloat("normY"), PlayerPrefs.GetFloat("normZ")));
         transform.localScale = new Vector3(ScreenSizeCm.x, ScreenSizeCm.y, 0);
+        vc = FindObjectOfType<Virtualscreen>();
+        vc.Setpos();
     }
 
     private void OnEnable ()
@@ -96,6 +97,7 @@ public class placeME : MonoBehaviour
         PlayerPrefs.SetFloat("normZ", norm.z);
         PlayerPrefs.SetFloat("normX", norm.x);
         PlayerPrefs.SetFloat("normY", norm.y);
+        vc.Setpos();
     }
     // Update is called once per frame
     void Update ()

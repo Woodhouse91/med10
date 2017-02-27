@@ -49,6 +49,9 @@ public class SteamVR_TestTrackedCamera : MonoBehaviour
 
 		// Adjust the height of the quad based on the aspect to keep the texels square.
 		var aspect = (float)texture.width / texture.height;
+       // print(aspect);
+        //print(texture.width);
+        //print(texture.height);
 
 		// The undistorted video feed has 'bad' areas near the edges where the original
 		// square texture feed is stretched to undo the fisheye from the lens.
@@ -79,6 +82,9 @@ public class SteamVR_TestTrackedCamera : MonoBehaviour
 			target.localPosition = t.pos;
 			target.localRotation = t.rot;
 		}
-	}
+        print(aspect);
+        print(texture.width);
+        print(texture.height);
+    }
 }
 
