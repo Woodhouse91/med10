@@ -42,7 +42,6 @@ SubShader {
 		o.uv[1].xy = uv - right;
 		o.uv[2].xy = uv + right;
 		o.uv[3].xy = uv + up;
-
 		o.uv[4].xy = uv;
 		
 		return o;
