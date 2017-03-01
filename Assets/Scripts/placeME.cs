@@ -7,9 +7,9 @@ public class placeME : MonoBehaviour
 
 	public SteamVR_TrackedController _controllerL, _controllerR;
     public Vector2 ScreenSizeCm;
-    private Virtualscreen vc;
     public Vector3[] placement = new Vector3[4]; //upLeft, downLeft, upRight, downRight
     public int xPlace = 0;
+    Virtualscreen vc;
     public void Start()
     {
         transform.position = new Vector3(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"), PlayerPrefs.GetFloat("PosZ"));

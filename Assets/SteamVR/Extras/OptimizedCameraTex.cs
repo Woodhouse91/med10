@@ -1,15 +1,22 @@
 ﻿//======= Copyright (c) Valve Corporation, All rights reserved. ===============
 using UnityEngine;
 using System;
-public class SteamVR_TestTrackedCamera : MonoBehaviour
+public class OptimizedCameraTex : MonoBehaviour
 {
 	public Material material;
 	public Transform target;
 	public bool undistorted = true;
 	public bool cropped = true;
-    private const float aspect = 1.33043478261f, du = 0.5f, dv = -0.5f;
-    private Vector2 texOffSet = new Vector2(0.3f, 0.8f), texScale = new Vector2(du, dv);
+    private const float aspect = 1.330435f, du = 0.5f, dv = -0.4999999f;
+    private Vector2 texOffSet = new Vector2(0.25f, 0.75f), texScale = new Vector2(du, dv), _texAdjust = Vector2.zero;
     private Vector3 scale = new Vector3(1.0f, 1.0f / aspect, 1);
+    public Vector2 texAdjust
+    {
+        set
+        {
+            _texAdjust = value;
+        }
+    }
 
     void OnEnable()
 	{
@@ -36,9 +43,8 @@ public class SteamVR_TestTrackedCamera : MonoBehaviour
 			return;
 		}
 		material.mainTexture = texture;
-        material.mainTextureOffset = texOffSet;
+        material.mainTextureOffset = texOffSet + _texAdjust;
         material.mainTextureScale = texScale;
-        target.localScale = scale;
 		if (source.hasTracking)
 		{
 			var t = source.transform;
