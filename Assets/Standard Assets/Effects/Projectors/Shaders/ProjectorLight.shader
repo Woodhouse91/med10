@@ -4,7 +4,7 @@
 Shader "Projector/Light" {
 	Properties {
 		
-		//_ShadowTex ("Cookie", 2D) = "" {}
+		_ShadowTex ("Cookie", 2D) = "" {}
 		_THa("Threshold_a",Range(0.0,1.0)) = 0.8
 		_THb("Threshold_b",Range(0.0,1.0)) = 0.8
 		_keyingColor("Keying Color", Color) = (1,1,1,1)

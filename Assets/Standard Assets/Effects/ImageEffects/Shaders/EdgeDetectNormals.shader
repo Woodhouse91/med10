@@ -279,7 +279,40 @@ Shader "Hidden/EdgeDetect" {
 	ENDCG 
 	
 Subshader {
- 
+ Pass {
+	  ZTest Always Cull Off ZWrite Off
+
+      CGPROGRAM
+      #pragma vertex vertThin
+      #pragma fragment fragThin
+      ENDCG
+  }
+ Pass {
+	  ZTest Always Cull Off ZWrite Off
+
+      CGPROGRAM
+      #pragma vertex vertRobert
+      #pragma fragment fragRobert
+      ENDCG
+  }
+ Pass {
+	  ZTest Always Cull Off ZWrite Off
+
+      CGPROGRAM
+	  #pragma target 3.0   
+      #pragma vertex vertD
+      #pragma fragment fragDCheap
+      ENDCG
+  }
+ Pass {
+	  ZTest Always Cull Off ZWrite Off
+
+      CGPROGRAM
+	  #pragma target 3.0   
+      #pragma vertex vertD
+      #pragma fragment fragD
+      ENDCG
+  }
  Pass {
 	  ZTest Always Cull Off ZWrite Off
 
