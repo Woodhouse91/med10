@@ -9,8 +9,15 @@ public class TheMarker : MonoBehaviour {
     public Transform TargetColumn;
     List<Transform>[] listCurrency = new List<Transform>[11];
 
+    private void OnApplicationQuit()
+    {
+        for (int i = 0; i < listCurrency.Length; i++)
+        {
+            listCurrency[i].Clear();
+        }
+    }
     // Use this for initialization
-	private void OnEnable()
+    private void OnEnable()
     {
         for (int i = 0; i < listCurrency.Length; i++)
             listCurrency[i] = new List<Transform>();
@@ -19,12 +26,13 @@ public class TheMarker : MonoBehaviour {
     }
     private void MyDisable()
     {
-        print(listCurrency[0].Count);
         for (int k = 0; k < 11; ++k)
         {
             for (int i = 0; i < listCurrency[k].Count; i++)
             {
-                listCurrency[k][i].SetParent(TargetColumn);
+                print(""+k + i);
+                //listCurrency[k][i].SetParent(TargetColumn.GetComponent<ColumnSection>().MoneySpace);
+                listCurrency[k][i].SetParent(null);
                 TargetColumn.GetComponent<ColumnSection>().ListCurrency[k].Add(listCurrency[k][i]);
             }
             //listCurrency[k].Clear();
@@ -37,8 +45,8 @@ public class TheMarker : MonoBehaviour {
     void Update () {
 
         // keyboard controls
-        transform.Translate(Vector3.up * Input.GetAxis("Vertical")* Time.deltaTime * 0.05f);
-        transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.05f);
+        transform.Translate(Vector3.up * Input.GetAxis("Vertical")* Time.deltaTime * 0.15f);
+        transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
 
         if (Input.GetKeyDown(KeyCode.Space))
             MyDisable();        
@@ -51,6 +59,8 @@ public class TheMarker : MonoBehaviour {
         {
             if (totalText.gameObject.activeSelf == false)
                 totalText.gameObject.SetActive(true);
+            if (other.transform.parent == transform)
+                return;
             other.transform.SetParent(transform);
 
             float newCurrency = other.transform.GetComponent<currency>().CurrencyValue;

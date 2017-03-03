@@ -22,7 +22,7 @@ public class currency : MonoBehaviour {
             else if(transform.parent.tag == "ColumnSection")
             {
                 // Troede jeg skulle skrive mere her, men nej systemet er for godt til det
-                Placed = true;
+                //Placed = true;
             }
         }
 	}
