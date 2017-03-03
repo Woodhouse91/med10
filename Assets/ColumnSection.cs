@@ -1,16 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-[ExecuteInEditMode]
 public class ColumnSection : MonoBehaviour {
 
     public string SectionName;
     Transform HighLight;
     TextMesh Name;
+    public List<Transform>[] ListCurrency = new List<Transform>[11];
+
     // Use this for initialization
 
-	void OnEnable() {
+    void OnEnable() {
+        for (int i = 0; i < ListCurrency.Length; i++)
+            ListCurrency[i] = new List<Transform>();
         if (Name == null)
             Name = transform.FindChild("SectionName").GetComponent<TextMesh>();
         if(HighLight == null)
@@ -29,5 +31,9 @@ public class ColumnSection : MonoBehaviour {
     }
 	void Update () {
        
+    }
+    public void PlaceMoney()
+    {
+        
     }
 }
