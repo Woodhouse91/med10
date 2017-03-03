@@ -22,12 +22,7 @@ public class UIButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         GetComponent<Image>().material.color = orgCol;
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        Debug.Log("PointerEnter");
-        hovered = true;
-    }
-
+    
     public void OnPointerExit(PointerEventData eventData)
     {
         Debug.Log("PointerExit");
@@ -49,5 +44,10 @@ public class UIButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Debug.Log("PointerUp");
         selected = hovered;
+    }
+
+    void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
+    {
+        
     }
 }

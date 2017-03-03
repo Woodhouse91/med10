@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 056ca1a6d2baf9e43b71f5f2e43e2e48
+timeCreated: 1488367321
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Px Grotesk
+  fontNames:
+  - Px Grotesk
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 3eedfc882b8b56b49b77cf837f18c452, type: 3}
+  - {fileID: 12800000, guid: 0e14b09d6247a7e43a76e3f09f69fd09, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
