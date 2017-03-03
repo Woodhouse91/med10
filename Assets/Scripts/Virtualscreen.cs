@@ -5,7 +5,6 @@ using UnityEngine;
 public class Virtualscreen : MonoBehaviour {
     [SerializeField]
     private Transform screen;
-    private float behind = 0.001f;
 
 	// Use this for initialization
 	void Start () {

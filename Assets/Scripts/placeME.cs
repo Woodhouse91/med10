@@ -99,9 +99,13 @@ public class placeME : MonoBehaviour
         PlayerPrefs.SetFloat("normY", norm.y);
         vc.Setpos();
     }
-    // Update is called once per frame
-    void Update ()
-	{
-	
-	}
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetFloat("PosZ", transform.position.z);
+        PlayerPrefs.SetFloat("PosX", transform.position.x);
+        PlayerPrefs.SetFloat("PosY", transform.position.y);
+        PlayerPrefs.SetFloat("normZ", (transform.position + transform.forward).z);
+        PlayerPrefs.SetFloat("normX", (transform.position + transform.forward).x);
+        PlayerPrefs.SetFloat("normY", (transform.position + transform.forward).y);
+    }
 }

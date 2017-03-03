@@ -162,6 +162,7 @@ Shader "Hidden/FastBlur" {
 	ENDCG
 	
 	SubShader {
+			Tags{"Queue"="Transparent"}
 	  ZTest Off Cull Off ZWrite Off Blend Off
 
 	// 0
