@@ -51,11 +51,10 @@ public class ColumnSection : MonoBehaviour {
             for (int i = 0; i < ListCurrency[k].Count; i++)
             {
                 SectionValue += ListCurrency[k][i].GetComponent<currency>().CurrencyValue;
-                StartCoroutine(PlaceMoneyInSpace(k, i, MoneySpace.position + Vector3.down * moneyOffsetPlacement));
+                StartCoroutine(PlaceMoneyInSpace(k, i, MoneySpace.position + -MoneySpace.transform.up * moneyOffsetPlacement));
                 moneyOffsetPlacement += 0.025f;
             }
         }
-        print(SectionValue);
     }
     IEnumerator PlaceMoneyInSpace(int k, int i, Vector3 pos)
     {

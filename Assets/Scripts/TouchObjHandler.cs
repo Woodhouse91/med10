@@ -28,7 +28,7 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
             touch[x].GO = Instantiate(pref);
             touch[x].GO.transform.parent = VrUi;
             touch[x].GO.transform.position = Vector3.one * 1000;
-            touch[x].GO.SetActive(false);
+            touch[x].GO.SetActive(false); 
             touch[x].id = -10;
             activeTouchID.Add(-10);
         }
@@ -89,7 +89,7 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
                 activeTouchID[k] = -10;
                 touch[k].id = -10;
                 touch[k].GO.transform.position = Vector3.one * 1000;
-                touch[k].GO.SetActive(false);
+                touch[k].GO.GetComponent<TheMarker>().MyDisable(); 
             }
         }
     }

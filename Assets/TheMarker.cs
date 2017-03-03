@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TheMarker : MonoBehaviour {
 
-    TextMesh totalText;
+    public TextMesh totalText;
     float totalTextVal;
     public Transform TargetColumn;
     List<Transform>[] listCurrency = new List<Transform>[11];
@@ -21,23 +21,28 @@ public class TheMarker : MonoBehaviour {
     {
         for (int i = 0; i < listCurrency.Length; i++)
             listCurrency[i] = new List<Transform>();
-        totalText = transform.GetComponentInChildren<TextMesh>();
         totalText.gameObject.SetActive(false);
+        totalTextVal = 0;
+
     }
-    private void MyDisable()
+    public void MyDisable()
     {
+        if (TargetColumn == null)
+        {
+            gameObject.SetActive(false);
+            return; // HER SKAL DEN I MONEYBALL
+        }
         for (int k = 0; k < 11; ++k)
         {
             for (int i = 0; i < listCurrency[k].Count; i++)
             {
-                print(""+k + i);
                 //listCurrency[k][i].SetParent(TargetColumn.GetComponent<ColumnSection>().MoneySpace);
                 listCurrency[k][i].SetParent(null);
                 TargetColumn.GetComponent<ColumnSection>().ListCurrency[k].Add(listCurrency[k][i]);
             }
             //listCurrency[k].Clear();
         }
-
+        
         TargetColumn.GetComponent<ColumnSection>().PlaceMoney(); // make the columnSection set the money
         gameObject.SetActive(false);
     }
@@ -70,36 +75,47 @@ public class TheMarker : MonoBehaviour {
             {
                 case 1000:
                     listCurrency[0].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[0].Remove(other.transform);
                     break;
                 case 500:
                     listCurrency[1].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[1].Remove(other.transform);
                     break;
                 case 200:
                     listCurrency[2].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[2].Remove(other.transform);
                     break;
                 case 100:
                     listCurrency[3].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[3].Remove(other.transform);
                     break;
                 case 50:
                     listCurrency[4].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[4].Remove(other.transform);
                     break;
                 case 20:
                     listCurrency[5].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[5].Remove(other.transform);
                     break;
                 case 10:
                     listCurrency[6].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[6].Remove(other.transform);
                     break;
                 case 5:
                     listCurrency[7].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[7].Remove(other.transform);
                     break;
                 case 2:
                     listCurrency[8].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[8].Remove(other.transform);
                     break;
                 case 1:
                     listCurrency[9].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[9].Remove(other.transform);
                     break;
                 case 0:
                     listCurrency[10].Add(other.transform);
+                    TargetColumn.GetComponent<ColumnSection>().ListCurrency[10].Remove(other.transform);
                     break;
             }
             
