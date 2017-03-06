@@ -17,7 +17,7 @@ public class currency : MonoBehaviour {
     void Start () {
         rig = GetComponent<Rigidbody>();
         CurrencyHandler ch = FindObjectOfType<CurrencyHandler>();
-        ch.AddCurrency(GameObject.Find("ColumnSection").transform, transform);
+        ch.AddCurrency(GameObject.FindGameObjectWithTag("ColumnSection").transform, transform);
     }
 	
 	// Update is called once per frame

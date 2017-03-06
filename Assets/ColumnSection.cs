@@ -20,8 +20,8 @@ public class ColumnSection : MonoBehaviour {
     void OnEnable() {
         for (int i = 0; i < ListCurrency.Length; i++)
             ListCurrency[i] = new List<Transform>();
-        if (Name == null)
-            Name = transform.FindChild("SectionName").GetComponent<TextMesh>();
+       // if (Name == null)
+       //     Name = transform.FindChild("SectionName").GetComponent<TextMesh>();
         if(HighLight == null)
         {
             HighLight = transform.FindChild("Highlight");
@@ -29,7 +29,7 @@ public class ColumnSection : MonoBehaviour {
         if (MoneySpace == null)
             MoneySpace = transform.FindChild("MoneySpace");
         HighLight.gameObject.SetActive(false);
-        Name.text = SectionName;
+        //Name.text = SectionName;
 
     }
 	
