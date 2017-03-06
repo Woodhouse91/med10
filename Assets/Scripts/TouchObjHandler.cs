@@ -9,7 +9,6 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
     private GameObject pref;
     private int prevTouch;
     private Transform VrUi;
-    List<int> activeTouchID;
     //public PointerEventData[] dat = new PointerEventData[10];
 
     public struct TouchRef
@@ -22,7 +21,6 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
     {
         VrUi = GameObject.Find("VRInterface").transform;
         pref = Resources.Load<GameObject>("TouchObject");
-        activeTouchID = new List<int>();
         for(int x = 0; x<10; ++x)
         {
             touch[x].GO = Instantiate(pref);
@@ -30,7 +28,6 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
             touch[x].GO.transform.position = Vector3.one * 1000;
             touch[x].GO.SetActive(false); 
             touch[x].id = -10;
-            activeTouchID.Add(-10);
         }
 
     }
@@ -76,20 +73,19 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
     private void touchesEndedHandler(object sender, TouchEventArgs e)
     {
         bool removeItem;
-        for (int k = 0; k<activeTouchID.Count; ++k)
+        for (int k = 0; k<touch.Length; ++k)
         {
             removeItem = true;
             for(int x = 0; x<TouchManager.Instance.ActiveTouches.Count; ++x)
             {
-                if (activeTouchID[k] == TouchManager.Instance.ActiveTouches[x].Id)
+                if (touch[k].id == TouchManager.Instance.ActiveTouches[x].Id)
                     removeItem = false;
             }
             if (removeItem)
             {
-                activeTouchID[k] = -10;
                 touch[k].id = -10;
-                touch[k].GO.transform.position = Vector3.one * 1000;
                 touch[k].GO.GetComponent<TheMarker>().MyDisable(); 
+                touch[k].GO.transform.position = Vector3.one * 1000;
             }
         }
     }
@@ -101,7 +97,6 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
             touch[x].GO.transform.localPosition = NormPos(TouchManager.Instance.ActiveTouches[x].Position);
             touch[x].GO.transform.LookAt(touch[x].GO.transform.position + VrUi.forward);
             touch[x].id = TouchManager.Instance.ActiveTouches[x].Id;
-            activeTouchID[x] = touch[x].id;
         }
     }
     private void touchesMovedHandler(object sender, TouchEventArgs e)
@@ -114,60 +109,6 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
             }
         }
     }
-
-
-
-    //public void OnBeginDrag(PointerEventData eventData)
-    //{
-
-    //}
-
-
-
-
-    //public void OnDrag(PointerEventData eventData)
-    //{
-    //    for(int x = 0; x<activeGO; ++x)
-    //    {
-    //        if(touch[x].id == eventData.pointerId)
-    //        {
-    //            touch[x].GO.transform.localPosition = NormPos(eventData.position);
-    //        }
-    //    }
-    //}
-
-    //public void OnEndDrag(PointerEventData eventData)
-    //{
-
-    //}
-
-    //public void OnInitializePotentialDrag(PointerEventData eventData)
-    //{
-
-    //}
-
-    //public void OnPointerDown(PointerEventData eventData)
-    //{
-    //    touch[activeGO].GO.SetActive(true);
-    //    touch[activeGO].GO.transform.localPosition = NormPos(eventData.position);
-    //    touch[activeGO].GO.transform.LookAt(touch[activeGO].GO.transform.position + VrUi.forward);
-    //    touch[activeGO].id = eventData.pointerId;
-    //    ++activeGO;
-    //}
-
-    //public void OnPointerUp(PointerEventData eventData)
-    //{
-    //    for(int x = 0; x<activeGO; ++x)
-    //    {
-    //        if (touch[x].id == eventData.pointerId)
-    //        {
-    //            touch[x].id = -10;
-    //            touch[x].GO.transform.position = Vector3.one * 1000;
-    //            touch[x].GO.SetActive(false);
-    //            activeGO--;
-    //        }
-    //    }
-    //}
 
     private Vector3 NormPos(Vector2 dat)
     {
