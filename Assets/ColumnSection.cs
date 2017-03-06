@@ -58,15 +58,16 @@ public class ColumnSection : MonoBehaviour {
     }
     IEnumerator PlaceMoneyInSpace(int k, int i, Vector3 pos)
     {
-        float t = 0;    
-        while(t<1)
+        float t = 0;
+        Transform id = ListCurrency[k][i];
+        while (t<1)
         {
-            ListCurrency[k][i].position = Vector3.Lerp(ListCurrency[k][i].position, pos, t);
-            ListCurrency[k][i].transform.LookAt(ListCurrency[k][i].transform.position + transform.forward);
+            id.position = Vector3.Lerp(id.position, pos, t);
+            id.LookAt(id.transform.position + transform.forward);
+            id.Rotate(Vector3.right * -5f);
             t += Time.deltaTime;
             yield return null;
         }
-        ListCurrency[k][i].Rotate(Vector3.right * -5f);
         yield return null;
     }
 }
