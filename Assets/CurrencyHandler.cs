@@ -5,9 +5,18 @@ public class CurrencyHandler : MonoBehaviour {
     private Transform prevColumn;
     public delegate void CurrencyEvent();
     public event CurrencyEvent OnCurrencyChange;
+    private Transform moneyBall;
 
     public void TransferCurrency(Transform to, Transform from)
     {
+        for(int k = 0; k<from.GetComponent<CurrencyHolder>().myCurrency.Count; ++k)
+        {
+            if(from.GetComponent<CurrencyHolder>().myCurrency[k].GetComponent<currency>().myListObj == to)
+            {
+                to = moneyBall;
+                break;
+            }
+        }
         for(int x = 0; x<from.GetComponent<CurrencyHolder>().myCurrency.Count; ++x)
         {
             from.GetComponent<CurrencyHolder>().myCurrency[x].GetComponent<currency>().tar = null;
@@ -30,6 +39,8 @@ public class CurrencyHandler : MonoBehaviour {
     }
     public void AddCurrency(Transform to, Transform obj)
     {
+        if (obj.GetComponent<currency>().myListObj!=null)
+            obj.GetComponent<currency>().myListObj.GetComponent<CurrencyHolder>().myCurrency.Remove(obj);
         to.GetComponent<CurrencyHolder>().myCurrency.Add(obj);
         obj.GetComponent<currency>().myListObj = to;
         CurrencyChange();

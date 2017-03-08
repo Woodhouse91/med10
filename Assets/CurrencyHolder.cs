@@ -8,9 +8,10 @@ public class CurrencyHolder : MonoBehaviour {
     [SerializeField]
     float offset;
     float _offset;
-    private void Start()
+    CurrencyHandler ch;
+    private void Awake()
     {
-        CurrencyHandler ch = FindObjectOfType<CurrencyHandler>();
+        ch = FindObjectOfType<CurrencyHandler>();
         _offset = offset;
         myCurrency = new List<Transform>();
         if (tag == "ColumnSection")
@@ -43,5 +44,13 @@ public class CurrencyHolder : MonoBehaviour {
             yield return null;
         }
         yield return null;
+    }
+    private void OnApplicationQuit()
+    {
+        ch.OnCurrencyChange -= updateHolding;
+    }
+    private void OnDisable()
+    {
+        ch.OnCurrencyChange -= updateHolding;
     }
 }
