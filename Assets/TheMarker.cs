@@ -9,19 +9,27 @@ public class TheMarker : MonoBehaviour {
     public Transform TargetColumn;
     Transform transferTar;
     CurrencyHandler CH;
-
+    [SerializeField]
+    private float pickUpDetectTime, swipeSpeed, maxPickUpSpeed;
+    private float detectTimer, velocity;
+    private Vector3 prevPos;
+    private List<Transform> bill;
 
     private void Awake()
     {
+        detectTimer = 0;
+        bill = new List<Transform>();
         CH = FindObjectOfType<CurrencyHandler>();
     }
     private void OnEnable()
     {
+        detectTimer = 0;
         totalText.gameObject.SetActive(false);
         totalTextVal = 0;
     }
     public void MyDisable()
     {
+        detectTimer = 0;
         if (TargetColumn == null)
         {
             gameObject.SetActive(false);
@@ -32,21 +40,42 @@ public class TheMarker : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-
+        velocity = (transform.position - prevPos).magnitude/Time.deltaTime;
+        prevPos = transform.position;
         // keyboard controls
-        transform.Translate(Vector3.up * Input.GetAxis("Vertical")* Time.deltaTime * 0.15f);
+        transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 0.15f);
         transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
 
         if (Input.GetKeyDown(KeyCode.Space))
-            MyDisable();        
+            MyDisable();
+        if (bill.Count > 0)
+        {
+            detectTimer += Time.deltaTime;
+            if (detectTimer >= pickUpDetectTime)
+                performAccuratePickup();
+        }
+        else
+            detectTimer = 0;
     }
-
+    private void performAccuratePickup()
+    {
+        bill.Sort(delegate (Transform a, Transform b)
+        {
+            return ((a.position-transform.position).magnitude.CompareTo((b.position-transform.position).magnitude));
+        });
+        CH.PickUp(bill[0], transform);
+        bill.Remove(bill[0]);
+        detectTimer = 0;
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Currency")
+        if (other.tag == "Currency" && other.GetComponent<currency>().canPickUp && velocity <= maxPickUpSpeed)
         {
-            CH.PickUp(other.transform, transform);
+            if (!bill.Contains(other.transform))
+            {
+                bill.Add(other.transform);
+            }
         }
         else if (other.tag == "ColumnSection")
         {
@@ -54,11 +83,24 @@ public class TheMarker : MonoBehaviour {
             other.GetComponent<ColumnSection>().Highlight(true);
         }
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Currency" && other.GetComponent<currency>().canPickUp && velocity <= maxPickUpSpeed)
+        {
+            if (!bill.Contains(other.transform))
+            {
+                bill.Add(other.transform);
+            }
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "ColumnSection")
+        if (other.tag == "Currency")
         {
-            other.GetComponent<ColumnSection>().PlaceMoney();
+            bill.Remove(other.transform);
+        }
+            if (other.tag == "ColumnSection")
+        {
             other.GetComponent<ColumnSection>().Highlight(false);
         }
     }

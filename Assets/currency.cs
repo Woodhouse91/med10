@@ -11,7 +11,13 @@ public class currency : MonoBehaviour {
     public bool hasOwner = false;
     public Transform myListObj;
     public Transform tar;
-
+    public bool canPickUp
+    {
+        get
+        {
+            return tar == null;
+        }
+    }
 
     // Use this for initialization
     void Start () {
