@@ -80,7 +80,7 @@ public class TheMarker : MonoBehaviour {
         else if (other.tag == "ColumnSection")
         {
             TargetColumn = other.transform;
-            other.GetComponent<ColumnSection>().Highlight(true);
+
         }
     }
     private void OnTriggerStay(Collider other)
@@ -101,7 +101,7 @@ public class TheMarker : MonoBehaviour {
         }
             if (other.tag == "ColumnSection")
         {
-            other.GetComponent<ColumnSection>().Highlight(false);
+
         }
     }
 

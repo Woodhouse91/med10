@@ -24,20 +24,5 @@ public class ColumnSection : MonoBehaviour {
 
     }
 	
-	// Update is called once per frame
-    public void Highlight(bool on)
-    {
-        HighLight.gameObject.SetActive(on);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Marker")
-            Highlight(true);
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.tag == "Marker")
-            Highlight(false);
-    }
 
 }
