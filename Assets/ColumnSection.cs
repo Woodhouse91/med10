@@ -41,33 +41,4 @@ public class ColumnSection : MonoBehaviour {
 	void Update () {
        
     }
-    public void PlaceMoney()
-    {
-        float SectionValue= 0;
-        //if(TOO MANY MONEYS)
-        float moneyOffsetPlacement = 0.03f;
-        for (int k = 0; k < 11; ++k) // 0-4 BILLS  // 5-10 Coins
-        {
-            for (int i = 0; i < ListCurrency[k].Count; i++)
-            {
-                SectionValue += ListCurrency[k][i].GetComponent<currency>().CurrencyValue;
-                StartCoroutine(PlaceMoneyInSpace(k, i, MoneySpace.position + -MoneySpace.transform.up * moneyOffsetPlacement));
-                moneyOffsetPlacement += 0.025f;
-            }
-        }
-    }
-    IEnumerator PlaceMoneyInSpace(int k, int i, Vector3 pos)
-    {
-        float t = 0;
-        Transform id = ListCurrency[k][i];
-        while (t<1)
-        {
-            id.position = Vector3.Lerp(id.position, pos, t);
-            id.LookAt(id.transform.position + transform.forward);
-            id.Rotate(Vector3.right * -5f);
-            t += Time.deltaTime;
-            yield return null;
-        }
-        yield return null;
-    }
 }

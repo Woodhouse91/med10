@@ -9,6 +9,7 @@ public class currency : MonoBehaviour {
     public float CurrencyValue;
     public bool Placed = false;
     public bool hasOwner = false;
+    CurrencyHandler ch;
     public Transform myListObj;
     public Transform tar;
     public bool canPickUp
@@ -20,12 +21,11 @@ public class currency : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         rig = GetComponent<Rigidbody>();
-        CurrencyHandler ch = FindObjectOfType<CurrencyHandler>();
-        ch.AddCurrency(GameObject.FindGameObjectWithTag("ColumnSection").transform, transform);
+        ch = FindObjectOfType<CurrencyHandler>();
     }
-	
 	// Update is called once per frame
 	void Update () {
 		if(!Placed && transform.parent != null)
@@ -36,7 +36,9 @@ public class currency : MonoBehaviour {
             {
             }
         }
-	}
+        if(Input.GetKeyDown(KeyCode.Y))
+            ch.AddCurrency(GameObject.FindGameObjectWithTag("ColumnSection").transform, transform);
+    }
     private void FixedUpdate()
     {
         if (!InheritVelocity)
