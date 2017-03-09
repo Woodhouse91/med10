@@ -3,48 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class currency : MonoBehaviour {
-    public bool InheritVelocity = false;
-    float followSpeed = 1f;
-    Rigidbody rig;
     public float CurrencyValue;
-    public bool Placed = false;
-    public bool hasOwner = false;
-    CurrencyHandler ch;
+    private CurrencyHandler ch;
+    [SerializeField]
+    private Material org, org_b, marked, marked_b;
+    [HideInInspector]
     public Transform myListObj;
-    public Transform tar;
-    public bool canPickUp
+    MeshRenderer f, b;
+    public bool isMarked
     {
         get
         {
-            return tar == null;
+            return _marked;
         }
     }
-
+    private bool _marked;
     // Use this for initialization
     void Start()
     {
-        rig = GetComponent<Rigidbody>();
+        f = GetComponent<MeshRenderer>();
+        b = transform.GetChild(0).GetComponent<MeshRenderer>();
         ch = FindObjectOfType<CurrencyHandler>();
+
     }
 	// Update is called once per frame
 	void Update () {
-		if(!Placed && transform.parent != null)
-        {
-            if(tar!=null)
-                transform.position = Vector3.Slerp(transform.position, tar.position - Vector3.forward * 0.01f, followSpeed * Time.deltaTime);
-            else if(transform.parent.tag == "ColumnSection")
-            {
-            }
-        }
         if(Input.GetKeyDown(KeyCode.Y))
             ch.AddCurrency(GameObject.FindGameObjectWithTag("ColumnSection").transform, transform);
     }
-    private void FixedUpdate()
-    {
-        if (!InheritVelocity)
-            rig.velocity = Vector3.zero;
-    }
     
-
+    public void MarkBill(bool mark)
+    {
+        _marked = mark;
+        f.material = mark ? marked : org;
+        b.material = mark ? marked_b : org_b;
+    }
 
 }

@@ -4,74 +4,86 @@ using UnityEngine;
 
 public class TheNewMarker : MonoBehaviour {
 
-    List<Transform>[] listCurrency = new List<Transform>[11];
-    private void OnApplicationQuit()
-    {
-        for (int i = 0; i < listCurrency.Length; i++)
-        {
-            listCurrency[i].Clear();
-        }
-    }
-    // Use this for initialization
-    private void OnEnable()
-    {
-        for (int i = 0; i < listCurrency.Length; i++)
-        {
-            listCurrency[i] = new List<Transform>();
-        }
+    private Transform TargetColumn, prevMarked, curTar, prevTar;
+    private CurrencyHandler CH;
+    private Ray ray;
+    private RaycastHit hit;
+    private int dropLayer, currencyLayer, columnLayer;
+    private bool dropCur, firstFrame = true, oppositeDrag;
+    private Vector3 prevPos, dragDir, orgDir, orgDrop, curDir, prevDir;
+    private float dropAmount;
 
+    private void Awake()
+    {
+        columnLayer = 1 << LayerMask.NameToLayer("Column");
+        currencyLayer = 1 << LayerMask.NameToLayer("Currency");
+        dropLayer = 1 << LayerMask.NameToLayer("DropSection");
+        CH = FindObjectOfType<CurrencyHandler>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void FixedUpdate()
     {
-        if (other.tag == "Currency")
+        ray.origin = transform.position - transform.forward * 0.5f;
+        ray.direction = transform.forward;
+        dragDir = transform.position - prevPos;
+        if (Physics.Raycast(ray, out hit, 1, columnLayer))
+            TargetColumn = hit.transform;
+
+        if (Physics.Raycast(ray, out hit, 1, currencyLayer))
         {
-            if (other.GetComponent<currency>().hasOwner)
-                return;
-            other.GetComponent<currency>().hasOwner = true;
-            other.transform.SetParent(transform);
-            int curVal = 0;
-            switch ((int)other.GetComponent<currency>().CurrencyValue)
+            prevTar = curTar;
+            curTar = hit.transform;
+            prevDir = curDir.normalized;
+            curDir = dragDir.normalized;
+            if(Vector3.Dot(orgDir, curDir) < -.5f || !oppositeDrag)
             {
-                case 1000:
-                    curVal = 0;
-                    break;
-                case 500:
-                    curVal = 1;
-                    break;
-                case 200:
-                    curVal = 2;
-                    break;
-                case 100:
-                    curVal = 3;
-                    break;
-                case 50:
-                    curVal = 4;
-                    break;
-                case 20:
-                    curVal = 5;
-                    break;
-                case 10:
-                    curVal = 6;
-                    break;
-                case 5:
-                    curVal = 7;
-                    break;
-                case 2:
-                    curVal = 8;
-                    break;
-                case 1:
-                    curVal = 9;
-                    break;
-                case 0:
-                    curVal = 10;
-                    break;
+                if (prevTar.GetComponent<currency>().isMarked)
+                    CH.MarkCurrency(prevTar, transform);
             }
-            listCurrency[curVal].Add(other.transform);
+            else if (prevTar != curTar)
+            {
+                CH.MarkCurrency(curTar, transform);
+                orgDir = dragDir.normalized;
+            }
         }
-    }
-    private void OnTriggerExit(Collider other)
-    {
 
+        if (Physics.Raycast(ray, out hit, 1, dropLayer))
+        {
+            if (!dropCur)
+            {
+                orgDrop = hit.point;
+                dropCur = true;
+            }
+            else
+                dropAmount = orgDrop.y - hit.point.y;
+        }
+        else
+        {
+            dropCur = false;
+        }
+        prevPos = transform.position;
+        firstFrame = false;
     }
+    public void MyDisable()
+    {
+        firstFrame = true;
+        if (TargetColumn == null)
+        {
+            gameObject.SetActive(false);
+            return; // HER SKAL DEN I MONEYBALL
+        }
+        CH.TransferCurrency(TargetColumn, transform);
+        gameObject.SetActive(false);
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        // keyboard controls
+        transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 0.15f);
+        transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            MyDisable();
+    }
+
 }
