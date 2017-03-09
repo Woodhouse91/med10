@@ -25,18 +25,28 @@ Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\OSC
 Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\OSCsharp.dll into Unity Child Domain
 Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\TUIOsharp.dll (this message is harmless)
 Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\TUIOsharp.dll into Unity Child Domain
-- Completed reload, in  0.380 seconds
+Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\ProBuilderCore-Unity5.dll (this message is harmless)
+Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\ProBuilderCore-Unity5.dll into Unity Child Domain
+Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\pb_Stl.dll (this message is harmless)
+Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\pb_Stl.dll into Unity Child Domain
+Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\KDTree.dll (this message is harmless)
+Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\KDTree.dll into Unity Child Domain
+Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\ProBuilderMeshOps-Unity5.dll (this message is harmless)
+Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\ProBuilderMeshOps-Unity5.dll into Unity Child Domain
+Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\Triangle.dll (this message is harmless)
+Loading C:\Users\Future Finance\Documents\med10\test_Data\Managed\Triangle.dll into Unity Child Domain
+- Completed reload, in  0.500 seconds
 Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Future Finance\Documents\med10\test_Data\Managed\System.dll (this message is harmless)
 <RI> Initializing input.
 <RI> Input initialized.
-desktop: 1920x1080 60Hz; virtual: 3000x1920 at -1080,-491
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initialized touch support.
 OpenVR initialized!
  
 (Filename:  Line: 381)
 
-UnloadTime: 3.637990 ms
+UnloadTime: 0.582229 ms
 Connected to lighthouse:LHR-2A38A370
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -61,78 +71,8 @@ WwiseUnity: Could not locate the SoundBanks. Did you make sure to copy them to t
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at CurrencyHolder.OnDisable () [0x00000] in <filename unknown>:0 
-UnityEngine.GameObject:SetActive(Boolean)
-TouchObjHandler:Start()
- 
-(Filename:  Line: -1)
-
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 1d70 -> priority: 1 
+  Thread -> id: 1770 -> priority: 1 
 OpenVR Shutdown
  
 (Filename:  Line: 815)

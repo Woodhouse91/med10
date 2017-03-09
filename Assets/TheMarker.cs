@@ -29,6 +29,7 @@ public class TheMarker : MonoBehaviour {
     }
     public void MyDisable()
     {
+        bill.Clear();
         detectTimer = 0;
         if (TargetColumn == null)
         {
@@ -63,36 +64,13 @@ public class TheMarker : MonoBehaviour {
         {
             return ((a.position-transform.position).magnitude.CompareTo((b.position-transform.position).magnitude));
         });
-        CH.PickUp(bill[0], transform);
+        CH.MarkCurrency(bill[0], transform);
         bill.Remove(bill[0]);
         detectTimer = 0;
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Currency" && other.GetComponent<currency>().canPickUp && velocity <= maxPickUpSpeed)
-        {
-            if (!bill.Contains(other.transform))
-            {
-                bill.Add(other.transform);
-            }
-        }
-        else if (other.tag == "ColumnSection")
-        {
-            TargetColumn = other.transform;
-            other.GetComponent<ColumnSection>().Highlight(true);
-        }
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "Currency" && other.GetComponent<currency>().canPickUp && velocity <= maxPickUpSpeed)
-        {
-            if (!bill.Contains(other.transform))
-            {
-                bill.Add(other.transform);
-            }
-        }
-    }
+
+
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Currency")

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class CurrencyHandler : MonoBehaviour {
-    private Transform prevColumn;
     public delegate void CurrencyEvent();
     public event CurrencyEvent OnCurrencyChange;
     private Transform moneyBall;
@@ -11,6 +10,7 @@ public class CurrencyHandler : MonoBehaviour {
     {
         for(int k = 0; k<from.GetComponent<CurrencyHolder>().myCurrency.Count; ++k)
         {
+            from.GetComponent<CurrencyHolder>().myCurrency[k].GetComponent<currency>().MarkBill(false);
             if(from.GetComponent<CurrencyHolder>().myCurrency[k].GetComponent<currency>().myListObj == to)
             {
                 to = moneyBall;
@@ -19,22 +19,25 @@ public class CurrencyHandler : MonoBehaviour {
         }
         for(int x = 0; x<from.GetComponent<CurrencyHolder>().myCurrency.Count; ++x)
         {
-            from.GetComponent<CurrencyHolder>().myCurrency[x].GetComponent<currency>().tar = null;
             from.GetComponent<CurrencyHolder>().myCurrency[x].GetComponent<currency>().myListObj = to;
             to.GetComponent<CurrencyHolder>().myCurrency.Add(from.GetComponent<CurrencyHolder>().myCurrency[x]);
         }
         from.GetComponent<CurrencyHolder>().myCurrency.Clear();
         CurrencyChange();
     }
-    public void PickUp(Transform obj, Transform to)
+    public void MarkCurrency(Transform obj, Transform marker)
     {
-        if(obj.GetComponent<currency>().tar == null)
+        if(marker.GetComponent<CurrencyHolder>().myCurrency.Contains(obj))
         {
-            Transform from = obj.GetComponent<currency>().myListObj;
-            from.GetComponent<CurrencyHolder>().myCurrency.Remove(obj);
-            to.GetComponent<CurrencyHolder>().myCurrency.Add(obj);
-            obj.GetComponent<currency>().tar = to;
-            obj.GetComponent<currency>().myListObj = to;
+            obj.GetComponent<currency>().myListObj.GetComponent<CurrencyHolder>().myCurrency.Add(obj);
+            marker.GetComponent<CurrencyHolder>().myCurrency.Remove(obj);
+            obj.GetComponent<currency>().MarkBill(false);
+        }
+        else
+        {
+            obj.GetComponent<currency>().myListObj.GetComponent<CurrencyHolder>().myCurrency.Remove(obj);
+            marker.GetComponent<CurrencyHolder>().myCurrency.Add(obj);
+            obj.GetComponent<currency>().MarkBill(true);
         }
     }
     public void AddCurrency(Transform to, Transform obj)
@@ -44,6 +47,10 @@ public class CurrencyHandler : MonoBehaviour {
         to.GetComponent<CurrencyHolder>().myCurrency.Add(obj);
         obj.GetComponent<currency>().myListObj = to;
         CurrencyChange();
+    }
+    public void PickUpCurrency(Transform picker)
+    {
+
     }
     public void CurrencyChange()
     {
