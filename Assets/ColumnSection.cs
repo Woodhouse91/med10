@@ -7,19 +7,10 @@ public class ColumnSection : MonoBehaviour {
     Transform HighLight;
     public Transform MoneySpace;
     TextMesh Name;
-    public List<Transform>[] ListCurrency = new List<Transform>[11];
-
     // Use this for initialization
-    private void OnApplicationQuit()
-    {
-        for (int i = 0; i < ListCurrency.Length; i++)
-        {
-            ListCurrency[i].Clear();
-        }
-    }
+  
     void OnEnable() {
-        for (int i = 0; i < ListCurrency.Length; i++)
-            ListCurrency[i] = new List<Transform>();
+      
        // if (Name == null)
        //     Name = transform.FindChild("SectionName").GetComponent<TextMesh>();
         if(HighLight == null)
@@ -33,12 +24,5 @@ public class ColumnSection : MonoBehaviour {
 
     }
 	
-	// Update is called once per frame
-    public void Highlight(bool on)
-    {
-        HighLight.gameObject.SetActive(on);
-    }
-	void Update () {
-       
-    }
+
 }
