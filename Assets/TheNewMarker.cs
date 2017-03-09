@@ -29,24 +29,73 @@ public class TheNewMarker : MonoBehaviour {
         if (Physics.Raycast(ray, out hit, 1, columnLayer))
             TargetColumn = hit.transform;
 
+        //#region Safety Raycast
+        //if(Physics.Raycast(transform.position-dragDir*(dragDir.magnitude/2.0f), transform.forward, out hit, 1, currencyLayer))
+        //{
+        //    prevTar = curTar;
+        //    curTar = hit.transform;
+        //    prevDir = curDir.normalized;
+        //    curDir = dragDir.normalized;
+        //    if (prevTar != curTar)
+        //    {
+        //        if (prevTar != null)
+        //        {
+        //            if (prevTar.GetComponent<currency>().isMarked && curTar.GetComponent<currency>().isMarked)
+        //            {
+        //                CH.MarkCurrency(prevTar, transform);
+        //                oppositeDrag = true;
+        //            }
+        //            else
+        //            {
+        //                oppositeDrag = false;
+        //            }
+        //        }
+        //        if (!oppositeDrag)
+        //            CH.MarkCurrency(curTar, transform);
+        //    }
+        //}
+        //else
+        //{
+        //    if (oppositeDrag && curTar.GetComponent<currency>().isMarked)
+        //        CH.MarkCurrency(curTar, transform);
+        //    oppositeDrag = false;
+        //    curTar = null;
+        //    prevTar = null;
+        //}
+        //#endregion
+
         if (Physics.Raycast(ray, out hit, 1, currencyLayer))
         {
             prevTar = curTar;
             curTar = hit.transform;
             prevDir = curDir.normalized;
             curDir = dragDir.normalized;
-            if(Vector3.Dot(orgDir, curDir) < -.5f || !oppositeDrag)
+            if (prevTar != curTar)
             {
-                if (prevTar.GetComponent<currency>().isMarked)
-                    CH.MarkCurrency(prevTar, transform);
-            }
-            else if (prevTar != curTar)
-            {
-                CH.MarkCurrency(curTar, transform);
-                orgDir = dragDir.normalized;
+                if (prevTar != null)
+                {
+                    if (prevTar.GetComponent<currency>().isMarked && curTar.GetComponent<currency>().isMarked)
+                    {
+                        CH.MarkCurrency(prevTar, transform);
+                        oppositeDrag = true;
+                    }
+                    else
+                    {
+                        oppositeDrag = false;
+                    }
+                }
+                if (!oppositeDrag)
+                    CH.MarkCurrency(curTar, transform);
             }
         }
-
+        else
+        {
+            if (oppositeDrag && curTar.GetComponent<currency>().isMarked)
+                CH.MarkCurrency(curTar, transform);
+            oppositeDrag = false;
+            curTar = null;
+            prevTar = null;
+        }
         if (Physics.Raycast(ray, out hit, 1, dropLayer))
         {
             if (!dropCur)
