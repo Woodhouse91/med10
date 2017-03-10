@@ -4,11 +4,20 @@ using UnityEngine;
 using System.Linq;
 
 public class CurrencyHolder : MonoBehaviour {
+    [HideInInspector]
     public List<Transform> myCurrency;
     [SerializeField]
-    float offset;
-    float _offset;
-    CurrencyHandler ch;
+    private float offset;
+    private float _offset;
+    private CurrencyHandler ch;
+    public int Total
+    {
+        get
+        {
+            return _total;
+        }
+    }
+    private int _total;
     private void Awake()
     {
         ch = FindObjectOfType<CurrencyHandler>();
@@ -20,6 +29,7 @@ public class CurrencyHolder : MonoBehaviour {
 
     public void updateHolding()
     {
+        _total = 0;
         myCurrency.Sort(delegate (Transform a, Transform b)
         {
             return (b.GetComponent<currency>().CurrencyValue.CompareTo(a.GetComponent<currency>().CurrencyValue));
@@ -28,6 +38,7 @@ public class CurrencyHolder : MonoBehaviour {
         for(int x = 0; x<myCurrency.Count; ++x)
         {
             StartCoroutine(PlaceMoneyInSpace(myCurrency[x], transform.GetChild(0).position - transform.up * offset));
+            _total += (int)myCurrency[x].GetComponent<currency>().CurrencyValue;
             offset += _offset;
         }
     }

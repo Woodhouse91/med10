@@ -38,5 +38,4 @@ public class currency : MonoBehaviour {
         f.material = mark ? marked : org;
         b.material = mark ? marked_b : org_b;
     }
-
 }

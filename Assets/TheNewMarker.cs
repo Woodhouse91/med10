@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class TheNewMarker : MonoBehaviour {
 
-    private Transform TargetColumn, prevMarked, curTar, prevTar;
+    private Transform TargetColumn, prevMarked, curTar, prevTar, freeCur;
     private CurrencyHandler CH;
     private Ray ray;
     private RaycastHit hit;
     private int dropLayer, currencyLayer, columnLayer;
-    private bool dropCur, firstFrame = true, oppositeDrag;
-    private Vector3 prevPos, dragDir, orgDir, orgDrop, curDir, prevDir;
+    private bool dropCur, firstFrame = true, oppositeDrag, dropAll;
+    private Vector3 prevPos, dragDir, orgDrop;
     private float dropAmount;
 
     private void Awake()
@@ -68,8 +68,6 @@ public class TheNewMarker : MonoBehaviour {
         {
             prevTar = curTar;
             curTar = hit.transform;
-            prevDir = curDir.normalized;
-            curDir = dragDir.normalized;
             if (prevTar != curTar)
             {
                 if (prevTar != null)
@@ -98,13 +96,22 @@ public class TheNewMarker : MonoBehaviour {
         }
         if (Physics.Raycast(ray, out hit, 1, dropLayer))
         {
-            if (!dropCur)
+            if (!dropCur || Vector3.Distance(hit.point, orgDrop + transform.up) < Vector3.Distance(hit.point, orgDrop - transform.up))
             {
                 orgDrop = hit.point;
                 dropCur = true;
+                if (firstFrame)
+                    dropAll = true;
+               // print("NEW POINT");
             }
             else
-                dropAmount = orgDrop.y - hit.point.y;
+            {
+                Vector3 hyp = hit.point - orgDrop;
+                float angle = Vector3.Angle(hyp, transform.right);
+                angle = angle > 90f ? 180f - angle : angle;
+                float theta = Mathf.Sin(angle*Mathf.Deg2Rad) * Mathf.Rad2Deg;
+                dropAmount = theta * hyp.magnitude;
+            }
         }
         else
         {
@@ -116,10 +123,9 @@ public class TheNewMarker : MonoBehaviour {
     public void MyDisable()
     {
         firstFrame = true;
-        if (TargetColumn == null)
+        if (dropAll)
         {
-            gameObject.SetActive(false);
-            return; // HER SKAL DEN I MONEYBALL
+            CH.TransferCurrency(TargetColumn, freeCur);
         }
         CH.TransferCurrency(TargetColumn, transform);
         gameObject.SetActive(false);
