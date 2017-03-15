@@ -109,25 +109,6 @@ public class ExcelReader : MonoBehaviour
         }
         dat.setExpenseArray(i - categoryRowStart);
         catCount = i - categoryRowStart;
-        //categoryRowEnd = i;
-        //int k = 0;
-        //int res;
-        //while (true)
-        //{
-        //    try
-        //    {
-        //        if (int.TryParse(sheet.GetRow(i).GetCell(categoryCell + k).ToString(), out res))
-        //        {
-        //            valueStart = categoryCell + k;
-        //            break;
-        //        }
-        //    }
-        //    catch
-        //    {
-        //    }
-        //        ++k;
-
-        //}
         valueStart = monthCell;
         categoryFound = true;
         StartCoroutine(findExpenseData());

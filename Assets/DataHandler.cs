@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DataHandler : MonoBehaviour {
-    public int[,] expenseData
+    [SerializeField]
+    private bool _ExposeData = false;
+    public static int[,] expenseData
     {
         get
         {
             return _expenseData;
         }
     }
-    private int[,] _expenseData;
-    public int[] incomeData
+    private static int[,] _expenseData;
+    public static int[] incomeData
     {
         get
         {
@@ -30,12 +32,14 @@ public class DataHandler : MonoBehaviour {
         }
         set
         {
-            ExposeData();
+            if(_ExposeData)
+                ExposeData(); //Print data to console
+            //passData();
             _dataCompleted = value;
         }
     }
     private bool _dataCompleted = false;
-    private int[] _incomeData;
+    private static int[] _incomeData;
     private enum Months { January, February, March, April, May, June, July, August, September, October, November, December};
     private Months month;
     private enum Categories {Rent, Ensurance, Savings};
@@ -43,6 +47,13 @@ public class DataHandler : MonoBehaviour {
     private int budgetStartMonth;
     List<string> BudgetCategories;
     private int catCounter = 0;
+    private AddMoneyToTable am;
+
+    private void passData()
+    {
+        am = FindObjectOfType<AddMoneyToTable>();
+        am.spawnAllTheMoney(expenseData);
+    }
     private void ExposeData()
     {
         print("Expense data:");

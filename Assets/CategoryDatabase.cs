@@ -6,7 +6,6 @@ using System;
 public class CategoryDatabase : MonoBehaviour {
     Dictionary<string, int> lookupDB;
     List<string[]> genericLookup;
-
 	// Use this for initialization
 	void Start () {
     }
