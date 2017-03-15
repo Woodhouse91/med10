@@ -29,17 +29,12 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
             touch[x].GO.SetActive(false); 
             touch[x].id = -10;
         }
-
-    }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.Escape))
-            Application.Quit();
+        Subscribe();
     }
 
 
-    private void OnEnable()
+
+    private void Subscribe()
     {
         if (TouchManager.Instance != null)
         {
