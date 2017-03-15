@@ -9,6 +9,7 @@ public class AddMoneyToTable : MonoBehaviour {
     public Vector3 centerpoint;
     public GameObject Thousand, FiveHundred, TwoHundred, OneHundred, Fifty;
     public GameObject Twenty, Ten, Five, Two, One;
+    List<GameObject>[,] eachCellGO;
 	// Use this for initialization
 	void Start () {
         spawnArea = transform.GetChild(0);
@@ -33,9 +34,10 @@ public class AddMoneyToTable : MonoBehaviour {
     {
         int x = arr.GetLength(0);
         int y = arr.GetLength(1);
-        for (int i = 0; i < x; i++)
+        eachCellGO = new List<GameObject>[x, y];
+        for (int i = 0; i < y; i++)
         {
-            for (int k = 0; k < y; k++)
+            for (int k = 1; k < x-1; k++)
             {
                 if(arr[i, k] > 0)
                     spawnMoney(arr[i, k]);
