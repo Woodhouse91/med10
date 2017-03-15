@@ -5,11 +5,10 @@ using UnityEngine;
 public class AddMoneyToTable : MonoBehaviour {
 
     Transform spawnArea;
-    public float Ax, Ay, Az;
-    public Vector3 centerpoint;
+    float Ax, Ay, Az;
+    Vector3 centerpoint;
     public GameObject Thousand, FiveHundred, TwoHundred, OneHundred, Fifty;
     public GameObject Twenty, Ten, Five, Two, One;
-    List<GameObject>[,] eachCellGO;
 	// Use this for initialization
 	void Start () {
         spawnArea = transform.GetChild(0);
@@ -18,10 +17,10 @@ public class AddMoneyToTable : MonoBehaviour {
         Az = spawnArea.lossyScale.z;
         centerpoint = spawnArea.localPosition;
         int[,] myArray = {
-                  {3300, 2250, 10000},
-                  {50, 50, 50},
-                  {100, 100, 100},
-                  {30, 31, 32},
+                  {12341, 1234,43123},
+                  {4989, 4789, 4489},
+                  {128794, 1701, 44489},
+                  {37898, 3789, 3889},
               };
         spawnAllTheMoney(myArray);
     }
@@ -32,15 +31,20 @@ public class AddMoneyToTable : MonoBehaviour {
 	}
     public void spawnAllTheMoney(int[,] arr)
     {
+
         int x = arr.GetLength(0);
         int y = arr.GetLength(1);
-        eachCellGO = new List<GameObject>[x, y];
+       
         for (int i = 0; i < y; i++)
         {
-            for (int k = 1; k < x-1; k++)
+            for (int k = 0; k < x-1; k++)
             {
-                if(arr[i, k] > 0)
-                    spawnMoney(arr[i, k]);
+                if(i == 0)
+                {
+                    // i GET ALL THE CATEGORIES
+                }
+                else if(arr[k, i] > 0)
+                    spawnMoney(arr[k, i]);
 
             }
         }
@@ -72,14 +76,11 @@ public class AddMoneyToTable : MonoBehaviour {
     {
         for (int i = 0; i < m / bill; i++)
         {
-            insideArea(go);
+            Vector3 pos = new Vector3(Random.Range(-Ax / 2f, Ax / 2f), Random.Range(-Ay / 2f, Ay / 2f), Random.Range(-Az / 2f, Az / 2f)) + centerpoint;
+            pos = transform.TransformPoint(pos);
+            Instantiate(go, pos, Quaternion.AngleAxis(Random.Range(0, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up)* Quaternion.AngleAxis(Random.Range(0, 360), Vector3.forward));
         }
     }
 
-    void insideArea(GameObject money)
-    {
-        Vector3 pos = new Vector3(Random.Range(-Ax / 2f, Ax / 2f), Random.Range(-Ay / 2f, Ay / 2f), Random.Range(-Az / 2f, Az / 2f)) + centerpoint;
-        pos = transform.TransformPoint(pos);
-        Instantiate(money, pos, Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up)* Quaternion.AngleAxis(Random.Range(0, 360), Vector3.forward));
-    }
+    
 }
