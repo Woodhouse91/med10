@@ -12,6 +12,6 @@ public class layoutTryoutTest : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Space))
-            transform.position += Vector3.up * 0.712f ;
+            transform.position += Vector3.up * 0.712f;
 	}
 }
