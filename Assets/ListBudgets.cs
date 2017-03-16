@@ -9,7 +9,7 @@ public class ListBudgets : MonoBehaviour {
     [SerializeField]
     private GameObject overlay, eventSystem;
     // Use this for initialization
-    void Start()
+    public void GenerateBudgetList()
     {
         but = Resources.Load<Transform>("budgetListButton");
         string path = Application.dataPath + "/Excel Budget/";

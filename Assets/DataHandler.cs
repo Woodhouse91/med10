@@ -117,24 +117,24 @@ public class DataHandler : MonoBehaviour {
     {
         incomeData = new int[13];
         incomeData = val;
-        for(int x = 0; x<incomeData.Length-1; ++x)
-        {
-            incomeData[12] += incomeData[x];
-        }
+        //for(int x = 0; x<incomeData.Length-1; ++x)
+        //{
+        //    incomeData[12] += incomeData[x];
+        //}
     }
     public void setExpenseData(int[] val)
     {
         bool skipCategory = true;
         _expenseData[0, catCounter] = val[0];
-        int sum = 0;
-        for(int x = 1; x<val.Length-1; ++x)
+       // int sum = 0;
+        for(int x = 1; x<val.Length; ++x)
         {
             if (val[x] != 0)
                 skipCategory = false;
             _expenseData[x, catCounter] = val[x];
-            sum += val[x];
+         //   sum += val[x];
         }
-        _expenseData[13, catCounter] = sum;
+        //_expenseData[13, catCounter] = sum;
         if (!skipCategory)
             ++catCounter;
         else if(catCounter<BudgetCategories.Count)

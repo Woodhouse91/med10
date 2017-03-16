@@ -24,7 +24,6 @@ public class ExcelReader : MonoBehaviour
     private int categoryRowEnd, catCount, valueStart, categoryRowStart, valueDataEnd, incomeRow;
     CategoryDatabase CDb;
     int[] transferValue, incomeValue;
-    public bool genericsFound = false, IDfound = false, expenseFound = false, categoryFound = false;
     private void Start()
     {
         CDb = FindObjectOfType<CategoryDatabase>();
@@ -72,7 +71,7 @@ public class ExcelReader : MonoBehaviour
             yield return null;
         }
         CDb.genericAddComplete();
-        genericsFound = true;
+        FindObjectOfType<ListBudgets>().GenerateBudgetList();
         yield break;
     }
     private void ExcelQuery()
@@ -92,7 +91,6 @@ public class ExcelReader : MonoBehaviour
         }
         StartCoroutine(findIdentifiers());
     }
-
     private IEnumerator findCategoryCount()
     {
         int i = categoryRowStart;
@@ -103,14 +101,13 @@ public class ExcelReader : MonoBehaviour
                 string s = sheet.GetRow(i).GetCell(categoryCell).ToString();
             }
             catch { break; }
-            dat.AddCategory(sheet.GetRow(i).GetCell(categoryCell).ToString());
+            dat.AddCategory(sheet.GetRow(i).GetCell(categoryCell).StringCellValue);
             i++;
             yield return null;
         }
         dat.setExpenseArray(i - categoryRowStart);
         catCount = i - categoryRowStart;
         valueStart = monthCell;
-        categoryFound = true;
         StartCoroutine(findExpenseData());
         yield break;
     }
@@ -135,12 +132,13 @@ public class ExcelReader : MonoBehaviour
         int i = categoryRowStart;
         int k = valueStart;
         transferValue = new int[14];
-        transferValue[0] = CDb.doGenericLookup(sheet.GetRow(i).GetCell(categoryCell).ToString());
+        transferValue[0] = CDb.doGenericLookup(sheet.GetRow(i).GetCell(categoryCell).StringCellValue);
+        bool breakOnNext = false;
         while (true)
         {
             try
             {
-                transferValue[k - valueStart + 1] = int.Parse(sheet.GetRow(i).GetCell(k).ToString());
+                transferValue[k - valueStart + 1] = (int) sheet.GetRow(i).GetCell(k).NumericCellValue;
             }
             catch
             {
@@ -154,20 +152,18 @@ public class ExcelReader : MonoBehaviour
                 ++i;
                 try
                 {
-                    transferValue[0] = CDb.doGenericLookup(sheet.GetRow(i).GetCell(categoryCell).ToString());
+                    transferValue[0] = CDb.doGenericLookup(sheet.GetRow(i).GetCell(categoryCell).StringCellValue);
                 }
                 catch
                 {
-                    break;
+                    transferValue[0] = -2;
+                    if (breakOnNext)
+                        break;
+                    breakOnNext = true;
                 }
-            }
-            if (i == catCount)
-            {
-                break;
             }
             yield return null;
         }
-        expenseFound = true;
         StartCoroutine(findIncomeData());
         yield break;
     }
@@ -187,7 +183,7 @@ public class ExcelReader : MonoBehaviour
                 }
                 else
                 {
-                    incomeValue[c - valueStart] = int.Parse(sheet.GetRow(incomeRow + r).GetCell(c).ToString());
+                    incomeValue[c - valueStart] = (int)sheet.GetRow(incomeRow + r).GetCell(c).NumericCellValue;
                 }
             }
             catch
@@ -206,7 +202,7 @@ public class ExcelReader : MonoBehaviour
                 break;
             yield return null;
         }
-        dat.setStartMonth(sheet.GetRow(monthRow).GetCell(monthCell).ToString());
+        dat.setStartMonth(sheet.GetRow(monthRow).GetCell(monthCell).StringCellValue);
         dat.setIncomeData(incomeValue);
         dat.dataCompleted = true;
         yield break;
@@ -220,12 +216,12 @@ public class ExcelReader : MonoBehaviour
         {
             try
             {
-                if (sheet.GetRow(r).GetCell(categoryCell).ToString() == incomeIdentifierString)
+                if (sheet.GetRow(r).GetCell(categoryCell).StringCellValue == incomeIdentifierString)
                 {
                     incomeRow = r;
                     foundIncome = true;
                 }
-                else if (sheet.GetRow(r).GetCell(categoryCell).ToString() == expenseIdentifierString)
+                else if (sheet.GetRow(r).GetCell(categoryCell).StringCellValue == expenseIdentifierString)
                 {
                     categoryRowStart = r + rowBuffer;
                     foundExpense = true;
@@ -237,7 +233,6 @@ public class ExcelReader : MonoBehaviour
             ++r;
             yield return null;
         }
-        IDfound = true;
         StartCoroutine(findCategoryCount());
         yield break;
     }
