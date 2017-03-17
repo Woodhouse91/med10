@@ -17,9 +17,12 @@ public class PlaceAllCrates : MonoBehaviour {
         PlaceANewRow();
 
     }
-	
-	// Update is called once per frame
-	void Update () {
+    public Transform GetCrate(int category, int month)
+    {
+        return ListOfCrates[month, category].transform;
+    }
+    // Update is called once per frame
+    void Update () {
 		if(Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(ExpandRow(EXPANDDONGAT, 0.5f));

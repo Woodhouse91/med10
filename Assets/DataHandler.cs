@@ -42,7 +42,7 @@ public class DataHandler : MonoBehaviour {
     {
         public int _1000, _500, _200, _100, _50, _20, _10, _5, _2, _1;
     }
-    public static List<billRef[]> BillsAtMonth_Category;
+    public static List<billRef[]> BillsAtCategory_Month;
     private bool _dataCompleted = false;
     private static int[] _incomeData;
     private enum Months { January, February, March, April, May, June, July, August, September, October, November, December};
@@ -58,7 +58,14 @@ public class DataHandler : MonoBehaviour {
         
     }
     private static int budgetStartMonth;
-    List<string> BudgetCategories;
+    public static List<string> BudgetCategories
+    {
+        get
+        {
+            return _budgetCategories;
+        }
+    }
+    private static List<string> _budgetCategories;
     private int catCounter = 0, totalCategories;
     private AddMoneyToTable am;
     private void passData()
@@ -79,18 +86,18 @@ public class DataHandler : MonoBehaviour {
             print("     " + incomeData[p]);
         print("Month: "+month);
         print("Categories:");
-        for(int l = 0; l<BudgetCategories.Count; ++l)
+        for(int l = 0; l<_budgetCategories.Count; ++l)
         {
-            print("     " + BudgetCategories[l]);
+            print("     " + _budgetCategories[l]);
         }
     }
     private void Start()
     {
-        BudgetCategories = new List<string>();
+        _budgetCategories = new List<string>();
     }
     public void AddCategory(string cat)
     {
-        BudgetCategories.Add(cat);
+        _budgetCategories.Add(cat);
     }
     public void setExpenseArray(int categoryCount)
     {
@@ -150,12 +157,12 @@ public class DataHandler : MonoBehaviour {
         //_expenseData[13, catCounter] = sum;
         if (!skipCategory)
             ++catCounter;
-        else if(catCounter<BudgetCategories.Count)
-            BudgetCategories.Remove(BudgetCategories[catCounter]);
+        else if(catCounter<_budgetCategories.Count)
+            _budgetCategories.Remove(_budgetCategories[catCounter]);
     }
     private void calcRequiredBills()
     {
-        BillsAtMonth_Category = new List<billRef[]>();
+        BillsAtCategory_Month = new List<billRef[]>();
         for(int r = 0; r<expenseData.GetLength(1)-1; ++r)
         {
             billRef[] res = new billRef[12];
@@ -182,7 +189,7 @@ public class DataHandler : MonoBehaviour {
                 val %= 2;
                 res[c - 1]._1 = val;
             }
-            BillsAtMonth_Category.Add(res);
+            BillsAtCategory_Month.Add(res);
         }
     }
 
