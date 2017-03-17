@@ -63,6 +63,7 @@ public class MoneyIntroHandler : MonoBehaviour {
         int sum1000 = 0, sum500 = 0, sum200 = 0, sum100 = 0, sum50 = 0, sum20 = 0, sum10 = 0, sum5 = 0, sum2 = 0, sum1 = 0;
         currencyFound = new List<List<GameObject>>();
         res = DataHandler.BillsAtCategory_Month[category];
+        int tSum;
         for(int x = 0; x<res.Length; ++x)
         {
             sum1000 += res[x]._1000;
@@ -75,6 +76,10 @@ public class MoneyIntroHandler : MonoBehaviour {
             sum5 += res[x]._5;
             sum2 += res[x]._2;
             sum1 += res[x]._1;
+            if(res[x]._1000 + res[x]._500 + res[x]._200 + res[x]._100 + res[x]._50 + res[x]._20 + res[x]._10 + res[x]._5 + res[x]._2 + res[x]._1 == 0)
+            {
+                pac.FlipCrate(category, x);
+            }
         }
         if(sum1000+sum500+sum200+sum100+sum50+sum20+sum10+sum5+sum2+sum1 == 0)
         {
