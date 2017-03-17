@@ -42,10 +42,7 @@ public class PlaceAllCrates : MonoBehaviour {
 
         yield return null;
     }
-    public Transform GetCrate(int category, int month)
-    {
-        return ListOfCrates[month, category].transform;
-    }
+  
     public void raiseAllCrate()
     {
         for (int i = 1; i <13; i++)
