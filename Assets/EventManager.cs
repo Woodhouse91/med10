@@ -4,30 +4,26 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour {
     public delegate void UIAction(GameObject go);
-    public event UIAction OnUIActionClick;
-    public event UIAction OnUIActionDoubleClick;
-    public event UIAction OnUIActionHoverBegin;
-    public event UIAction OnUIActionHoverEnd;
-    public event UIAction OnUIActionSelect;
-    public event UIAction OnUIActionDeselect;
-    public event UIAction OnUIActionPress;
-    public event UIAction OnUIActionRelease;
-    public event UIAction OnUIActionDragBegin;
-    public event UIAction OnUIActionDragEnd;
+    public static event UIAction OnUIActionClick;
+    public static event UIAction OnUIActionDoubleClick;
+    public static event UIAction OnUIActionHoverBegin;
+    public static event UIAction OnUIActionHoverEnd;
+    public static event UIAction OnUIActionSelect;
+    public static event UIAction OnUIActionDeselect;
+    public static event UIAction OnUIActionPress;
+    public static event UIAction OnUIActionRelease;
+    public static event UIAction OnUIActionDragBegin;
+    public static event UIAction OnUIActionDragEnd;
 
-    public delegate void UIElementAction(GameObject go);
-    public event UIElementAction OnUIElementAdd;
-    public event UIElementAction OnUIElementRemove;
-    public event UIElementAction OnUIElementSplit;
+    public delegate void UIElementAction();
+    public static event UIElementAction OnUIElementAdd;
+    public static event UIElementAction OnUIElementRemove;
+    public static event UIElementAction OnUIElementSplit;
+    public static event UIElementAction OnUIPlaced;
 
-    //NOT DONE
-
-
-    void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+    public static void UIPlaced()
+    {
+        if (OnUIPlaced != null)
+            OnUIPlaced();
+    }
 }
