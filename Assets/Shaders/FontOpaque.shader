@@ -12,7 +12,7 @@ Shader "GUI/Opaque Text Shader" {
 			"RenderType"="Transparent"
 			"PreviewType"="Plane"
 		}
-		Lighting Off Cull Off ZTest Always ZWrite Off
+		Lighting Off Cull Back ZTest Always ZWrite Off
 		Blend SrcAlpha OneMinusSrcAlpha
 
 		Pass {
