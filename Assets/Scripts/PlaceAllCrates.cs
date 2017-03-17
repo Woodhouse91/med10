@@ -10,11 +10,14 @@ public class PlaceAllCrates : MonoBehaviour {
     public int EXPANDDONGAT;
     public float AngleRotate;
     public GameObject Crate;
-	// Use this for initialization
-	void Start () {
+
+    
+
+    // Use this for initialization
+    void Start () {
         ListOfCrates = new GameObject[14,SizeOfBudget];
         PlaceThemAll(SizeOfBudget);
-        PlaceANewRow();
+        PlaceAllRows();
 
     }
 	
@@ -23,8 +26,34 @@ public class PlaceAllCrates : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.E))
         {
             StartCoroutine(ExpandRow(EXPANDDONGAT, 0.5f));
+            raiseAllCrate();
         }
 	}
+    public void FlipCrate(int category, int month)
+    {
+        StartCoroutine(FlipCrateAni( ListOfCrates[month, category]));
+    }
+    IEnumerator FlipCrateAni(GameObject crate) // MANGLER ANIMATION
+    {
+        crate.transform.rotation = Quaternion.AngleAxis(180, crate.transform.up);
+
+        yield return null;
+    }
+    public Transform GetCrate(int category, int month)
+    {
+        return ListOfCrates[month, category].transform;
+    }
+    public void raiseAllCrate()
+    {
+        for (int i = 1; i <13; i++)
+        {
+            for (int k = 0; k < SizeOfBudget; k++)
+            {
+                StartCoroutine(MoveWithRow(ListOfCrates[i, k].transform.position, ListOfCrates[i, k].transform.position + ListOfCrates[i, k].transform.up * SizeOfCrate.y, ListOfCrates[i, k].transform));
+            }
+        }
+    }
+
     IEnumerator ExpandRow(int rowNumber, float percent)
     {
         for (int i = 1; i < 13; i++) // only going through crates
@@ -100,7 +129,7 @@ public class PlaceAllCrates : MonoBehaviour {
             PlaceThemRepeat(x - 1, crate.transform.position, crate.transform.rotation, clockwise);
         }
     }
-    public void PlaceANewRow() //place the rest of all the rows needed
+    public void PlaceAllRows() //place the rest of all the rows needed
     {
         for (int i = 1; i < 13 ; i++) //runs through all the crates
         {
