@@ -9,15 +9,17 @@ public class AddMoneyToTable : MonoBehaviour {
     Vector3 centerpoint;
     public GameObject Thousand, FiveHundred, TwoHundred, OneHundred, Fifty;
     public GameObject Twenty, Ten, Five, Two, One;
-    public bool spawnNextNow = true;
-	// Use this for initialization
-	void Start () {
-        spawnArea = transform.GetChild(0);
+    bool spawnNextNow = true;
+    int[,] myArray;
+    // Use this for initialization
+    void Start () {
+        spawnArea = transform.GetChild(2); //the lids are 0 and 1
         Ax = spawnArea.lossyScale.x;
         Ay = spawnArea.lossyScale.y;
         Az = spawnArea.lossyScale.z;
         centerpoint = spawnArea.localPosition;
-        int[,] myArray = {
+
+        myArray = new int[,]{
                   {12341, 1234,4123},
                   {4989, 4789, 4489},
                   {1794, 1701, 4489},
@@ -26,27 +28,31 @@ public class AddMoneyToTable : MonoBehaviour {
                   {4989, 4789, 4489},
                   {8794, 1701, 44489},
               };
-        StartCoroutine(spawnAllTheMoney(myArray));
+       // StartCoroutine(spawnAllTheMoney(myArray));
     }
 	
 	// Update is called once per frame
 	void Update () {
         //insideArea(Thousand);
 	}
- 
-    public IEnumerator spawnAllTheMoney(int[,] arr)
+    public void ShowMeTheMoney()
     {
+        StartCoroutine(spawnAllTheMoney(DataHandler.expenseData,DataHandler.incomeData[12]));
+    }
 
+    public IEnumerator spawnAllTheMoney(int[,] arr, int total)
+    {
+        int totalMoney = 0;
         int x = arr.GetLength(0);
         int y = arr.GetLength(1);
        
         for (int i = 0; i < y; i++)
         {
-            for (int k = 0; k < x-1; k++)
+            for (int k = 0; k < x-1; k++) // to skip totals
             {
                 yield return new WaitUntil(() => spawnNextNow == true);
 
-                if (i == 0)
+                if (i == 0) // to skip the categories
                 {
                     // i GET ALL THE CATEGORIES
                 }
@@ -54,10 +60,12 @@ public class AddMoneyToTable : MonoBehaviour {
                 {
                     spawnNextNow = false;
                     spawnMoney(arr[k, i]);
+                    totalMoney += arr[k, i];
                 }
 
             }
         }
+        spawnMoney(total - totalMoney);
       
     }
     void spawnMoney(int money)
@@ -91,7 +99,7 @@ public class AddMoneyToTable : MonoBehaviour {
             yield return new WaitForEndOfFrame();
             Vector3 pos = new Vector3(Random.Range(-Ax / 2f, Ax / 2f), Random.Range(-Ay / 2f, Ay / 2f), Random.Range(-Az / 2f, Az / 2f)) + centerpoint;
             pos = transform.TransformPoint(pos);
-            Instantiate(go, pos, Quaternion.AngleAxis(Random.Range(0, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up)* Quaternion.AngleAxis(Random.Range(0, 360), Vector3.forward));
+            Instantiate(go, pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up)* Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
            
         }
         if (((float)m / bill)%1 == 0)
