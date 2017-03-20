@@ -75,10 +75,12 @@ public class MoneyIntroHandler : MonoBehaviour {
             sum5 += res[x]._5;
             sum2 += res[x]._2;
             sum1 += res[x]._1;
-        }
-        if(sum1000+sum500+sum200+sum100+sum50+sum20+sum10+sum5+sum2+sum1 == 0)
-        {
-            return;
+            if(res[x]._1000 + res[x]._500 + res[x]._200 + res[x]._100 + res[x]._50 + res[x]._20 + res[x]._10 + res[x]._5 + res[x]._2 + res[x]._1 == 0)
+            {
+                pac.FlipCrate(category, x);
+                ++category;
+                return;
+            }
         }
         List<GameObject> _1000 = new List<GameObject>(sum1000), _500 = new List<GameObject>(sum500), _200 = new List<GameObject>(sum200), 
             _100 = new List<GameObject>(sum100), _50 = new List<GameObject>(sum50), _20 = new List<GameObject>(sum20), 
@@ -232,5 +234,6 @@ public class MoneyIntroHandler : MonoBehaviour {
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
         }
+        ++category;
     }
 }

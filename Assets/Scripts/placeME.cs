@@ -98,6 +98,7 @@ public class placeME : MonoBehaviour
         PlayerPrefs.SetFloat("normX", norm.x);
         PlayerPrefs.SetFloat("normY", norm.y);
         vc.Setpos();
+        EventManager.UIPlaced();
     }
     private void OnApplicationQuit()
     {

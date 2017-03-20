@@ -8,7 +8,7 @@ public class TheNewMarker : MonoBehaviour {
     private CurrencyHandler CH;
     private Ray ray;
     private RaycastHit hit;
-    private int dropLayer, currencyLayer, columnLayer, touchScreenLayer;
+    private int dropLayer, currencyLayer, columnLayer, touchScreenLayer, dragLayer;
     private bool dropCur, firstFrame = true, oppositeDrag, dropAll;
     private Vector3 prevPos, dragDir, orgDrop;
     private float dropAmount;
@@ -19,6 +19,7 @@ public class TheNewMarker : MonoBehaviour {
         currencyLayer = 1 << LayerMask.NameToLayer("Currency");
         dropLayer = 1 << LayerMask.NameToLayer("DropSection");
         touchScreenLayer = 1 << LayerMask.NameToLayer("TouchScreen");
+        dragLayer = 1 << LayerMask.NameToLayer("DragLayer");
         CH = FindObjectOfType<CurrencyHandler>();
     }
 
@@ -31,8 +32,12 @@ public class TheNewMarker : MonoBehaviour {
         {
 
         }
+        if (Physics.Raycast(ray, out hit, 1, dragLayer))
+        {
+
+        }
         if (Physics.Raycast(ray, out hit, 1, columnLayer))
-            TargetColumn = hit.transform;
+        TargetColumn = hit.transform;
 
         //#region Safety Raycast
         //if(Physics.Raycast(transform.position-dragDir*(dragDir.magnitude/2.0f), transform.forward, out hit, 1, currencyLayer))
