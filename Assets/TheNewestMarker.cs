@@ -39,7 +39,7 @@ public class TheNewestMarker : MonoBehaviour
     }
     public void releaseSlider()
     {
-
+        draggedTar = null;
     }
     // Update is called once per frame
     void Update()
