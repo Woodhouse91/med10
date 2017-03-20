@@ -67,12 +67,7 @@ public class DataHandler : MonoBehaviour {
     }
     private static List<string> _budgetCategories;
     private int catCounter = 0, totalCategories;
-    private AddMoneyToTable am;
-    private void passData()
-    {
-        am = FindObjectOfType<AddMoneyToTable>();
-        am.spawnAllTheMoney(expenseData);
-    }
+  
     private void ExposeData()
     {
         print("Expense data:");
