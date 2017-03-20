@@ -16,6 +16,7 @@ public class placeME : MonoBehaviour
         transform.LookAt(new Vector3(PlayerPrefs.GetFloat("normX"), PlayerPrefs.GetFloat("normY"), PlayerPrefs.GetFloat("normZ")));
         transform.localScale = new Vector3(ScreenSizeCm.x, ScreenSizeCm.y, 0);
         vc = FindObjectOfType<Virtualscreen>();
+        EventManager.UIPlaced();
         vc.Setpos();
     }
 

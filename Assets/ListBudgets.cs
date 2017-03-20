@@ -24,11 +24,12 @@ public class ListBudgets : MonoBehaviour {
         GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
         GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height + transform.childCount * 108);
     }
-
     private void OnDisable()
     {
-        overlay.SetActive(true);
-        eventSystem.SetActive(false);
+        if(overlay!=null)
+            overlay.SetActive(true);
+        if(eventSystem!=null)
+            eventSystem.SetActive(false);
     }
     private void OnEnable()
     {

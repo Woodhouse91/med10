@@ -19,6 +19,8 @@ public class SlideAbleObject : MonoBehaviour
     private float returnSpeed;
     TheNewestMarker owner;
     private bool returning = false;
+    [SerializeField]
+    private BoxBehaviour bh;
 
     private void Awake()
     {
@@ -76,7 +78,7 @@ public class SlideAbleObject : MonoBehaviour
             else
                 transform.localPosition = moddedPos;
             normDist = 1 - Vector3.Distance(transform.position, target.position) / dist;
-            if (normDist > 0)
+            if (normDist < 0)
                 normDist = 0;
             if (normDist > 0.97f)
             {
@@ -91,11 +93,16 @@ public class SlideAbleObject : MonoBehaviour
                     case DestBehaviour.ReturnToOrigin:
                         StartCoroutine(Return());
                         break;
+                    default:
+                        break;
                 }
             }
         }
         else if(transform.localPosition != orgPos && !returning)
             StartCoroutine(Return());
+        if (bh != null)
+            bh.setTapeRip(normDist);
+
     }
 
     private IEnumerator Return()
