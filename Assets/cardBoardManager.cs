@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class cardBoardManager : MonoBehaviour {
 
-    DataHandler DH;
     List<Transform> CardBoxList;
     Vector3 initialPos, nextRight,nextUp;
     public GameObject CardBoxPrefab;
-    List<Sprite> boxIcons;
     // Use this for initialization
 	void Start () {
-        StartAfterLoad();
+        EventManager.OnExcelDataLoaded += StartAfterLoad;
 	}
 	void StartAfterLoad()
     {
@@ -19,12 +17,6 @@ public class cardBoardManager : MonoBehaviour {
         nextRight = new Vector3(-0.55f, 0, 0); // den næste der skal stå til højre for den forrige kasse
         nextUp = new Vector3(-0.275f, 0.51f, 0f); // når man hopper en tak op til næste række
         CardBoxList = new List<Transform>();
-        boxIcons = new List<Sprite>();
-
-        for (int i = 0; i < Resources.LoadAll("/BoxIcons").Length; i++)
-        {
-            boxIcons.Add((Sprite)Resources.LoadAll("/BoxIcons")[i]);
-        }
         CreateAllBoxes();
     }
 	// Update is called once per frame
@@ -33,8 +25,8 @@ public class cardBoardManager : MonoBehaviour {
 	}
     void CreateAllBoxes()
     {
-        //int budgetCatCount = DataHandler.BudgetCategories.Count;
-        int budgetCatCount = 1; //test
+        int budgetCatCount = DataHandler.BudgetCategories.Count;
+        //int budgetCatCount = 1; //test
         int i = 0;
         while(budgetCatCount > i)
         {
@@ -42,8 +34,8 @@ public class cardBoardManager : MonoBehaviour {
             ++i;
         } // finds the correct number of rows
 
-        //budgetCatCount = DataHandler.BudgetCategories.Count;
-        budgetCatCount = 1; //test
+        budgetCatCount = DataHandler.BudgetCategories.Count;
+        //budgetCatCount = 1; //test
         for (int h = 0; h < i; h++)
         {
             for (int w = 0; w < i - h; w++)
@@ -64,7 +56,7 @@ public class cardBoardManager : MonoBehaviour {
     void PaintBox(GameObject box, int category)
     {
         box.GetComponentInChildren<TextMesh>().text = DataHandler.BudgetCategories[category];
-        box.GetComponentInChildren<SpriteRenderer>().sprite = boxIcons[DataHandler.expenseData[category, 0]];
+        //box.GetComponentInChildren<SpriteRenderer>().sprite = boxIcons[DataHandler.expenseData[category, 0]];
         //box.GetComponent<BoxBehaviour>().setCategory(DataHandler.expenseData[category, 0]);
     }
 }
