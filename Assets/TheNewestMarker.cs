@@ -10,6 +10,7 @@ public class TheNewestMarker : MonoBehaviour
     private int touchScreenLayer, dragLayer;
     private Vector3 prevPos, dragDir, orgDrop, dragOffset;
     private Transform draggedTar;
+    private bool slideReleaseWait = true;
 
 
     private void Awake()
@@ -19,7 +20,7 @@ public class TheNewestMarker : MonoBehaviour
         dragLayer = 1 << LayerMask.NameToLayer("DragLayer");
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         ray.origin = transform.position - transform.forward * 0.5f;
         ray.direction = transform.forward;
@@ -28,27 +29,36 @@ public class TheNewestMarker : MonoBehaviour
         {
 
         }
-        if (Physics.Raycast(ray, out hit, 1, dragLayer))
+        if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
         {
-            if(draggedTar == null)
-            {
-                dragOffset = transform.position - draggedTar.position;
-                draggedTar = hit.transform;
-            }
+            draggedTar = hit.transform;
+            dragOffset = transform.position - draggedTar.position;
+            draggedTar.GetComponent<SlideAbleObject>().TakeControl(this);
+        }
+        transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 0.15f);
+        transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
+        if (draggedTar != null)
+        {
+            draggedTar.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
         }
     }
     public void releaseSlider()
     {
         draggedTar = null;
+        StartCoroutine(slideWait());
     }
-    // Update is called once per frame
-    void Update()
+    IEnumerator slideWait()
     {
-        transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 0.15f);
-        transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
+        slideReleaseWait = false;
+        yield return new WaitForSeconds(1f);
+        slideReleaseWait = true;
+    }
+    private void OnDisable()
+    {
         if (draggedTar != null)
         {
-            draggedTar.transform.position = transform.position - dragOffset;
+            draggedTar.GetComponent<SlideAbleObject>().ReleaseControl();
+            draggedTar = null;
         }
     }
 

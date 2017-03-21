@@ -79,8 +79,8 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
             if (removeItem)
             {
                 touch[k].id = -10;
-                touch[k].GO.GetComponent<TheNewMarker>().MyDisable(); 
                 touch[k].GO.transform.position = Vector3.one * 1000;
+                touch[k].GO.SetActive(false);
             }
         }
     }

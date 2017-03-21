@@ -204,7 +204,7 @@ public class ExcelReader : MonoBehaviour
         }
         dat.setStartMonth(sheet.GetRow(monthRow).GetCell(monthCell).StringCellValue);
         dat.setIncomeData(incomeValue);
-        dat.dataCompleted = true;
+        DataHandler.dataCompleted = true;
         yield break;
     }
     private IEnumerator findIdentifiers()

@@ -30,8 +30,7 @@ public class RipTheTape : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        testT += Time.deltaTime * 1f;
-        SetTapeDist(testT);
+       
 	}
     public void SetTapeDist(float dist)
     {
