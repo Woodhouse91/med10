@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class SlideAbleObject : MonoBehaviour
 {
+    private Vector3 orgPos;
     private enum DirBehaviour { Horizontal, Vertical, TowardsTarget, Free }
     private enum DestBehaviour { Stay, Destroy, ReturnToOrigin }
-    private Vector3 orgPos;
+    private enum ReleaseBehaviour { Stay, Return, CarryMomentum}
     [SerializeField]
-    private DirBehaviour Direction;
+    private ReleaseBehaviour ReleaseSetting;
+    [SerializeField]
+    private DirBehaviour DirectionSetting;
     [SerializeField]
     private DestBehaviour DestinationSetting;
-    private Transform target, slider, area;
+    [HideInInspector]
+    public Transform target, slider, area;
     private float dist, normDist;
     [SerializeField]
     private float returnSpeed;
@@ -42,15 +46,31 @@ public class SlideAbleObject : MonoBehaviour
     public void ReleaseControl()
     {
         owner = null;
-        if (!returning)
+        switch (ReleaseSetting)
         {
-            StartCoroutine(Return());
+            case ReleaseBehaviour.Return:
+                if (!returning)
+                    StartCoroutine(Return());
+                break;
+            case ReleaseBehaviour.Stay:
+                break;
+            case ReleaseBehaviour.CarryMomentum:
+                StartCoroutine(Glide());
+                break;
         }
+        StartCoroutine(Return());
     }
+
+    private IEnumerator Glide()
+    {
+
+        yield break;
+    }
+
     private void SetVariables()
     {
         orgPos = slider.position;
-        switch (Direction)
+        switch (DirectionSetting)
         {
             case DirBehaviour.Horizontal:
                 target.position = new Vector3(target.position.x, slider.position.y, target.position.z);
@@ -67,7 +87,7 @@ public class SlideAbleObject : MonoBehaviour
     public void setOwnerPosition(Vector3 pos)
     {
         Vector3 moddedPos = pos;
-        switch (Direction)
+        switch (DirectionSetting)
         {
             case DirBehaviour.Horizontal:
                 moddedPos.y = orgPos.y;
@@ -99,11 +119,15 @@ public class SlideAbleObject : MonoBehaviour
                     StartCoroutine(Return());
                     break;
             }
+            DestinationInvoke();
         }
         bh.setTapeRip(normDist);
         slider.position = moddedPos;
     }
+    private void DestinationInvoke()
+    {
 
+    }
 
     private IEnumerator Return()
     {
