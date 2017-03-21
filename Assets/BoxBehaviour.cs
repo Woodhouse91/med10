@@ -19,7 +19,6 @@ public class BoxBehaviour : MonoBehaviour {
     public void tapeRipped()
     {
         StartCoroutine(FlipUp());
-        print("tape is ripped");
     }
     public void setTapeRip(float dist)
     {
@@ -27,23 +26,29 @@ public class BoxBehaviour : MonoBehaviour {
     }
 
 
-    private void OnTriggerEnter(Collider other)
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.layer == LayerMask.NameToLayer("Currency"))
+    //    {
+    //        StartCoroutine(LayerChange(other.transform, true, 0f));
+    //    }
+
+    //}
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.layer == LayerMask.NameToLayer("ignoreCur"))
+    //    {
+    //        StartCoroutine(LayerChange(other.transform, false, Random.Range(1f, 2f)));
+    //        StartCoroutine(makeKinematic(Random.Range(2f, 3f), other.transform));
+    //    }
+    //}
+
+    IEnumerator makeKinematic(float t, Transform obj)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Currency"))
-        {
-            StartCoroutine(LayerChange(other.transform, true, 0f));
-        }
-
+        yield return new WaitForSeconds(t);
+        obj.GetComponent<Rigidbody>().isKinematic = true;
+        yield break;
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("ignoreCur"))
-        {
-            StartCoroutine(LayerChange(other.transform, false, Random.Range(1f, 2f)));
-        }
-    }
-
-
     IEnumerator LayerChange(Transform other, bool layer, float t)
     {
         yield return new WaitForSeconds(t);
@@ -93,10 +98,13 @@ public class BoxBehaviour : MonoBehaviour {
             yield return null;
         }
         GetComponent<AddMoneyToTable>().ShowMeTheMoney(); // SPAWN ALL THE MONIES PLZ
-        yield return new WaitForSeconds(2f);
-        rig.isKinematic = false;
-        rig.AddForce(FORCEIT);
-        rig.AddTorque(FORCEIT);
 
+        yield break;
+    }
+        public void Throw()
+    {
+            rig.isKinematic = false;
+            rig.AddForce(FORCEIT);
+            rig.AddTorque(FORCEIT);
     }
 }

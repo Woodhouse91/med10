@@ -21,9 +21,23 @@ public class EventManager : MonoBehaviour {
     public static event UIElementAction OnUIElementSplit;
     public static event UIElementAction OnUIPlaced;
 
+    public delegate void LoadAction();
+    public static event LoadAction OnExcelDataLoaded;
+    public static event LoadAction OnMoneyInstantiated;
+
     public static void UIPlaced()
     {
         if (OnUIPlaced != null)
             OnUIPlaced();
+    }
+    public static void ExcelDataLoaded()
+    {
+        if (OnExcelDataLoaded != null)
+            OnExcelDataLoaded();
+    }
+    public static void MoneyInstantiated()
+    {
+        if (OnMoneyInstantiated != null)
+            OnMoneyInstantiated();
     }
 }

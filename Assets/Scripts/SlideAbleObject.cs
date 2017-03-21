@@ -12,18 +12,20 @@ public class SlideAbleObject : MonoBehaviour
     private DirBehaviour Direction;
     [SerializeField]
     private DestBehaviour DestinationSetting;
-    [SerializeField]
-    private Transform target;
+    private Transform target, slider, area;
     private float dist, normDist;
     [SerializeField]
     private float returnSpeed;
     TheNewestMarker owner;
     private bool returning = false;
-    [SerializeField]
     private BoxBehaviour bh;
 
-    private void Awake()
+    private void Start()
     {
+        target = transform.GetChild(1);
+        area = transform.GetChild(2);
+        slider = transform.GetChild(0);
+        bh = FindObjectOfType<BoxBehaviour>();
         EventManager.OnUIPlaced += SetVariables;
     }
     private void Unsub()
@@ -33,91 +35,94 @@ public class SlideAbleObject : MonoBehaviour
     public void TakeControl(TheNewestMarker script)
     {
         if (owner == null)
+        {
             owner = script;
+        }
+    }
+    public void ReleaseControl()
+    {
+        owner = null;
+        if (!returning)
+        {
+            StartCoroutine(Return());
+        }
     }
     private void SetVariables()
     {
-        orgPos = transform.localPosition;
+        orgPos = slider.position;
         switch (Direction)
         {
             case DirBehaviour.Horizontal:
-                target.localPosition = new Vector3(target.localPosition.x, transform.localPosition.y, target.localPosition.z);
+                target.position = new Vector3(target.position.x, slider.position.y, target.position.z);
                 break;
             case DirBehaviour.Vertical:
-                target.localPosition = new Vector3(transform.localPosition.x, target.localPosition.y, target.localPosition.z);
+                target.position = new Vector3(slider.position.x, target.position.y, target.position.z);
                 break;
             default:
                 break;
         }
-        dist = Vector3.Distance(transform.position, transform.position);
+        normDist = 0;
+        dist = Vector3.Distance(slider.position, target.position);
     }
-
-    private void LateUpdate()
+    public void setOwnerPosition(Vector3 pos)
     {
-        if (owner != null)
+        Vector3 moddedPos = pos;
+        switch (Direction)
         {
-            Vector3 moddedPos = transform.localPosition;
-            switch (Direction)
+            case DirBehaviour.Horizontal:
+                moddedPos.y = orgPos.y;
+                break;
+            default:
+                break;
+        }
+        normDist = 1f - Vector3.Distance(moddedPos, target.position) / dist;
+        if (normDist<0)
+        {
+            normDist = 0;
+            moddedPos = orgPos;
+        }
+        if(normDist >= 0.95f)
+        {
+            normDist = 1;
+            moddedPos = target.position;
+            owner.releaseSlider();
+            owner = null;
+            switch (DestinationSetting)
             {
-                case DirBehaviour.Horizontal:
-                    moddedPos = new Vector3(transform.localPosition.x, target.localPosition.y, transform.localPosition.z);
+                case DestBehaviour.Destroy:
+                    if (GetComponent<SlideSpecialDestroy>() == null)
+                        Destroy(slider.parent);
+                    else
+                        GetComponent<SlideSpecialDestroy>().invoke();
                     break;
-                case DirBehaviour.Vertical:
-                    moddedPos = new Vector3(target.localPosition.x, transform.localPosition.y, transform.localPosition.z);
+                case DestBehaviour.ReturnToOrigin:
+                    StartCoroutine(Return());
                     break;
-                case DirBehaviour.TowardsTarget:
-                    break;
-                case DirBehaviour.Free:
-                    break;
-            }
-            if (Vector3.Distance(moddedPos, target.localPosition) > dist)
-                if (normDist < 0.5f)
-                    transform.localPosition = orgPos;
-                else
-                    transform.localPosition = target.localPosition;
-            else
-                transform.localPosition = moddedPos;
-            normDist = 1 - Vector3.Distance(transform.position, target.position) / dist;
-            if (normDist < 0)
-                normDist = 0;
-            if (normDist > 0.97f)
-            {
-                owner.releaseSlider();
-                owner = null;
-                switch (DestinationSetting)
-                {
-                    case DestBehaviour.Destroy:
-                        Destroy(target);
-                        Destroy(gameObject);
-                        break;
-                    case DestBehaviour.ReturnToOrigin:
-                        StartCoroutine(Return());
-                        break;
-                    default:
-                        break;
-                }
             }
         }
-        else if(transform.localPosition != orgPos && !returning)
-            StartCoroutine(Return());
-        if (bh != null)
-            bh.setTapeRip(normDist);
-
+        bh.setTapeRip(normDist);
+        slider.position = moddedPos;
     }
+
 
     private IEnumerator Return()
     {
-        returning = true;
-        Vector3 dir = (transform.localPosition - orgPos).normalized;
-        while (Vector3.Distance(transform.localPosition, orgPos)>0.01f && owner==null)
+        if(returnSpeed==0)
         {
-            transform.localPosition += dir * returnSpeed * Time.deltaTime;
+            slider.position = orgPos;
+            yield break;
+        }
+        returning = true;
+        Vector3 dir = -(slider.position - orgPos).normalized;
+        while (Vector3.Distance(slider.position, orgPos)>0.01f && owner==null)
+        {
+            slider.position += dir * returnSpeed * Time.deltaTime;
             yield return null;
         }
         returning = false;
         if(owner == null)
             yield break;
-        transform.localPosition = orgPos;
+        slider.localPosition = orgPos;
     }
 
     private void OnApplicationQuit()
