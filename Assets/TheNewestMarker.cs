@@ -7,10 +7,11 @@ public class TheNewestMarker : MonoBehaviour
 
     private Ray ray;
     private RaycastHit hit;
-    private int touchScreenLayer, dragLayer;
+    private int touchScreenLayer, dragLayer, butLayer;
     private Vector3 prevPos, dragDir, orgDrop, dragOffset;
-    private Transform draggedTar;
+    private Transform draggedTar, hoverTar;
     private bool slideReleaseWait = true;
+    MoneyIntoButton mb;
 
 
     private void Awake()
@@ -18,6 +19,7 @@ public class TheNewestMarker : MonoBehaviour
 
         touchScreenLayer = 1 << LayerMask.NameToLayer("TouchScreen");
         dragLayer = 1 << LayerMask.NameToLayer("DragLayer");
+        butLayer = 1 << LayerMask.NameToLayer("ButtonLayer");
     }
 
     private void Update()
@@ -25,10 +27,19 @@ public class TheNewestMarker : MonoBehaviour
         ray.origin = transform.position - transform.forward * 0.5f;
         ray.direction = transform.forward;
         dragDir = transform.position - prevPos;
-        if (Physics.Raycast(ray, out hit, 1, touchScreenLayer))
+        if (Physics.Raycast(ray, out hit, 1, butLayer))
         {
-
+            hoverTar = hit.transform.parent;
+            mb = hoverTar.GetComponent<MoneyIntoButton>();
+            mb.curState = MoneyIntoButton.state.Hovered;
         }
+        else
+        {
+            mb.curState = MoneyIntoButton.state.Normal;
+            mb = null;
+            hoverTar = null;
+        }
+
         if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
         {
             draggedTar = hit.transform;
@@ -59,6 +70,12 @@ public class TheNewestMarker : MonoBehaviour
         {
             draggedTar.GetComponent<SlideAbleObject>().ReleaseControl();
             draggedTar = null;
+        }
+        if (hoverTar != null)
+        {
+            mb.curState = MoneyIntoButton.state.Pressed;
+            hoverTar = null;
+            mb = null;
         }
     }
 
