@@ -71,7 +71,7 @@ public class MoneyIntoButton : MonoBehaviour {
         float t = 0;
         while (curState == state.Hovered)
         {
-            if (t < transitionTime)
+            if (t <= transitionTime)
             {
                 float normT = t / transitionTime;
                 setColors(Color.Lerp(snapColor, hoverColor, normT));
@@ -90,7 +90,7 @@ public class MoneyIntoButton : MonoBehaviour {
         float t = 0;
         while (curState == state.Normal)
         {
-            if (t < transitionTime)
+            if (t <= transitionTime)
             {
                 float normT = t / transitionTime;
                 setColors(Color.Lerp(snapColor, normalColor, normT));
@@ -107,7 +107,8 @@ public class MoneyIntoButton : MonoBehaviour {
         Vector3 snapPos = transform.position;
         Color snapColor = GetComponent<SpriteRenderer>().color;
         float t = 0;
-        while (t < transitionTime)
+        EventManager.CategoryButtonPressed();
+        while (t <= transitionTime)
         {
             float normT = t / transitionTime;
             setColors(Color.Lerp(snapColor, pressColor, normT));
@@ -122,7 +123,7 @@ public class MoneyIntoButton : MonoBehaviour {
         setColors(disabledColor);
         Vector3 snapPos = transform.position;
         float t = 0;
-        while (t < transitionTime)
+        while (t <= transitionTime)
         {
             setColors(Color.Lerp(disabledColor, normalColor, t / transitionTime));
             transform.position = Vector3.Lerp(snapPos, orgPos,t);
