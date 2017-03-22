@@ -14,9 +14,10 @@ public class CategorySpriteHandler : MonoBehaviour {
         s[s.Length - 1] = Resources.Load<Sprite>("BoxIcons/unknown");
         
 	}
-    public static Sprite GetSprite(int id)
+    public static Sprite GetAt(int id)
     {
-        print(id);
+        if (id < 0 && id > s.Length - 1)
+            return null;
         if (id == -1)
             return s[s.Length - 1];
         return s[id];

@@ -89,11 +89,11 @@ public class cardBoardManager : MonoBehaviour {
         int categoryInt = DataHandler.expenseData[0, category - 1];
         if (categoryInt == -1)
         {
-            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetSprite(-1);
+            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(-1);
         }
         else
         {
-            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetSprite(categoryInt);
+            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(categoryInt);
         }
         //box.GetComponent<BoxBehaviour>().setCategory(DataHandler.expenseData[category, 0]);
     }

@@ -33,7 +33,7 @@ public class TheNewestMarker : MonoBehaviour
             mb = hoverTar.GetComponent<MoneyIntoButton>();
             mb.curState = MoneyIntoButton.state.Hovered;
         }
-        else
+        else if(hoverTar!=null)
         {
             mb.curState = MoneyIntoButton.state.Normal;
             mb = null;
@@ -44,13 +44,13 @@ public class TheNewestMarker : MonoBehaviour
         {
             draggedTar = hit.transform;
             dragOffset = transform.position - draggedTar.position;
-            draggedTar.GetComponent<SlideAbleObject>().TakeControl(this);
+            draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
         }
         transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 0.15f);
         transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
         if (draggedTar != null)
         {
-            draggedTar.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
+            draggedTar.parent.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
         }
     }
     public void releaseSlider()
@@ -68,7 +68,7 @@ public class TheNewestMarker : MonoBehaviour
     {
         if (draggedTar != null)
         {
-            draggedTar.GetComponent<SlideAbleObject>().ReleaseControl();
+            draggedTar.parent.GetComponent<SlideAbleObject>().ReleaseControl();
             draggedTar = null;
         }
         if (hoverTar != null)

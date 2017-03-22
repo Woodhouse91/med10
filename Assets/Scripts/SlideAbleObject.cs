@@ -23,6 +23,7 @@ public class SlideAbleObject : MonoBehaviour
     TheNewestMarker owner;
     private bool returning = false;
     private BoxBehaviour bh;
+    private cardBoardManager cbm;
 
     private void Start()
     {
@@ -30,8 +31,20 @@ public class SlideAbleObject : MonoBehaviour
         area = transform.GetChild(2);
         slider = transform.GetChild(0);
         bh = FindObjectOfType<BoxBehaviour>();
+        cbm = FindObjectOfType<cardBoardManager>();
         EventManager.OnUIPlaced += SetVariables;
+        EventManager.OnBoxAtTable += NextCategory;
     }
+
+    private void NextCategory()
+    {
+        bh = cbm.CardBoxList[EventManager.CurrentCategory].GetComponent<BoxBehaviour>();
+        for (int x = 0; x < transform.childCount; ++x)
+        {
+            transform.GetChild(x).gameObject.SetActive(true);
+        }
+    }
+
     private void Unsub()
     {
         EventManager.OnUIPlaced -= SetVariables;
@@ -107,6 +120,7 @@ public class SlideAbleObject : MonoBehaviour
             moddedPos = target.position;
             owner.releaseSlider();
             owner = null;
+            DestinationInvoke();
             switch (DestinationSetting)
             {
                 case DestBehaviour.Destroy:
@@ -119,14 +133,23 @@ public class SlideAbleObject : MonoBehaviour
                     StartCoroutine(Return());
                     break;
             }
-            DestinationInvoke();
         }
-        bh.setTapeRip(normDist);
+        if(bh!=null)
+            bh.setTapeRip(normDist);
         slider.position = moddedPos;
     }
+
     private void DestinationInvoke()
     {
-
+        bh = null;
+        if (DirectionSetting == DirBehaviour.Horizontal)
+            EventManager.RipTapeSliderDone();
+        else
+            EventManager.CategorySliderDone();
+        for(int x = 0; x<transform.childCount; ++x)
+        {
+            transform.GetChild(x).gameObject.SetActive(false);
+        }
     }
     private void instantReturn()
     {
