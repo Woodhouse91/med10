@@ -16,6 +16,11 @@ public class cardBoardManager : MonoBehaviour {
         EventManager.OnStartNextCategory += MoveBoxToTable;
 	}
 
+    private void Unsub()
+    {
+        EventManager.OnExcelDataLoaded -= StartAfterLoad;
+        EventManager.OnStartNextCategory -= MoveBoxToTable;
+    }
     private void MoveBoxToTable()
     {
         print("lul");
@@ -98,5 +103,17 @@ public class cardBoardManager : MonoBehaviour {
             box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(categoryInt);
         }
         //box.GetComponent<BoxBehaviour>().setCategory(DataHandler.expenseData[category, 0]);
+    }
+    private void OnApplicationQuit()
+    {
+        Unsub();
+    }
+    private void OnDestroy()
+    {
+        Unsub();
+    }
+    private void OnDisable()
+    {
+        Unsub();
     }
 }

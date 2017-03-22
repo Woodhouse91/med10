@@ -50,4 +50,5 @@ public class AddMoneyToTable : MonoBehaviour {
         GetComponent<BoxBehaviour>().Throw();
         yield break;
     }
+
 }

@@ -23,7 +23,9 @@ public class BoxBehaviour : MonoBehaviour {
         Ay = spawnArea.lossyScale.y / 2f;
         Az = spawnArea.lossyScale.z / 2f;
     }
-	// Update is called once per frame
+
+
+    // Update is called once per frame
     public void tapeRipped()
     {
         StartCoroutine(FlipUp());
@@ -133,7 +135,8 @@ public class BoxBehaviour : MonoBehaviour {
     public void Throw()
     {
         rig.isKinematic = false;
-        rig.AddForce(FORCEIT);
-        rig.AddTorque(FORCEIT);
+        Vector3 forceDir = EventManager.Table.right * FORCEIT.x + EventManager.Table.forward * FORCEIT.z + EventManager.Table.up * FORCEIT.y;
+        rig.AddForce(forceDir);
+        rig.AddTorque(forceDir);
     }
 }

@@ -17,7 +17,10 @@ public class PlaceAllCrates : MonoBehaviour {
     void Start () {
         EventManager.OnExcelDataLoaded += InitiateStart;
     }
-
+    private void Unsub()
+    {
+        EventManager.OnExcelDataLoaded -= InitiateStart;
+    }
     private void InitiateStart()
     {
         SizeOfBudget = DataHandler.BudgetCategories.Count;
@@ -156,5 +159,16 @@ public class PlaceAllCrates : MonoBehaviour {
         }
         return SizeOfBudget;
     }
-
+    private void OnApplicationQuit()
+    {
+        Unsub();
+    }
+    private void OnDestroy()
+    {
+        Unsub();
+    }
+    private void OnDisable()
+    {
+        Unsub();
+    }
 }
