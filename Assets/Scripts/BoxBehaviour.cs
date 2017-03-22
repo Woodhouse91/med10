@@ -18,7 +18,7 @@ public class BoxBehaviour : MonoBehaviour {
 	// Update is called once per frame
     public void tapeRipped()
     {
-        EventManager.BoxOpened();
+        EventManager.RipTapeSliderDone();
         StartCoroutine(FlipUp());
     }
     public void setTapeRip(float dist)
