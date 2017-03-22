@@ -45,9 +45,8 @@ public class AddMoneyToTable : MonoBehaviour {
             }
             yield return null;
         }
-        yield return new WaitForSeconds(1.5f);
-        FindObjectOfType<MoneyIntoButton>().gameObject.SetActive(true);
-        //FindObjectOfType<MoneyIntoButton>().setSprite()
+        yield return new WaitForSeconds(.5f);
+        EventManager.MoneySpawned();
         yield break;
     }
 }

@@ -18,6 +18,7 @@ public class BoxBehaviour : MonoBehaviour {
 	// Update is called once per frame
     public void tapeRipped()
     {
+        EventManager.BoxOpened();
         StartCoroutine(FlipUp());
     }
     public void setTapeRip(float dist)
@@ -101,10 +102,11 @@ public class BoxBehaviour : MonoBehaviour {
 
         yield break;
     }
-        public void Throw()
+    public void Throw()
     {
-            rig.isKinematic = false;
-            rig.AddForce(FORCEIT);
-            rig.AddTorque(FORCEIT);
+        EventManager.BoxThrow();
+        rig.isKinematic = false;
+        rig.AddForce(FORCEIT);
+        rig.AddTorque(FORCEIT);
     }
 }
