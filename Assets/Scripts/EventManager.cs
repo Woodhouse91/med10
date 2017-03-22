@@ -10,13 +10,15 @@ public class EventManager : MonoBehaviour {
     public static event LoadAction OnExcelDataLoaded;
     public static event LoadAction OnMoneyInstantiated;
 
-    public delegate void GameAction();
-    public static event GameAction OnMoneySpawned;
-    public static event GameAction OnBoxOpened;
-    public static event GameAction OnBoxThrow;
-    public static event GameAction OnCategoryButtonPressed;
-    public static event GameAction OnMoneyMovedToScreen;
-    public static event GameAction OnMoneyMovedToShelf;
+    public delegate void IntroAction();
+    public static event IntroAction OnBoxEmptied;
+    public static event IntroAction OnRipTapeSliderDone;
+    public static event IntroAction OnCategorySliderDone;
+    public static event IntroAction OnStartNextCategory;
+    public static event IntroAction OnCategoryDone;
+
+    private static int _currentCategory = 0;
+    public static int CurrentCategory { get { return _currentCategory; } }
 
     public static void UIPlaced()
     {
@@ -33,34 +35,30 @@ public class EventManager : MonoBehaviour {
         if (OnMoneyInstantiated != null)
             OnMoneyInstantiated();
     }
-    public static void MoneySpawned()
+    public static void BoxEmptied()
     {
-        if (OnMoneySpawned != null)
-            OnMoneySpawned();
+        if (OnBoxEmptied != null)
+            OnBoxEmptied();
     }
-    public static void BoxOpened()
+    public static void RipTapeSliderDone()
     {
-        if (OnBoxOpened != null)
-            OnBoxOpened();
+        if (OnRipTapeSliderDone != null)
+            OnRipTapeSliderDone();
     }
-    public static void BoxThrow()
+    public static void CategorySliderDone()
     {
-        if (OnBoxThrow != null)
-            OnBoxThrow();
+        if (OnCategorySliderDone != null)
+            OnCategorySliderDone();
     }
-    public static void CategoryButtonPressed()
+    public static void CategoryDone()
     {
-        if (OnCategoryButtonPressed != null)
-            OnCategoryButtonPressed();
+        _currentCategory++;
+        if (OnCategoryDone != null)
+            OnCategoryDone();
     }
-    public static void MoneyMovedToScreen()
+    public static void StartNextCategory()
     {
-        if (OnMoneyMovedToScreen != null)
-            OnMoneyMovedToScreen();
-    }
-    public static void MoneyMovedToShelf()
-    {
-        if (OnMoneyMovedToShelf != null)
-            OnMoneyMovedToShelf();
+        if (OnStartNextCategory != null)
+            OnStartNextCategory();
     }
 }

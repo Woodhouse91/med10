@@ -107,7 +107,7 @@ public class MoneyIntoButton : MonoBehaviour {
         Vector3 snapPos = transform.position;
         Color snapColor = GetComponent<SpriteRenderer>().color;
         float t = 0;
-        EventManager.CategoryButtonPressed();
+        EventManager.CategorySliderDone();
         while (t <= transitionTime)
         {
             float normT = t / transitionTime;
