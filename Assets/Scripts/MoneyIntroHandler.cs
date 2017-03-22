@@ -12,10 +12,15 @@ public class MoneyIntroHandler : MonoBehaviour {
     [SerializeField]
     private float minTravelTime_screen, maxTravelTime_screen, minTravelTime_crate, maxTravelTime_crate;
     DataHandler.billRef[] res;
+    public static List<Transform> model;
+    cardBoardManager cbm;
+    public static List<Transform> focusModel;
 
     private void Awake()
     {
+        focusModel = new List<Transform>();
         pac = FindObjectOfType<PlaceAllCrates>();
+        cbm = FindObjectOfType<cardBoardManager>();
         EventManager.OnBoxEmptied += MoveMoneyToScreen;
         EventManager.OnCategorySliderDone += MoveMoneyToCrate;
 
@@ -25,9 +30,20 @@ public class MoneyIntroHandler : MonoBehaviour {
         obj.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
-        tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f);
+        if (destroy)
+        {
+            tarPos += this.t.up * .5f;
+            if (obj.tag == "ModelOnTable")
+                tarPos += this.t.right * .3f;
+            else
+                tarPos += this.t.right * Random.Range(-.25f, .25f) + this.t.up * Random.Range(-.1f, .1f);
+        }
+        else if (obj.tag == "ModelOnTable")
+            focusModel.Add(obj);
+        else
+            tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f);
         int s = side ? 1 : -1;
-        if (!destroy)
+        if (!destroy && obj.tag != "ModelOnTable")
         {
             if (coin)
             {
@@ -41,7 +57,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 tarRot *= Quaternion.AngleAxis(Random.Range(0f, 359f), Vector3.forward);
             }
         }
-        else
+        else if(obj.tag!="ModelOnTable")
             tarRot = new Quaternion(Random.Range(0, 359), Random.Range(0, 359), Random.Range(0, 359), 1);
         float tt = 0;
         while (tt <= t)
@@ -55,10 +71,13 @@ public class MoneyIntroHandler : MonoBehaviour {
         //obj.rotation = tarRot;
         if (destroy)
         {
-            obj.transform.position += Vector3.up * 0.5f;
             obj.GetComponent<Rigidbody>().isKinematic = false;
             //Destroy(obj.gameObject);
         }
+        yield break;
+    }
+    IEnumerator doModelMovement()
+    {
         yield break;
     }
     IEnumerator eventTrigger()
@@ -180,13 +199,14 @@ public class MoneyIntroHandler : MonoBehaviour {
         currencyFound.Add(_2);
         currencyFound.Add(_1);
     }
+    Transform t;
     public void MoveMoneyToCrate()
     {
         int bill = 0;
         for (int x = 0; x<res.Length; ++x)
         {
             bill = 0;
-            Transform t = pac.GetCrate(EventManager.CurrentCategory, x);
+            t = pac.GetCrate(EventManager.CurrentCategory, x);
             for (int l = 0; l < res[x]._1000; ++l)
             {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
