@@ -157,6 +157,10 @@ public class DataHandler : MonoBehaviour {
         else if(catCounter<_budgetCategories.Count)
             _budgetCategories.Remove(_budgetCategories[catCounter]);
     }
+    public static float getScale(int category, int month)
+    {
+        return _expenseData[month, category] / tExpense;
+    }
     private static void calcRequiredBills()
     {
         BillsAtCategory_Month = new List<billRef[]>();

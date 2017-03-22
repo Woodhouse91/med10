@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoneyIntroHandler : MonoBehaviour {
-    private int month = 0, category = 0;
+    private int month = 0;
     private int[,] data;
     PlaceAllCrates pac;
     List<List<GameObject>> currencyFound;
@@ -15,13 +15,6 @@ public class MoneyIntroHandler : MonoBehaviour {
     private void Awake()
     {
         pac = FindObjectOfType<PlaceAllCrates>();
-
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            MoveMoneyToScreen();
     }
     IEnumerator doMovement(bool coin, float t, Vector3 tarPos, Quaternion tarRot, Transform obj, bool side, bool destroy)
     {
@@ -55,14 +48,17 @@ public class MoneyIntroHandler : MonoBehaviour {
         obj.position = orgPos;
         obj.rotation = tarRot;
         if (destroy)
+        {
+            EventManager.ObjectsPlacedAtShelves();
             Destroy(obj);
+        }
         yield break;
     }
     public void MoveMoneyToScreen()
     {
         int sum1000 = 0, sum500 = 0, sum200 = 0, sum100 = 0, sum50 = 0, sum20 = 0, sum10 = 0, sum5 = 0, sum2 = 0, sum1 = 0;
         currencyFound = new List<List<GameObject>>();
-        res = DataHandler.BillsAtCategory_Month[category];
+        res = DataHandler.BillsAtCategory_Month[EventManager.CurrentCategory];
         for(int x = 0; x<res.Length; ++x)
         {
             sum1000 += res[x]._1000;
@@ -77,8 +73,7 @@ public class MoneyIntroHandler : MonoBehaviour {
             sum1 += res[x]._1;
             if(res[x]._1000 + res[x]._500 + res[x]._200 + res[x]._100 + res[x]._50 + res[x]._20 + res[x]._10 + res[x]._5 + res[x]._2 + res[x]._1 == 0)
             {
-                pac.FlipCrate(category, x);
-                ++category;
+                pac.FlipCrate(EventManager.CurrentCategory, x);
                 return;
             }
         }
@@ -174,7 +169,7 @@ public class MoneyIntroHandler : MonoBehaviour {
         for (int x = 0; x<res.Length; ++x)
         {
             bill = 0;
-            Transform t = pac.GetCrate(category, x);
+            Transform t = pac.GetCrate(EventManager.CurrentCategory, x);
             for (int l = 0; l < res[x]._1000; ++l)
             {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
@@ -234,6 +229,5 @@ public class MoneyIntroHandler : MonoBehaviour {
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
         }
-        ++category;
     }
 }

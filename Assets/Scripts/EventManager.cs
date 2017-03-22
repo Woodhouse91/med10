@@ -16,10 +16,31 @@ public class EventManager : MonoBehaviour {
     public static event IntroAction OnCategorySliderDone;
     public static event IntroAction OnStartNextCategory;
     public static event IntroAction OnCategoryDone;
+    public static event IntroAction OnBoxAtTable;
+    public static event IntroAction OnObjectsPlacedAtShelves;
 
     private static int _currentCategory = 0;
     public static int CurrentCategory { get { return _currentCategory; } }
-
+    private static Transform _table;
+    public static Transform Table
+    {
+        get
+        {
+            if (_table == null)
+                _table = GameObject.Find("Table").transform;
+            return _table;
+        }
+    }
+    public static void ObjectsPlacedAtShelves()
+    {
+        if (OnObjectsPlacedAtShelves != null)
+            OnObjectsPlacedAtShelves();
+    }
+    public static void BoxAtTable()
+    {
+        if (OnBoxAtTable != null)
+            OnBoxAtTable();
+    }
     public static void UIPlaced()
     {
         if (OnUIPlaced != null)

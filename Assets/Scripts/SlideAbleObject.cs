@@ -128,7 +128,10 @@ public class SlideAbleObject : MonoBehaviour
     {
 
     }
-
+    private void instantReturn()
+    {
+        slider.position = orgPos;
+    }
     private IEnumerator Return()
     {
         if(returnSpeed==0)
@@ -146,7 +149,7 @@ public class SlideAbleObject : MonoBehaviour
         returning = false;
         if(owner == null)
             yield break;
-        slider.localPosition = orgPos;
+        slider.position = orgPos;
     }
 
     private void OnApplicationQuit()
