@@ -42,6 +42,7 @@ public class TheNewestMarker : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
         {
+            print("hit");
             draggedTar = hit.transform;
             dragOffset = transform.position - draggedTar.position;
             draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
@@ -61,11 +62,13 @@ public class TheNewestMarker : MonoBehaviour
     IEnumerator slideWait()
     {
         slideReleaseWait = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.5f);
         slideReleaseWait = true;
+        yield break;
     }
     private void OnDisable()
     {
+        slideReleaseWait = true;
         if (draggedTar != null)
         {
             draggedTar.parent.GetComponent<SlideAbleObject>().ReleaseControl();

@@ -33,7 +33,16 @@ public class SlideAbleObject : MonoBehaviour
         bh = FindObjectOfType<BoxBehaviour>();
         cbm = FindObjectOfType<cardBoardManager>();
         EventManager.OnUIPlaced += SetVariables;
-        EventManager.OnBoxAtTable += NextCategory;
+        if (DirectionSetting == DirBehaviour.Horizontal)
+            EventManager.OnBoxAtTable += NextCategory;
+        else
+        {
+            for (int x = 0; x < transform.childCount; ++x)
+            {
+                transform.GetChild(x).gameObject.SetActive(false);
+            }
+            EventManager.OnRipTapeSliderDone += NextObject;
+        }
     }
 
     private void NextCategory()
@@ -47,8 +56,21 @@ public class SlideAbleObject : MonoBehaviour
 
     private void Unsub()
     {
+        if (DirectionSetting == DirBehaviour.Horizontal)
+            EventManager.OnBoxAtTable -= NextCategory;
+        else
+            EventManager.OnRipTapeSliderDone -= NextObject;
         EventManager.OnUIPlaced -= SetVariables;
     }
+
+    private void NextObject()
+    {
+        for (int x = 0; x < transform.childCount; ++x)
+        {
+            transform.GetChild(x).gameObject.SetActive(true);
+        }
+    }
+
     public void TakeControl(TheNewestMarker script)
     {
         if (owner == null)
@@ -71,7 +93,6 @@ public class SlideAbleObject : MonoBehaviour
                 StartCoroutine(Glide());
                 break;
         }
-        StartCoroutine(Return());
     }
 
     private IEnumerator Glide()
@@ -99,15 +120,19 @@ public class SlideAbleObject : MonoBehaviour
     }
     public void setOwnerPosition(Vector3 pos)
     {
-        Vector3 moddedPos = pos;
+        Vector3 moddedPos = slider.InverseTransformPoint(pos);
         switch (DirectionSetting)
         {
             case DirBehaviour.Horizontal:
-                moddedPos.y = orgPos.y;
+                moddedPos.y = 0;
+                moddedPos.z = 0;
                 break;
-            default:
+            case DirBehaviour.Vertical:
+                moddedPos.z = 0;
+                moddedPos.x = 0;
                 break;
         }
+        moddedPos = slider.TransformPoint(moddedPos);
         normDist = 1f - Vector3.Distance(moddedPos, target.position) / dist;
         if (normDist<0)
         {
@@ -120,7 +145,8 @@ public class SlideAbleObject : MonoBehaviour
             moddedPos = target.position;
             owner.releaseSlider();
             owner = null;
-            bh.setTapeRip(1f);
+            if (DirectionSetting == DirBehaviour.Horizontal)
+                bh.setTapeRip(1f);
             DestinationInvoke();
            
             switch (DestinationSetting)
@@ -138,14 +164,15 @@ public class SlideAbleObject : MonoBehaviour
             
         }
         if(bh!=null)
-            bh.setTapeRip(normDist);
+            if (DirectionSetting == DirBehaviour.Horizontal)
+                bh.setTapeRip(normDist);
         slider.position = moddedPos;
     }
 
     private void DestinationInvoke()
     {
         bh = null;
-
+        normDist = 0;
         if (DirectionSetting == DirBehaviour.Horizontal)
             EventManager.RipTapeSliderDone();
         else

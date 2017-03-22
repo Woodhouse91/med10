@@ -23,8 +23,6 @@ public class cardBoardManager : MonoBehaviour {
     }
     private void MoveBoxToTable()
     {
-        print("lul");
-        print(CardBoxList[EventManager.CurrentCategory]);
         StartCoroutine(MoveBoxAnimation(CardBoxList[EventManager.CurrentCategory].transform));
     }
 
