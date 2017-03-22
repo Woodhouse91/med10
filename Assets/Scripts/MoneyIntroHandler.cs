@@ -49,10 +49,21 @@ public class MoneyIntroHandler : MonoBehaviour {
         obj.rotation = tarRot;
         if (destroy)
         {
-            EventManager.ObjectsPlacedAtShelves();
             Destroy(obj);
         }
         yield break;
+    }
+    IEnumerator eventTrigger()
+    {
+        yield return new WaitForSeconds(maxTravelTime_crate);
+        EventManager.ObjectsPlacedAtShelves();
+    }
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            MoveMoneyToScreen();
+        }
     }
     public void MoveMoneyToScreen()
     {
@@ -228,6 +239,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
+            StartCoroutine(eventTrigger());
         }
     }
 }
