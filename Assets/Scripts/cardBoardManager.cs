@@ -1,17 +1,45 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class cardBoardManager : MonoBehaviour {
 
-    List<GameObject> CardBoxList;
+    public List<GameObject> CardBoxList;
     Vector3 initialPos, nextRight,nextUp;
     public GameObject CardBoxPrefab;
+    public Vector3 OffsetBoxToTable;
+    public float TimeForBoxToTable;
     // Use this for initialization
 	void Start () {
         EventManager.OnExcelDataLoaded += StartAfterLoad;
+        EventManager.OnStartNextCategory += MoveBoxToTable;
 	}
-	void StartAfterLoad()
+
+    private void MoveBoxToTable()
+    {
+        Transform NewBox = CardBoxList[EventManager.CurrentCategory].transform;
+        NewBox.GetComponent<Rigidbody>().isKinematic = true;
+        StartCoroutine(MoveBoxAnimation(NewBox));
+    }
+
+    private IEnumerator MoveBoxAnimation(Transform newBox)
+    {
+        Vector3 startPos = newBox.position;
+        Quaternion startRot = newBox.rotation;
+        float t = 1;
+        while (t>0)
+        {
+            t += Time.deltaTime / TimeForBoxToTable;
+            newBox.position = Vector3.Lerp(EventManager.Table.position+OffsetBoxToTable, startPos, t);
+            newBox.rotation = Quaternion.Lerp(EventManager.Table.rotation * Quaternion.AngleAxis(180f,Vector3.up), startRot, t);
+            yield return null;
+        }
+        newBox.GetComponent<Rigidbody>().isKinematic = false;
+        EventManager.BoxAtTable();
+    }
+
+    void StartAfterLoad()
     {
         initialPos = new Vector3(1.5f, 0.28f, 0f); // starten af pyramiden i bunden til venstre
         nextRight = new Vector3(-0.55f, 0, 0); // den næste der skal stå til højre for den forrige kasse

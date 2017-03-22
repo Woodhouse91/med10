@@ -8,17 +8,24 @@ public class BoxBehaviour : MonoBehaviour {
     Transform leftLid, rightLid;
     Rigidbody rig;
     public Vector3 FORCEIT;
-	// Use this for initialization
-	void Start () {
+    public float SpawnRate;
+    private Transform spawnArea;
+    private float Ax,Ay,Az;
+
+    // Use this for initialization
+    void Start () {
         rig = GetComponent<Rigidbody>();
         leftLid = transform.GetChild(0);
         rightLid = transform.GetChild(1);
         tape = GetComponentInChildren<RipTheTape>();
-	}
+        spawnArea = transform.GetChild(2); //the lids are 0 and 1
+        Ax = spawnArea.lossyScale.x / 2f;
+        Ay = spawnArea.lossyScale.y / 2f;
+        Az = spawnArea.lossyScale.z / 2f;
+    }
 	// Update is called once per frame
     public void tapeRipped()
     {
-        EventManager.RipTapeSliderDone();
         StartCoroutine(FlipUp());
     }
     public void setTapeRip(float dist)
@@ -98,8 +105,27 @@ public class BoxBehaviour : MonoBehaviour {
             t += Time.deltaTime;
             yield return null;
         }
-        GetComponent<AddMoneyToTable>().ShowMeTheMoney(); // SPAWN ALL THE MONIES PLZ
+        if(GetComponent<AddMoneyToTable>() != null)
+            GetComponent<AddMoneyToTable>().ShowMeTheMoney(); // SPAWN ALL THE MONIES PLZ
+        else // SPAWN ALL THE MODELS
+        {
+            int categoryInt = DataHandler.expenseData[0, EventManager.CurrentCategory];
+            int numOfObj = 0;
+            for (int i = 1; i < 13; i++)
+            {
+                if (DataHandler.expenseData[i, EventManager.CurrentCategory] > 0)
+                    numOfObj++;
+            }
+            for (int i = 0; i < numOfObj; i++)
+            {
+                Transform model = null; //CategoryModelHandler.GetAt(categoryInt).transform; // MODELS HERE THO
+                Vector3 pos = new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
+                pos = transform.TransformPoint(pos);
+                Instantiate(model,pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
+                yield return new WaitForSeconds(1f/SpawnRate);
+            }
 
+        }
         yield break;
     }
     public void Throw()
