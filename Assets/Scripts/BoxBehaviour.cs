@@ -118,13 +118,15 @@ public class BoxBehaviour : MonoBehaviour {
             }
             for (int i = 0; i < numOfObj; i++)
             {
-                Transform model = null; //CategoryModelHandler.GetAt(categoryInt).transform; // MODELS HERE THO
+                Transform model = CategoryModelHandler.GetAt(categoryInt).transform; // MODELS HERE THO
                 Vector3 pos = new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
                 pos = transform.TransformPoint(pos);
                 Instantiate(model,pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
                 yield return new WaitForSeconds(1f/SpawnRate);
             }
-
+            yield return new WaitForSeconds(0.5f);
+            EventManager.BoxEmptied();
+            Throw();
         }
         yield break;
     }

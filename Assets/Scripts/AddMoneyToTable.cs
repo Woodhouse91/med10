@@ -46,7 +46,8 @@ public class AddMoneyToTable : MonoBehaviour {
             yield return null;
         }
         yield return new WaitForSeconds(.5f);
-        EventManager.BoxEmptied();
+        EventManager.StartNextCategory();
+        GetComponent<BoxBehaviour>().Throw();
         yield break;
     }
 }

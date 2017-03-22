@@ -15,14 +15,20 @@ public class PlaceAllCrates : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        ListOfCrates = new GameObject[14,SizeOfBudget];
+        EventManager.OnExcelDataLoaded += InitiateStart;
+    }
+
+    private void InitiateStart()
+    {
+        SizeOfBudget = DataHandler.BudgetCategories.Count;
+        ListOfCrates = new GameObject[14, SizeOfBudget];
         PlaceThemAll(SizeOfBudget);
         PlaceAllRows();
-
     }
+
     public Transform GetCrate(int category, int month)
     {
-        return ListOfCrates[month, category].transform;
+        return ListOfCrates[month+1, category].transform;
     }
     // Update is called once per frame
     void Update () {

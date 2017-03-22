@@ -18,19 +18,20 @@ public class cardBoardManager : MonoBehaviour {
 
     private void MoveBoxToTable()
     {
-        Transform NewBox = CardBoxList[EventManager.CurrentCategory].transform;
-        NewBox.GetComponent<Rigidbody>().isKinematic = true;
-        StartCoroutine(MoveBoxAnimation(NewBox));
+        print("lul");
+        print(CardBoxList[EventManager.CurrentCategory]);
+        StartCoroutine(MoveBoxAnimation(CardBoxList[EventManager.CurrentCategory].transform));
     }
 
     private IEnumerator MoveBoxAnimation(Transform newBox)
     {
+        newBox.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 startPos = newBox.position;
         Quaternion startRot = newBox.rotation;
         float t = 1;
         while (t>0)
         {
-            t += Time.deltaTime / TimeForBoxToTable;
+            t -= Time.deltaTime / TimeForBoxToTable;
             newBox.position = Vector3.Lerp(EventManager.Table.position+OffsetBoxToTable, startPos, t);
             newBox.rotation = Quaternion.Lerp(EventManager.Table.rotation * Quaternion.AngleAxis(180f,Vector3.up), startRot, t);
             yield return null;
@@ -77,6 +78,7 @@ public class cardBoardManager : MonoBehaviour {
                     box.transform.localPosition = initialPos + nextRight * w + nextUp * h;
                     box.transform.rotation = transform.rotation;
                     CardBoxList.Add(box);
+                    CardBoxList.Insert(0, box);
                     PaintBox(box,budgetCatCount);
                     budgetCatCount--;
                 }

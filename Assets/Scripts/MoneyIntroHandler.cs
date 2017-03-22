@@ -12,14 +12,20 @@ public class MoneyIntroHandler : MonoBehaviour {
     [SerializeField]
     private float minTravelTime_screen, maxTravelTime_screen, minTravelTime_crate, maxTravelTime_crate;
     DataHandler.billRef[] res;
+
     private void Awake()
     {
         pac = FindObjectOfType<PlaceAllCrates>();
+        EventManager.OnBoxEmptied += MoveMoneyToScreen;
+        EventManager.OnCategorySliderDone += MoveMoneyToCrate;
+
     }
     IEnumerator doMovement(bool coin, float t, Vector3 tarPos, Quaternion tarRot, Transform obj, bool side, bool destroy)
     {
+        obj.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
+        tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f);
         int s = side ? 1 : -1;
         if (!destroy)
         {
@@ -45,11 +51,13 @@ public class MoneyIntroHandler : MonoBehaviour {
             tt += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        obj.position = orgPos;
-        obj.rotation = tarRot;
+        //obj.position = orgPos;
+        //obj.rotation = tarRot;
         if (destroy)
         {
-            Destroy(obj);
+            obj.transform.position += Vector3.up * 0.5f;
+            obj.GetComponent<Rigidbody>().isKinematic = false;
+            //Destroy(obj.gameObject);
         }
         yield break;
     }
@@ -60,10 +68,8 @@ public class MoneyIntroHandler : MonoBehaviour {
     }
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            MoveMoneyToScreen();
-        }
+        if (Input.GetKeyDown(KeyCode.Alpha8))
+            EventManager.CategorySliderDone();
     }
     public void MoveMoneyToScreen()
     {
@@ -84,82 +90,82 @@ public class MoneyIntroHandler : MonoBehaviour {
             sum1 += res[x]._1;
             if(res[x]._1000 + res[x]._500 + res[x]._200 + res[x]._100 + res[x]._50 + res[x]._20 + res[x]._10 + res[x]._5 + res[x]._2 + res[x]._1 == 0)
             {
-                pac.FlipCrate(EventManager.CurrentCategory, x);
+                pac.FlipCrate(EventManager.CurrentCategory, x); //flipper det lidt for tidligt måske?!
                 return;
             }
         }
-        List<GameObject> _1000 = new List<GameObject>(sum1000), _500 = new List<GameObject>(sum500), _200 = new List<GameObject>(sum200), 
-            _100 = new List<GameObject>(sum100), _50 = new List<GameObject>(sum50), _20 = new List<GameObject>(sum20), 
-            _10 = new List<GameObject>(sum10), _5 = new List<GameObject>(sum5), _2 = new List<GameObject>(sum2), _1 = new List<GameObject>(sum1);
+        List<GameObject> _1000 = new List<GameObject>(), _500 = new List<GameObject>(), _200 = new List<GameObject>(), 
+            _100 = new List<GameObject>(), _50 = new List<GameObject>(), _20 = new List<GameObject>(), 
+            _10 = new List<GameObject>(), _5 = new List<GameObject>(), _2 = new List<GameObject>(), _1 = new List<GameObject>();
         GameObject[] search = GameObject.FindGameObjectsWithTag("1000kr");
         Vector3 pos = screen.position;
         Quaternion rot = screen.rotation;
         bool side = true;
-        for(int x = 0; x< _1000.Count; ++x)
+        for(int x = 0; x< sum1000; ++x)
         {
-            _1000[x] = search[x];
+            _1000.Add(search[x]);
             StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("500kr");
-        for(int x = 0; x<_500.Count; ++x)
+        for(int x = 0; x<sum500; ++x)
         {
-            _500[x] = search[x];
+            _500.Add(search[x]);
             StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("200kr");
-        for (int x = 0; x < _200.Count; ++x)
+        for (int x = 0; x < sum200; ++x)
         {
-            _200[x] = search[x];
+            _200.Add(search[x]);
             StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("100kr");
-        for (int x = 0; x < _100.Count; ++x)
+        for (int x = 0; x < sum100; ++x)
         {
-            _100[x] = search[x];
+            _100.Add(search[x]);
             StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("50kr");
-        for (int x = 0; x < _50.Count; ++x)
+        for (int x = 0; x < sum50; ++x)
         {
-            _50[x] = search[x];
+            _50.Add(search[x]);
             StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("20kr");
-        for (int x = 0; x < _20.Count; ++x)
+        for (int x = 0; x < sum20; ++x)
         {
-            _20[x] = search[x];
+            _20.Add(search[x]);
             StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("10kr");
-        for (int x = 0; x < _10.Count; ++x)
+        for (int x = 0; x < sum10; ++x)
         {
-            _10[x] = search[x];
+            _10.Add(search[x]);
             StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
         }
         search = GameObject.FindGameObjectsWithTag("5kr");
-        for (int x = 0; x < _5.Count; ++x)
+        for (int x = 0; x < sum5; ++x)
         {
-            _5[x] = search[x];
+            _5.Add(search[x]);
             StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("2kr");
-        for (int x = 0; x < _2.Count; ++x)
+        for (int x = 0; x < sum2; ++x)
         {
-            _2[x] = search[x];
+            _2.Add(search[x]);
             StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("1kr");
-        for (int x = 0; x < _1.Count; ++x)
+        for (int x = 0; x < sum1; ++x)
         {
-            _1[x] = search[x];
+            _1.Add(search[x]);
             StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
             side = !side;
         }

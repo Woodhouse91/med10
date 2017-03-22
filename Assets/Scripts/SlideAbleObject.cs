@@ -120,19 +120,22 @@ public class SlideAbleObject : MonoBehaviour
             moddedPos = target.position;
             owner.releaseSlider();
             owner = null;
+            bh.setTapeRip(1f);
             DestinationInvoke();
+           
             switch (DestinationSetting)
             {
                 case DestBehaviour.Destroy:
-                    if (GetComponent<SlideSpecialDestroy>() == null)
-                        Destroy(slider.parent);
-                    else
-                        GetComponent<SlideSpecialDestroy>().invoke();
-                    break;
+                    instantReturn();
+                    slider.gameObject.SetActive(false);
+                    area.gameObject.SetActive(false);
+                    target.gameObject.SetActive(false);
+                    return;
                 case DestBehaviour.ReturnToOrigin:
                     StartCoroutine(Return());
                     break;
             }
+            
         }
         if(bh!=null)
             bh.setTapeRip(normDist);
@@ -142,14 +145,12 @@ public class SlideAbleObject : MonoBehaviour
     private void DestinationInvoke()
     {
         bh = null;
+
         if (DirectionSetting == DirBehaviour.Horizontal)
             EventManager.RipTapeSliderDone();
         else
             EventManager.CategorySliderDone();
-        for(int x = 0; x<transform.childCount; ++x)
-        {
-            transform.GetChild(x).gameObject.SetActive(false);
-        }
+       
     }
     private void instantReturn()
     {
