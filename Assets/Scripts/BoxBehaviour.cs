@@ -104,7 +104,6 @@ public class BoxBehaviour : MonoBehaviour {
     }
     public void Throw()
     {
-        EventManager.BoxThrow();
         rig.isKinematic = false;
         rig.AddForce(FORCEIT);
         rig.AddTorque(FORCEIT);
