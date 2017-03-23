@@ -29,6 +29,23 @@ public class MoneyIntroHandler : MonoBehaviour {
         EventManager.OnCategorySliderDone += MoveMoneyToCrate;
 
     }
+    private void Unsub()
+    {
+        EventManager.OnBoxEmptied -= MoveMoneyToScreen;
+        EventManager.OnCategorySliderDone -= MoveMoneyToCrate;
+    }
+    private void OnApplicationQuit()
+    {
+        Unsub();
+    }
+    private void OnDestroy()
+    {
+        Unsub();
+    }
+    private void OnDisable()
+    {
+        Unsub();
+    }
     IEnumerator doMovement(bool coin, float t, Vector3 tarPos, Quaternion tarRot, Transform obj, bool side, bool destroy)
     {
         obj.GetComponent<Rigidbody>().isKinematic = true;
@@ -94,6 +111,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 obj.localScale = Vector3.Lerp(defaultModelScale, tarScale, ttt / EventManager.scaleTime);
                 yield return null;
             }
+            obj.SetParent(this.t, true);
             obj.GetComponent<Rigidbody>().isKinematic = false;
             obj.tag = "ModelOnShelf";
         }
@@ -107,6 +125,8 @@ public class MoneyIntroHandler : MonoBehaviour {
     {
         yield return new WaitForSeconds(maxTravelTime_crate+defaultScaleTime);
         EventManager.ObjectsPlacedAtShelves();
+        yield return new WaitForSeconds(EventManager.scaleTime);
+        EventManager.CategoryDone();
     }
     public void MoveMoneyToScreen()
     {
