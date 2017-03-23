@@ -36,13 +36,7 @@ public class SlideAbleObject : MonoBehaviour
         if (DirectionSetting == DirBehaviour.Horizontal)
             EventManager.OnBoxAtTable += NextCategory;
         else
-        {
-            for (int x = 0; x < transform.childCount; ++x)
-            {
-                transform.GetChild(x).gameObject.SetActive(false);
-            }
-            EventManager.OnRipTapeSliderDone += NextObject;
-        }
+           EventManager.OnBoxEmptied += NextObject;
     }
 
     private void NextCategory()
@@ -59,7 +53,7 @@ public class SlideAbleObject : MonoBehaviour
         if (DirectionSetting == DirBehaviour.Horizontal)
             EventManager.OnBoxAtTable -= NextCategory;
         else
-            EventManager.OnRipTapeSliderDone -= NextObject;
+            EventManager.OnBoxEmptied -= NextObject;
         EventManager.OnUIPlaced -= SetVariables;
     }
 
@@ -104,19 +98,33 @@ public class SlideAbleObject : MonoBehaviour
     private void SetVariables()
     {
         orgPos = slider.position;
+        Vector3 tar = transform.InverseTransformPoint(target.position);
+        Vector3 slid = transform.InverseTransformPoint(slider.position);
+        tar.z = 0;
         switch (DirectionSetting)
         {
             case DirBehaviour.Horizontal:
-                target.position = new Vector3(target.position.x, slider.position.y, target.position.z);
+                tar.y = slid.y;
                 break;
             case DirBehaviour.Vertical:
-                target.position = new Vector3(slider.position.x, target.position.y, target.position.z);
+                tar.x = slid.x;
                 break;
             default:
                 break;
         }
+        target.position = transform.TransformPoint(tar);
         normDist = 0;
         dist = Vector3.Distance(slider.position, target.position);
+        if (DirectionSetting == DirBehaviour.Horizontal)
+            EventManager.OnBoxAtTable += NextCategory;
+        else
+        {
+            for (int x = 0; x < transform.childCount; ++x)
+            {
+                transform.GetChild(x).gameObject.SetActive(false);
+            }
+            EventManager.OnRipTapeSliderDone += NextObject;
+        }
     }
     public void setOwnerPosition(Vector3 pos)
     {
