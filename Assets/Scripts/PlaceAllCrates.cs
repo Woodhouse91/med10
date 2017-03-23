@@ -7,7 +7,8 @@ public class PlaceAllCrates : MonoBehaviour {
     public GameObject[,] ListOfCrates;
     public Vector3 SizeOfCrate; //should be (1.5f,1.0f,1.0f)
     public int SizeOfBudget;
-    public int EXPANDDONGAT;
+    public int TestCat;
+    public int TestMonth;
     public float AngleRotate;
     public GameObject Crate;
     Vector3 originCrateSize;
@@ -37,12 +38,15 @@ public class PlaceAllCrates : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-		if(Input.GetKeyDown(KeyCode.E))
+		if(Input.GetKeyDown(KeyCode.J))
         {
-            StartCoroutine(ExpandRow(EXPANDDONGAT, 0.5f));
-            raiseAllCrate();
+            StartCoroutine(ExpandCrateAt_Cat_Month(TestCat,TestMonth, 0.5f));
         }
-	}
+        if(Input.GetKeyDown(KeyCode.K))
+            raiseAllCrate();
+
+
+    }
     public void FlipCrate(int category, int month)
     {
         StartCoroutine(FlipCrateAni( ListOfCrates[month, category]));
@@ -60,12 +64,33 @@ public class PlaceAllCrates : MonoBehaviour {
         {
             for (int k = 0; k < SizeOfBudget; k++)
             {
-                StartCoroutine(MoveWithRow(ListOfCrates[i, k].transform.position, ListOfCrates[i, k].transform.position + ListOfCrates[i, k].transform.up * SizeOfCrate.y, ListOfCrates[i, k].transform));
+                StartCoroutine(MoveWithRow(ListOfCrates[i, k].transform.position, ListOfCrates[i, k].transform.position + ListOfCrates[i, k].transform.up, ListOfCrates[i, k].transform));
             }
         }
     }
     IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
     {
+        int month = Month + 1; 
+        Vector3 start = originCrateSize;
+        Vector3 end = originCrateSize + Vector3.up * percent;
+        Vector3[] startPos = new Vector3[rowNumber];
+        Vector3[] endPos = new Vector3[rowNumber];
+        for (int i = 0; i < rowNumber; i++)
+        {
+            startPos[i] = ListOfCrates[month, i].transform.position;
+            endPos[i] = ListOfCrates[month, i].transform.position + Vector3.up * originCrateSize.y * percent / 2f; // originsize = SizeOfCrate.y
+        }
+        float t = 0;
+        while (t < 1f)
+        {
+            t += Time.deltaTime;
+            for (int i = 0; i < rowNumber; i++)
+            {
+                ListOfCrates[month, i].transform.position = Vector3.Lerp(startPos[i], endPos[i], t);
+            }
+            ListOfCrates[month, rowNumber].transform.localScale = Vector3.Lerp(start, end, t);
+            yield return null;
+        }
         yield return null;
     }
 
