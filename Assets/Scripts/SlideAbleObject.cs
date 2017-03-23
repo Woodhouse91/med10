@@ -24,6 +24,7 @@ public class SlideAbleObject : MonoBehaviour
     private bool returning = false;
     private BoxBehaviour bh;
     private cardBoardManager cbm;
+    private GameObject[] models;
 
     private void Start()
     {
@@ -63,6 +64,25 @@ public class SlideAbleObject : MonoBehaviour
         {
             transform.GetChild(x).gameObject.SetActive(true);
         }
+        models = GameObject.FindGameObjectsWithTag("ModelOnTable");
+        for(int x = 0; x<models.Length; ++x)
+        {
+            StartCoroutine(controlModel(models[x].transform));
+        }
+    }
+
+    IEnumerator controlModel(Transform obj)
+    {
+        yield return new WaitForSeconds(.5f);
+        Vector3 origin = obj.position, tar;
+        obj.GetComponent<Rigidbody>().isKinematic = true;
+        while (slider.gameObject.activeSelf)
+        {
+            tar = origin + Vector3.up * (normDist / 4f);
+            obj.position += (obj.position - tar) * .1f * Time.deltaTime;
+            yield return null;
+        }
+        yield break;
     }
 
     public void TakeControl(TheNewestMarker script)
@@ -123,7 +143,6 @@ public class SlideAbleObject : MonoBehaviour
             {
                 transform.GetChild(x).gameObject.SetActive(false);
             }
-            EventManager.OnRipTapeSliderDone += NextObject;
         }
     }
     public void setOwnerPosition(Vector3 pos)

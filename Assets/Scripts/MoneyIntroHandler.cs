@@ -74,6 +74,11 @@ public class MoneyIntroHandler : MonoBehaviour {
             obj.GetComponent<Rigidbody>().isKinematic = false;
             //Destroy(obj.gameObject);
         }
+        else if(obj.tag == "ModelOnTable")
+        {
+            obj.GetComponent<Rigidbody>().isKinematic = false;
+            obj.tag = "ModelOnShelf";
+        }
         yield break;
     }
     IEnumerator doModelMovement()
@@ -203,6 +208,7 @@ public class MoneyIntroHandler : MonoBehaviour {
     public void MoveMoneyToCrate()
     {
         int bill = 0;
+        GameObject[] model = GameObject.FindGameObjectsWithTag("ModelOnTable");
         for (int x = 0; x<res.Length; ++x)
         {
             bill = 0;
@@ -265,6 +271,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
+            StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, model[x].transform, false, false));
             StartCoroutine(eventTrigger());
         }
     }
