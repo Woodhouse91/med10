@@ -8,6 +8,7 @@ public class cardBoardManager : MonoBehaviour {
     public List<GameObject> CardBoxList;
     Vector3 initialPos, nextRight,nextUp;
     public GameObject CardBoxPrefab;
+    public AnimationCurve AC;
     public Vector3 OffsetBoxToTable;
     public float TimeForBoxToTable;
     // Use this for initialization
@@ -36,6 +37,7 @@ public class cardBoardManager : MonoBehaviour {
         {
             t -= Time.deltaTime / TimeForBoxToTable;
             newBox.position = Vector3.Lerp(EventManager.Table.position+OffsetBoxToTable, startPos, t);
+            newBox.position += Vector3.up * AC.Evaluate(t);
             newBox.rotation = Quaternion.Lerp(EventManager.Table.rotation * Quaternion.AngleAxis(180f,Vector3.up), startRot, t);
             yield return null;
         }

@@ -19,10 +19,12 @@ public class PlaceAllCrates : MonoBehaviour {
 
         originCrateSize = Crate.transform.lossyScale;
         EventManager.OnExcelDataLoaded += InitiateStart;
+        EventManager.OnCategoryDone += raiseAllCrate;
     }
     private void Unsub()
     {
         EventManager.OnExcelDataLoaded -= InitiateStart;
+        EventManager.OnCategoryDone -= raiseAllCrate;
     }
     private void InitiateStart()
     {
@@ -67,7 +69,15 @@ public class PlaceAllCrates : MonoBehaviour {
                 StartCoroutine(MoveWithRow(ListOfCrates[i, k].transform.position, ListOfCrates[i, k].transform.position + ListOfCrates[i, k].transform.up, ListOfCrates[i, k].transform));
             }
         }
+        StartCoroutine(waitASec());
     }
+
+    private IEnumerator waitASec()
+    {
+        yield return new WaitForSeconds(1f);
+        EventManager.StartNextCategory();
+    }
+
     IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
     {
         int month = Month + 1; 
