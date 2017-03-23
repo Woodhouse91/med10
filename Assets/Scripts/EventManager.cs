@@ -18,7 +18,14 @@ public class EventManager : MonoBehaviour {
     public static event IntroAction OnCategoryDone;
     public static event IntroAction OnBoxAtTable;
     public static event IntroAction OnObjectsPlacedAtShelves;
-
+    public static event IntroAction OnStartScale;
+    public static float scaleTime
+    {
+        get
+        {
+            return 1f;
+        }
+    }
     private static int _currentCategory = 0;
     public static int CurrentCategory { get { return _currentCategory; } }
     private static Transform _table;
@@ -30,6 +37,11 @@ public class EventManager : MonoBehaviour {
                 _table = GameObject.Find("Table").transform;
             return _table;
         }
+    }
+    public static void StartScale()
+    {
+        if (OnStartScale != null)
+            OnStartScale();
     }
     public static void ObjectsPlacedAtShelves()
     {

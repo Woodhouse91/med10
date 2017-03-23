@@ -15,6 +15,10 @@ public class MoneyIntroHandler : MonoBehaviour {
     public static List<Transform> model;
     cardBoardManager cbm;
     public static List<Transform> focusModel;
+    [SerializeField]
+    Vector3 defaultModelScale;
+    [SerializeField]
+    private float defaultScaleTime = 1.5f;
 
     private void Awake()
     {
@@ -32,14 +36,12 @@ public class MoneyIntroHandler : MonoBehaviour {
         Quaternion orgRot = obj.rotation;
         if (destroy)
         {
-            tarPos += this.t.up * .5f;
+            tarPos += this.t.up*.5f;
             if (obj.tag == "ModelOnTable")
                 tarPos += this.t.right * .3f;
             else
-                tarPos += this.t.right * Random.Range(-.25f, .25f) + this.t.up * Random.Range(-.1f, .1f);
+                tarPos += this.t.right * Random.Range(.1f, .4f) + this.t.up * Random.Range(-.05f, .05f);
         }
-        else if (obj.tag == "ModelOnTable")
-            focusModel.Add(obj);
         else
             tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f);
         int s = side ? 1 : -1;
@@ -57,25 +59,41 @@ public class MoneyIntroHandler : MonoBehaviour {
                 tarRot *= Quaternion.AngleAxis(Random.Range(0f, 359f), Vector3.forward);
             }
         }
-        else if(obj.tag!="ModelOnTable")
+        else if (obj.tag != "ModelOnTable")
             tarRot = new Quaternion(Random.Range(0, 359), Random.Range(0, 359), Random.Range(0, 359), 1);
         float tt = 0;
         while (tt <= t)
         {
+            tt += Time.deltaTime;
             obj.position = Vector3.Lerp(orgPos, tarPos, tt / t);
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, tt / t);
-            tt += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
         //obj.position = orgPos;
         //obj.rotation = tarRot;
-        if (destroy)
+        if (destroy && obj.tag!="ModelOnTable")
         {
             obj.GetComponent<Rigidbody>().isKinematic = false;
             //Destroy(obj.gameObject);
         }
         else if(obj.tag == "ModelOnTable")
         {
+            Vector3 tarScale = defaultModelScale;
+            float ttt = 0;
+            while (ttt <= defaultScaleTime)
+            {
+                ttt += Time.deltaTime;
+                obj.localScale = Vector3.Lerp(Vector3.one, tarScale, ttt/EventManager.scaleTime);
+                yield return null;
+            }
+            ttt = 0;
+            tarScale = defaultModelScale * (1f + DataHandler.getScale(EventManager.CurrentCategory, month));
+            while (ttt <= EventManager.scaleTime)
+            {
+                ttt += Time.deltaTime;
+                obj.localScale = Vector3.Lerp(defaultModelScale, tarScale, ttt / EventManager.scaleTime);
+                yield return null;
+            }
             obj.GetComponent<Rigidbody>().isKinematic = false;
             obj.tag = "ModelOnShelf";
         }
@@ -87,13 +105,8 @@ public class MoneyIntroHandler : MonoBehaviour {
     }
     IEnumerator eventTrigger()
     {
-        yield return new WaitForSeconds(maxTravelTime_crate);
+        yield return new WaitForSeconds(maxTravelTime_crate+defaultScaleTime);
         EventManager.ObjectsPlacedAtShelves();
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha8))
-            EventManager.CategorySliderDone();
     }
     public void MoveMoneyToScreen()
     {
@@ -211,6 +224,7 @@ public class MoneyIntroHandler : MonoBehaviour {
         GameObject[] model = GameObject.FindGameObjectsWithTag("ModelOnTable");
         for (int x = 0; x<res.Length; ++x)
         {
+            month = x;
             bill = 0;
             t = pac.GetCrate(EventManager.CurrentCategory, x);
             for (int l = 0; l < res[x]._1000; ++l)
@@ -271,7 +285,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
-            StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, model[x].transform, false, false));
+            StartCoroutine(doMovement(false, minTravelTime_crate, t.position, t.rotation, model[x].transform, false, true));
             StartCoroutine(eventTrigger());
         }
     }

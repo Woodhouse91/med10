@@ -74,12 +74,19 @@ public class SlideAbleObject : MonoBehaviour
     IEnumerator controlModel(Transform obj)
     {
         yield return new WaitForSeconds(.5f);
-        Vector3 origin = obj.position, tar;
-        obj.GetComponent<Rigidbody>().isKinematic = true;
+        Vector3 origin = obj.position, tar, dir;
+        origin.y = 0;
         while (slider.gameObject.activeSelf)
         {
-            tar = origin + Vector3.up * (normDist / 4f);
-            obj.position += (obj.position - tar) * .1f * Time.deltaTime;
+            while (owner!=null)
+            {
+                tar = origin + Vector3.up * slider.position.y;
+                dir = tar - obj.position;
+                obj.position += dir * (1+dir.sqrMagnitude) * .1f * Time.deltaTime;
+                float t = Time.deltaTime / 2f*dir.magnitude;
+                obj.position += Vector3.right * UnityEngine.Random.Range(-t, t) + Vector3.forward * UnityEngine.Random.Range(-t, t);
+                yield return null;
+            }
             yield return null;
         }
         yield break;
@@ -107,6 +114,10 @@ public class SlideAbleObject : MonoBehaviour
                 StartCoroutine(Glide());
                 break;
         }
+        for(int x = 0; x<models.Length; ++x)
+        {
+            models[x].GetComponent<Rigidbody>().isKinematic = false;
+        }
     }
 
     private IEnumerator Glide()
@@ -121,6 +132,7 @@ public class SlideAbleObject : MonoBehaviour
         Vector3 tar = transform.InverseTransformPoint(target.position);
         Vector3 slid = transform.InverseTransformPoint(slider.position);
         tar.z = 0;
+       
         switch (DirectionSetting)
         {
             case DirBehaviour.Horizontal:
@@ -148,6 +160,11 @@ public class SlideAbleObject : MonoBehaviour
     public void setOwnerPosition(Vector3 pos)
     {
         Vector3 moddedPos = slider.InverseTransformPoint(pos);
+        if(models!=null)
+            for (int x = 0; x < models.Length; ++x)
+            {
+                models[x].GetComponent<Rigidbody>().isKinematic = true;
+            }
         switch (DirectionSetting)
         {
             case DirBehaviour.Horizontal:
