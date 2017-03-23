@@ -10,7 +10,7 @@ public class PlaceAllCrates : MonoBehaviour {
     public int TestCat;
     public int TestMonth;
     public float AngleRotate;
-    public GameObject Crate;
+    public GameObject Crate, MonthCrate;
     Vector3 originCrateSize;
     
 
@@ -31,6 +31,7 @@ public class PlaceAllCrates : MonoBehaviour {
         SizeOfBudget = DataHandler.BudgetCategories.Count;
         ListOfCrates = new GameObject[14, SizeOfBudget];
         PlaceThemAll(SizeOfBudget);
+        PlaceTheMonths();
         PlaceAllRows();
     }
 
@@ -180,6 +181,53 @@ public class PlaceAllCrates : MonoBehaviour {
             crate.transform.rotation *= Quaternion.AngleAxis(AngleRotate, crate.transform.up); //rotated to new angle
             crate.transform.position += crate.transform.forward * -SizeOfCrate.z / 2f - crate.transform.right * SizeOfCrate.x / 2f; //back to right position
             PlaceThemRepeat(x - 1, crate.transform.position, crate.transform.rotation, clockwise);
+        }
+    }
+
+
+    private void PlaceTheMonths()
+    {
+        int startMonth = DataHandler.startMonth;
+        print("startmonth er: "+ DataHandler.startMonth);
+        for (int i = 0; i < 12; i++)
+        {
+            GameObject month = Instantiate(MonthCrate);
+            month.transform.position = ListOfCrates[i + 1,0].transform.position + ListOfCrates[i + 1, 0].transform.forward  / 2f;
+            month.transform.rotation = ListOfCrates[i + 1, 0].transform.rotation * Quaternion.AngleAxis(90f,Vector3.up);
+            month.GetComponentInChildren<TextMesh>().text = monthToString((startMonth + i) % 12);
+        }
+    }
+
+    string monthToString(int x)
+    {
+        switch (x)
+        {
+            case 0:
+                return "Januar";
+            case 1:
+                return "Februar";
+            case 2:
+                return "Marts";
+            case 3:
+                return "April";
+            case 4:
+                return "Maj";
+            case 5:
+                return "Juni";
+            case 6:
+                return "Juli";
+            case 7:
+                return "August";
+            case 8:
+                return "September";
+            case 9:
+                return "Oktober";
+            case 10:
+                return "November";
+            case 11:
+                return "December";
+            default:
+                return "Null";
         }
     }
     public void PlaceAllRows() //place the rest of all the rows needed
