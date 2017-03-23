@@ -130,7 +130,8 @@ public class DataHandler : MonoBehaviour {
             DataHandler.month = Months.November;
         else if (month.Contains("Dec"))
             DataHandler.month = Months.December;
-        budgetStartMonth = month.GetHashCode();
+        budgetStartMonth = DataHandler.month.GetHashCode();
+        
     }
     public void setIncomeData(int[] val)
     {
