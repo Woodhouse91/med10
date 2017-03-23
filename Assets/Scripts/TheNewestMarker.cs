@@ -42,7 +42,6 @@ public class TheNewestMarker : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
         {
-            print("hit");
             draggedTar = hit.transform;
             dragOffset = transform.position - draggedTar.position;
             draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
