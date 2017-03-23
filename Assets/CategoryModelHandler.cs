@@ -9,6 +9,7 @@ public class CategoryModelHandler : MonoBehaviour
     void Start()
     {
         s = Resources.LoadAll<Transform>("BoxModels");
+        print(s.Length);
         if (s.Length > 0)
         {
             for (int x = 0; x < s.Length - 1; ++x)
