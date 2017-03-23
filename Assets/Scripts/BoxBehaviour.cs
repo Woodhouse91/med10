@@ -77,7 +77,15 @@ public class BoxBehaviour : MonoBehaviour {
         //first we raise it.
         float t = 0;
         Vector3 startPos = transform.position;
-        Vector3 endPos = transform.position + Vector3.up; // RAISE ONE METER
+        Vector3 endPos;
+        if (GetComponent<AddMoneyToTable>() != null)
+        {
+            endPos = EventManager.Table.position + EventManager.Table.up * 2f + EventManager.Table.right;
+        }
+        else
+        {
+            endPos = EventManager.Table.position + EventManager.Table.up * 2f - EventManager.Table.right;
+        }
         while (t<1)
         {
             transform.position = Vector3.Lerp(startPos, endPos, t);

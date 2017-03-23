@@ -10,11 +10,13 @@ public class PlaceAllCrates : MonoBehaviour {
     public int EXPANDDONGAT;
     public float AngleRotate;
     public GameObject Crate;
-
+    Vector3 originCrateSize;
     
 
     // Use this for initialization
     void Start () {
+
+        originCrateSize = Crate.transform.lossyScale;
         EventManager.OnExcelDataLoaded += InitiateStart;
     }
     private void Unsub()
@@ -62,7 +64,12 @@ public class PlaceAllCrates : MonoBehaviour {
             }
         }
     }
+    IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
+    {
+        yield return null;
+    }
 
+    #region OutdatedExpand
     IEnumerator ExpandRow(int rowNumber, float percent)
     {
         for (int i = 1; i < 13; i++) // only going through crates
@@ -97,6 +104,8 @@ public class PlaceAllCrates : MonoBehaviour {
         }
         yield return null;
     }
+    #endregion
+
 
     public void PlaceThemAll(int sizeOfBudget)
     {
