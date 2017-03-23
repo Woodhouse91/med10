@@ -46,18 +46,20 @@ public class MoneyIntroHandler : MonoBehaviour {
     {
         Unsub();
     }
-    IEnumerator doMovement(bool coin, float t, Vector3 tarPos, Quaternion tarRot, Transform obj, bool side, bool destroy)
+    IEnumerator doMovement(bool coin, float t, Transform target, Transform obj, bool side, bool destroy)
     {
         obj.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
+        Vector3 tarPos = target.position;
+        Quaternion tarRot = target.rotation;
         if (destroy)
         {
-            tarPos += this.t.up*.5f;
+            tarPos += target.up*.5f;
             if (obj.tag == "ModelOnTable")
-                tarPos += this.t.right * .3f;
+                tarPos += target.right * .3f;
             else
-                tarPos += this.t.right * Random.Range(.1f, .4f) + this.t.up * Random.Range(-.05f, .05f);
+                tarPos += target.right * Random.Range(.1f, .4f) + target.up * Random.Range(-.05f, .05f);
         }
         else
             tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f);
@@ -91,7 +93,8 @@ public class MoneyIntroHandler : MonoBehaviour {
         if (destroy && obj.tag!="ModelOnTable")
         {
             obj.GetComponent<Rigidbody>().isKinematic = false;
-            Destroy(obj.gameObject);
+            obj.tag = "Untagged";
+            //Destroy(obj.gameObject);
         }
         else if(obj.tag == "ModelOnTable")
         {
@@ -105,13 +108,14 @@ public class MoneyIntroHandler : MonoBehaviour {
             }
             ttt = 0;
             tarScale = defaultModelScale * (1f + DataHandler.getScale(EventManager.CurrentCategory, month));
+            StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, month, DataHandler.getScale(EventManager.CurrentCategory, month)));
             while (ttt <= EventManager.scaleTime)
             {
                 ttt += Time.deltaTime;
                 obj.localScale = Vector3.Lerp(defaultModelScale, tarScale, ttt / EventManager.scaleTime);
                 yield return null;
             }
-            obj.SetParent(this.t, true);
+            obj.SetParent(target, true);
             obj.GetComponent<Rigidbody>().isKinematic = false;
             obj.tag = "ModelOnShelf";
         }
@@ -139,7 +143,7 @@ public class MoneyIntroHandler : MonoBehaviour {
             sum500 += res[x]._500;
             sum200 += res[x]._200;
             sum100 += res[x]._100;
-            sum50 += res[x]._20;
+            sum50 += res[x]._50;
             sum20 += res[x]._20;
             sum10 += res[x]._10;
             sum5 += res[x]._5;
@@ -161,69 +165,69 @@ public class MoneyIntroHandler : MonoBehaviour {
         for(int x = 0; x< sum1000; ++x)
         {
             _1000.Add(search[x]);
-            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("500kr");
         for(int x = 0; x<sum500; ++x)
         {
             _500.Add(search[x]);
-            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("200kr");
         for (int x = 0; x < sum200; ++x)
         {
             _200.Add(search[x]);
-            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("100kr");
         for (int x = 0; x < sum100; ++x)
         {
             _100.Add(search[x]);
-            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("50kr");
         for (int x = 0; x < sum50; ++x)
         {
             _50.Add(search[x]);
-            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(false, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("20kr");
         for (int x = 0; x < sum20; ++x)
         {
             _20.Add(search[x]);
-            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("10kr");
         for (int x = 0; x < sum10; ++x)
         {
             _10.Add(search[x]);
-            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
         }
         search = GameObject.FindGameObjectsWithTag("5kr");
         for (int x = 0; x < sum5; ++x)
         {
             _5.Add(search[x]);
-            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("2kr");
         for (int x = 0; x < sum2; ++x)
         {
             _2.Add(search[x]);
-            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         search = GameObject.FindGameObjectsWithTag("1kr");
         for (int x = 0; x < sum1; ++x)
         {
             _1.Add(search[x]);
-            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), pos, rot, search[x].transform, side, false));
+            StartCoroutine(doMovement(true, Random.Range(minTravelTime_screen, maxTravelTime_screen), screen, search[x].transform, side, false));
             side = !side;
         }
         currencyFound.Add(_1000);
@@ -249,63 +253,64 @@ public class MoneyIntroHandler : MonoBehaviour {
             t = pac.GetCrate(EventManager.CurrentCategory, x);
             for (int l = 0; l < res[x]._1000; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._500; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._200; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._100; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
+            bill++;
             for (int l = 0; l < res[x]._50; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._20; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._10; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._5; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._2; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             bill++;
             for (int l = 0; l < res[x]._1; ++l)
             {
-                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t.position, t.rotation, currencyFound[bill][0].transform, true, true));
+                StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
-            StartCoroutine(doMovement(false, minTravelTime_crate, t.position, t.rotation, model[x].transform, false, true));
+            StartCoroutine(doMovement(false, minTravelTime_crate, t, model[x].transform, false, true));
         }
         StartCoroutine(eventTrigger());
     }

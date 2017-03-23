@@ -185,7 +185,7 @@ public class PlaceAllCrates : MonoBehaviour {
     }
 
 
-    private void PlaceTheMonths()
+    public void PlaceTheMonths()
     {
         int startMonth = DataHandler.startMonth;
         print("startmonth er: "+ DataHandler.startMonth);
