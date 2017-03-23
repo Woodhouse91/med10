@@ -41,14 +41,7 @@ public class PlaceAllCrates : MonoBehaviour {
     }
     // Update is called once per frame
     void Update () {
-		if(Input.GetKeyDown(KeyCode.J))
-        {
-            StartCoroutine(ExpandCrateAt_Cat_Month(TestCat,TestMonth, 0.5f));
-        }
-        if(Input.GetKeyDown(KeyCode.K))
-            raiseAllCrate();
-
-
+	
     }
     public void FlipCrate(int category, int month)
     {
@@ -63,19 +56,31 @@ public class PlaceAllCrates : MonoBehaviour {
   
     public void raiseAllCrate()
     {
+        /*
         for (int i = 1; i <13; i++)
         {
             for (int k = 0; k < SizeOfBudget; k++)
             {
                 StartCoroutine(MoveWithRow(ListOfCrates[i, k].transform.position, ListOfCrates[i, k].transform.position + ListOfCrates[i, k].transform.up, ListOfCrates[i, k].transform));
             }
-        }
-        StartCoroutine(waitASec());
+        }*/
+
+        StartCoroutine(MoveEverythingUp());
     }
 
-    private IEnumerator waitASec()
+    private IEnumerator MoveEverythingUp()
     {
-        yield return new WaitForSeconds(1f);
+        float t = 0;
+        Vector3 start = transform.parent.position;
+        Vector3 end = transform.parent.position + transform.up;
+        while (t < 1f)
+        {
+            transform.parent.position = Vector3.Lerp(start, end, t);
+            t += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        //yield return new WaitForSeconds(1f);
         EventManager.StartNextCategory();
     }
 
@@ -188,7 +193,7 @@ public class PlaceAllCrates : MonoBehaviour {
     public void PlaceTheMonths()
     {
         int startMonth = DataHandler.startMonth;
-        print("startmonth er: "+ DataHandler.startMonth);
+        
         for (int i = 0; i < 12; i++)
         {
             GameObject month = Instantiate(MonthCrate);

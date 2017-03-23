@@ -43,7 +43,7 @@ public class RipTheTape : MonoBehaviour {
         {
             if(dist - distance>0)
             {
-                ps1.Emit( (int)((dist-distance)*1000f));
+                ps1.Emit( 1 + (int)((dist-distance)*100f));
                 ps1.transform.localPosition = new Vector3(-10f * dist,0f,0f);
             } 
             
@@ -53,6 +53,8 @@ public class RipTheTape : MonoBehaviour {
                 // startpos (0,0,0) endpos (-10,0,0) 
                 if ((float)i / NumOfPos <= dist)
                     pos[i] = new Vector3(-(-10f *i / NumOfPos+ dist * 10f)+dist*-10f,0f, (dist * -(NumOfPos-i)/NumOfPos));
+                else
+                    pos[i] = new Vector3(-10f * ((float)i / NumOfPos), 0f,0f);
             }
             tape.SetPositions(pos);
         }
@@ -60,7 +62,7 @@ public class RipTheTape : MonoBehaviour {
     }
     IEnumerator fadeOut()
     {
-        ps2.Emit(100);
+        ps2.Emit(50);
         float t = 1f;
         while(t>0)
         {

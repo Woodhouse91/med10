@@ -240,12 +240,21 @@ public class SlideAbleObject : MonoBehaviour
         while (Vector3.Distance(slider.position, orgPos)>0.05f && owner==null)
         {
             slider.position += dir * returnSpeed * Time.deltaTime;
+            if (DirectionSetting == DirBehaviour.Horizontal)
+            {
+                normDist = 1f - Vector3.Distance(slider.position, target.position) / dist;
+                bh.setTapeRip(normDist);
+            }
             yield return null;
         }
         returning = false;
         if(owner != null)
             yield break;
         slider.position = orgPos;
+        if (DirectionSetting == DirBehaviour.Horizontal)
+        {
+            bh.setTapeRip(0f);
+        }
     }
 
     private void OnApplicationQuit()

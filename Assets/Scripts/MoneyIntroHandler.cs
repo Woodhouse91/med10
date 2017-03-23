@@ -246,12 +246,14 @@ public class MoneyIntroHandler : MonoBehaviour {
     {
         int bill = 0;
         GameObject[] model = GameObject.FindGameObjectsWithTag("ModelOnTable");
+        
         for (int x = 0; x<res.Length; ++x)
         {
             month = x;
             bill = 0;
+            print(DataHandler.expenseData[EventManager.CurrentCategory, month]);
             t = pac.GetCrate(EventManager.CurrentCategory, x);
-            for (int l = 0; l < res[x]._1000; ++l)
+                for (int l = 0; l < res[x]._1000; ++l)
             {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
@@ -310,7 +312,10 @@ public class MoneyIntroHandler : MonoBehaviour {
                 StartCoroutine(doMovement(false, Random.Range(minTravelTime_crate, maxTravelTime_crate), t, currencyFound[bill][0].transform, true, true));
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
+           
+               
             StartCoroutine(doMovement(false, minTravelTime_crate, t, model[x].transform, false, true));
+             
         }
         StartCoroutine(eventTrigger());
     }
