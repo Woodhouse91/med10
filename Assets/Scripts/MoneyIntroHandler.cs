@@ -91,7 +91,7 @@ public class MoneyIntroHandler : MonoBehaviour {
         if (destroy && obj.tag!="ModelOnTable")
         {
             obj.GetComponent<Rigidbody>().isKinematic = false;
-            //Destroy(obj.gameObject);
+            Destroy(obj.gameObject);
         }
         else if(obj.tag == "ModelOnTable")
         {
@@ -306,7 +306,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 currencyFound[bill].Remove(currencyFound[bill][0]);
             }
             StartCoroutine(doMovement(false, minTravelTime_crate, t.position, t.rotation, model[x].transform, false, true));
-            StartCoroutine(eventTrigger());
         }
+        StartCoroutine(eventTrigger());
     }
 }
