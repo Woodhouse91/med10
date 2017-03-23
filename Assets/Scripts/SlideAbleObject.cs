@@ -114,10 +114,11 @@ public class SlideAbleObject : MonoBehaviour
                 StartCoroutine(Glide());
                 break;
         }
-        for(int x = 0; x<models.Length; ++x)
-        {
-            models[x].GetComponent<Rigidbody>().isKinematic = false;
-        }
+        if(models!=null)
+            for(int x = 0; x<models.Length; ++x)
+            {
+                models[x].GetComponent<Rigidbody>().isKinematic = false;
+            }
     }
 
     private IEnumerator Glide()
@@ -236,13 +237,13 @@ public class SlideAbleObject : MonoBehaviour
         }
         returning = true;
         Vector3 dir = -(slider.position - orgPos).normalized;
-        while (Vector3.Distance(slider.position, orgPos)>0.01f && owner==null)
+        while (Vector3.Distance(slider.position, orgPos)>0.05f && owner==null)
         {
             slider.position += dir * returnSpeed * Time.deltaTime;
             yield return null;
         }
         returning = false;
-        if(owner == null)
+        if(owner != null)
             yield break;
         slider.position = orgPos;
     }

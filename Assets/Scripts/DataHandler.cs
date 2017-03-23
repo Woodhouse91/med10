@@ -47,8 +47,6 @@ public class DataHandler : MonoBehaviour {
     private static int[] _incomeData;
     private enum Months { January, February, March, April, May, June, July, August, September, October, November, December};
     private static Months month;
-    private enum Categories {Rent, Ensurance, Savings};
-    private Categories category;
     public struct TotalBills
     {
         public int _1000, _500, _200, _100, _50, _20, _10, _5, _2, _1;
@@ -225,7 +223,7 @@ public class DataHandler : MonoBehaviour {
         dIncome %= 5;
         tBills._2 += dIncome / 2;
         dIncome %= 2;
-        tBills._1 += dIncome / 1;
+        tBills._1 += dIncome;
     }
 
 }
