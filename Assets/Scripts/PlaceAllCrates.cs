@@ -79,7 +79,7 @@ public class PlaceAllCrates : MonoBehaviour {
         EventManager.StartNextCategory();
     }
 
-    IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
+    public IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
     {
         int month = Month + 1; 
         Vector3 start = originCrateSize;
@@ -185,7 +185,7 @@ public class PlaceAllCrates : MonoBehaviour {
     }
 
 
-    private void PlaceTheMonths()
+    public void PlaceTheMonths()
     {
         int startMonth = DataHandler.startMonth;
         print("startmonth er: "+ DataHandler.startMonth);

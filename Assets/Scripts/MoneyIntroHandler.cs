@@ -108,6 +108,7 @@ public class MoneyIntroHandler : MonoBehaviour {
             }
             ttt = 0;
             tarScale = defaultModelScale * (1f + DataHandler.getScale(EventManager.CurrentCategory, month));
+            StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, month, DataHandler.getScale(EventManager.CurrentCategory, month)));
             while (ttt <= EventManager.scaleTime)
             {
                 ttt += Time.deltaTime;
