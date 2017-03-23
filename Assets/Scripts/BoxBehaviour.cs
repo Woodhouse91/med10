@@ -80,11 +80,11 @@ public class BoxBehaviour : MonoBehaviour {
         Vector3 endPos;
         if (GetComponent<AddMoneyToTable>() != null)
         {
-            endPos = EventManager.Table.position + EventManager.Table.up * 2f + EventManager.Table.right;
+            endPos = EventManager.Table.position + EventManager.Table.up * 2f + EventManager.Table.right/2f;
         }
         else
         {
-            endPos = EventManager.Table.position + EventManager.Table.up * 2f - EventManager.Table.right;
+            endPos = EventManager.Table.position + EventManager.Table.up * 2f - EventManager.Table.right/2f;
         }
         while (t<1)
         {
