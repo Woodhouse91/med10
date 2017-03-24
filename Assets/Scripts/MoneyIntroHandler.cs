@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class MoneyIntroHandler : MonoBehaviour {
     private int month = 0;
     private int[,] data;
