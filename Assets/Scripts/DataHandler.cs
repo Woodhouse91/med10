@@ -158,7 +158,7 @@ public class DataHandler : MonoBehaviour {
     }
     public static float getScale(int category, int month)
     {
-        return _expenseData[month, category] / tExpense;
+        return _expenseData[month+1, category] * 12f / tExpense; // times 12 because of single crate expanding
     }
     private static void calcRequiredBills()
     {
