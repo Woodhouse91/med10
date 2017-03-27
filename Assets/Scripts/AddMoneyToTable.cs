@@ -38,7 +38,7 @@ public class AddMoneyToTable : MonoBehaviour {
                 pos = transform.TransformPoint(pos);
                 MoneyHolder.allCurrency[y].SetActive(true);
                 MoneyHolder.allCurrency[y].transform.position = pos;
-                MoneyHolder.allCurrency[y].transform.rotation = Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward);
+                MoneyHolder.allCurrency[y].transform.rotation = Random.rotation;
                 y++;
                 if (y < MoneyHolder.allCurrency.Count)
                     break;
