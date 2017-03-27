@@ -18,7 +18,6 @@ public class PlaceAllCrates : MonoBehaviour {
     void Start () {
 
         originCrateSize = Crate.transform.lossyScale;
-        print(originCrateSize);
         EventManager.OnExcelDataLoaded += InitiateStart;
         EventManager.OnCategoryDone += raiseAllCrate;
     }
