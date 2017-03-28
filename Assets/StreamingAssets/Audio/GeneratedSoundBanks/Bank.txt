@@ -1,15 +1,17 @@
 Event	ID	Name			Wwise Object Path	Notes
-	720171548	playSoundOnPC			\Default Work Unit\playSoundOnPC	
-	951616562	playSoundOnHeadphones			\Default Work Unit\playSoundOnHeadphones	
+	77978275	Ambient			\Default Work Unit\Ambient	
+	167122607	HitPiano			\Default Work Unit\HitPiano	
+	363813520	RipTapePause			\Default Work Unit\RipTapePause	
+	1327934027	RipTapeResume			\Default Work Unit\RipTapeResume	
+	3482241282	RipTape			\Default Work Unit\RipTape	
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
-	129	MIDI note velocity			\MIDI note velocity	
+	201860055	RipTapeVelocity			\Default Work Unit\RipTapeVelocity	
+	878780846	HitPianoVelocity			\Default Work Unit\HitPianoVelocity	
+	1605327198	RipTapeDist			\Default Work Unit\RipTapeDist	
 
-Modulator Envelope	ID	Name			Wwise Object Path	Notes
-	773663610	Modulator Envelope (Custom)				
-	914599797	Modulator Envelope (Custom)				
-
-Source plug-ins	ID	Name	Type		Wwise Object Path	Notes
-	690379693	CONFIRM 01	Wwise Synth One		\Actor-Mixer Hierarchy\SoundTest\PlaySoundHeadphones\CONFIRM 01\CONFIRM 01	Audiokinetic Inc. All rights reserved. Content provided by Vincent Gagnon © 2014 Vincent Gagnon
-	970241952	CONFIRM 01	Wwise Synth One		\Actor-Mixer Hierarchy\SoundTest\PlaySoundPC\CONFIRM 01\CONFIRM 01	Audiokinetic Inc. All rights reserved. Content provided by Vincent Gagnon © 2014 Vincent Gagnon
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	14048819	HitPiano	C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\SFX\Music\pianoHit_9E69E797.wem		\Actor-Mixer Hierarchy\Kristoffer-Temp\HitPiano		217152
+	307548062	RipTape	C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\SFX\Music\ripTape_458016A2.wem		\Actor-Mixer Hierarchy\Kristoffer-Temp\RipTape		366164
+	964623156	PianoAmbient	C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\SFX\The Legend of Zelda- Breath of the Wild OST - Day_9E69E797.wem		\Actor-Mixer Hierarchy\Kristoffer-Temp\PianoAmbient		48568384
 

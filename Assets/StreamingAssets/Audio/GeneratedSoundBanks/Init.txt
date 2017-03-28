@@ -1,5 +1,4 @@
 Audio Bus	ID	Name			Wwise Object Path	Notes
 	805203703	Master Secondary Bus			\Default Work Unit\Master Secondary Bus	
-	3012075935	bus 2			\Default Work Unit\Master Secondary Bus\bus 2	
 	3803692087	Master Audio Bus			\Default Work Unit\Master Audio Bus	
 

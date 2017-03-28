@@ -63,25 +63,28 @@ public class PlaceAllCrates : MonoBehaviour {
     IEnumerator FlipCrateAni(GameObject crate) // MANGLER ANIMATION
     {
         float t = 0;
-
+        Vector3 startP = crate.transform.position;
+        Vector3 endP = crate.transform.forward;
+        Quaternion startR = crate.transform.rotation;
+        Quaternion endR = crate.transform.rotation * Quaternion.AngleAxis(Time.deltaTime * 180f, crate.transform.up);
         while (t < 1)
         {
             t += Time.deltaTime;
-            crate.transform.position += crate.transform.forward * Time.deltaTime;
+            crate.transform.position = Vector3.Lerp(startP,endP,t);
             yield return null;
         }
         t = 0;
         while (t < 1)
         {
             t += Time.deltaTime;
-            crate.transform.rotation *= Quaternion.AngleAxis(Time.deltaTime*180f, crate.transform.up);
+            crate.transform.rotation = Quaternion.Lerp(startR, endR, t);
             yield return null;
         }
         t = 0;
         while (t < 1)
         {
             t += Time.deltaTime;
-            crate.transform.position += crate.transform.forward * Time.deltaTime;
+            crate.transform.position = Vector3.Lerp(endP, startP, t);
             yield return null;
         }
         yield return null;
