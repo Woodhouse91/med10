@@ -75,6 +75,7 @@ public class DataAppLauncher : MonoBehaviour
     }
     private IEnumerator populateArrays()
     {
+        int val;
         GenericsList = new List<string>();
         BudgetCat = new List<string>();
         Income = new List<int>();
@@ -132,6 +133,7 @@ public class DataAppLauncher : MonoBehaviour
         #region Expense
         res = sr.ReadLine();
         bool isCategory = true;
+        
         while (true)
         {
             while (res != rowBreak && res!=dataBreak)
@@ -144,7 +146,11 @@ public class DataAppLauncher : MonoBehaviour
                 }
                 else
                 {
-                    ExpenseList.Add(int.Parse(res));
+                    if (int.TryParse(res, out val))
+                        ExpenseList.Add(val);
+                    else
+                        ExpenseList.Add(0);
+
                 }
                 res = sr.ReadLine();
                 yield return null;
@@ -161,6 +167,7 @@ public class DataAppLauncher : MonoBehaviour
         #region PRINT DATA
         //print("Month: " + DataHandler.startMonth);
         //print("EXPENSE DATA: ");
+        //print(Expense.Count);
         //for (int x = 0; x < Expense.Count; ++x)
         //{
         //    print(BudgetCat[x]);

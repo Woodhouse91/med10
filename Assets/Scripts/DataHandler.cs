@@ -53,7 +53,7 @@ public class DataHandler : MonoBehaviour {
         public int _1000, _500, _200, _100, _50, _20, _10, _5, _2, _1;
     }
     public static List<billRef[]> BillsAtCategory_Month;
-    private static bool _dataCompleted = false, _ExposeData = true;
+    private static bool _dataCompleted = false, _ExposeData = false;
     private static int[] _incomeData;
     public struct TotalBills
     {
