@@ -19,6 +19,7 @@ public class EventManager : MonoBehaviour {
     public static event IntroAction OnBoxAtTable;
     public static event IntroAction OnObjectsPlacedAtShelves;
     public static event IntroAction OnStartScale;
+    public static event IntroAction OnCategoryFinished;
     public static float scaleTime
     {
         get
@@ -86,7 +87,12 @@ public class EventManager : MonoBehaviour {
     public static void CategoryDone()
     {
         _currentCategory++;
-        if (OnCategoryDone != null)
+        if(_currentCategory >= DataHandler.BudgetCategories.Count)
+        {
+            if (OnCategoryFinished != null)
+                OnCategoryFinished();
+        }
+        else if (OnCategoryDone != null)
             OnCategoryDone();
     }
     public static void StartNextCategory()

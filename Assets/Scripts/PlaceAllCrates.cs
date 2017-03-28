@@ -18,7 +18,6 @@ public class PlaceAllCrates : MonoBehaviour {
     void Start () {
 
         originCrateSize = Crate.transform.lossyScale;
-        print(originCrateSize);
         EventManager.OnExcelDataLoaded += InitiateStart;
         EventManager.OnCategoryDone += raiseAllCrate;
     }
@@ -39,6 +38,19 @@ public class PlaceAllCrates : MonoBehaviour {
     public Transform GetCrate(int category, int month)
     {
         return ListOfCrates[month+1, category].transform;
+    }
+    
+    public int GetExpenseDataFromCrate(Transform crate) //Expensive method for getting the expenseData for the specific crate
+    {
+        for (int i = 1; i < 12; i++)
+        {
+            for (int k = 0; k < SizeOfBudget; k++)
+            {
+                if (crate.gameObject.GetInstanceID() == ListOfCrates[i, k].GetInstanceID())
+                    return DataHandler.expenseData[i, k];
+            }
+        }
+        return 0;
     }
     // Update is called once per frame
     void Update () {
@@ -97,6 +109,7 @@ public class PlaceAllCrates : MonoBehaviour {
         while (t < 1f)
         {
             transform.parent.position = Vector3.Lerp(start, end, t);
+            
             t += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }

@@ -1,10 +1,16 @@
-﻿using System.Collections;
+﻿//using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 public class MoneyIntroHandler : MonoBehaviour {
     private int month = 0;
+    private float BagValue;
+    private int maxValueOfAMonth;
+    float bagSize;
+    public float spawnBagDelay = 1f;
+    public Transform BagOfMoney;
     private int[,] data;
     PlaceAllCrates pac;
     List<List<GameObject>> currencyFound;
@@ -29,12 +35,32 @@ public class MoneyIntroHandler : MonoBehaviour {
         cbm = FindObjectOfType<cardBoardManager>();
         EventManager.OnBoxEmptied += MoveMoneyToScreen;
         EventManager.OnCategorySliderDone += MoveMoneyToCrate;
-
+        EventManager.OnExcelDataLoaded += CalculateBagOfMoney;
+        EventManager.OnCategoryFinished += CreateMoneyBagsOnTable;
+        EventManager.OnCategoryDone += CreateMoneyBagsOnTable2;
     }
+
+    private void CreateMoneyBagsOnTable2()
+    {
+        print("vi kører videre");
+    }
+
+    private void CreateMoneyBagsOnTable()
+    {
+        print("nu stopper vi");
+    }
+    private void CalculateBagOfMoney()
+    {
+        BagValue = DataHandler.incomeData[12]/100f;
+    }
+
     private void Unsub()
     {
         EventManager.OnBoxEmptied -= MoveMoneyToScreen;
         EventManager.OnCategorySliderDone -= MoveMoneyToCrate;
+        EventManager.OnExcelDataLoaded -= CalculateBagOfMoney;
+        EventManager.OnCategoryFinished -= CreateMoneyBagsOnTable;
+        EventManager.OnCategoryDone -= CreateMoneyBagsOnTable2;
     }
     private void OnApplicationQuit()
     {
@@ -48,6 +74,64 @@ public class MoneyIntroHandler : MonoBehaviour {
     {
         Unsub();
     }
+    void CreateBagsOfMoney(int _month,Transform target)
+    {
+        float bags = DataHandler.expenseData[_month+1, EventManager.CurrentCategory] / BagValue;
+        
+        for (int i = 0; i < bags; i++)
+        {
+            Transform BoM  = Instantiate(BagOfMoney);
+            if (bagSize == 0)
+            {
+                bagSize = BoM.GetComponent<Collider>().bounds.size.y;
+                print("bagsize er : " +bagSize);
+            }
+            BoM.localScale = Vector3.zero;
+            BoM.position = target.position + Vector3.up * (target.GetComponent<Collider>().bounds.size.y*0.8f-bagSize/2f) + Vector3.right * (target.GetComponent<Collider>().bounds.size.x * 0.8f * Random.Range(-0.4f, 0.4f));
+            BoM.rotation = target.rotation;
+            if (bags - i >= 1f)
+                StartCoroutine(ExpandBag(1f, i,BoM, target));
+            else
+                StartCoroutine(ExpandBag(bags % 1, i,BoM,target));
+        }
+
+    }
+
+    private IEnumerator FallAndChildTo(Transform obj,Transform target)
+    {
+        obj.GetComponent<Rigidbody>().isKinematic = false;
+        float t = 0;
+        while (t < EventManager.scaleTime)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+        obj.gameObject.AddComponent<ChildTo>();
+        obj.GetComponent<ChildTo>().Initiate(target);
+        yield return null;
+    }
+
+    private IEnumerator ExpandBag(float expand, int delay, Transform BoM, Transform target)
+    {
+        float cDelay = 0;
+        while (cDelay<delay)
+        {
+            cDelay += Time.deltaTime * spawnBagDelay;
+            yield return null;
+        }
+        float t = 0;
+        while (t < expand)
+        {
+            t += Time.deltaTime;
+            if (t > 1)
+                t = 1.0f;
+            BoM.localScale = Vector3.one * t;
+            yield return null;
+        }
+        StartCoroutine(FallAndChildTo(BoM, target));
+        yield return null;
+    }
+
     IEnumerator doMovement(bool coin, float t, Transform target, Transform obj, bool side, bool destroy, int _month)
     {
         obj.GetComponent<Rigidbody>().isKinematic = true;
@@ -90,13 +174,14 @@ public class MoneyIntroHandler : MonoBehaviour {
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, tt / t);
             yield return new WaitForEndOfFrame();
         }
+   
         //obj.position = orgPos;
         //obj.rotation = tarRot;
         if (destroy && obj.tag!="ModelOnTable")
         {
-            obj.GetComponent<Rigidbody>().isKinematic = false;
-            obj.tag = "Untagged";
-            //Destroy(obj.gameObject);
+            Destroy(obj.gameObject);
+            //obj.GetComponent<Rigidbody>().isKinematic = false;
+            //obj.tag = "Untagged";
         }
         else if(obj.tag == "ModelOnTable")
         {
@@ -114,13 +199,18 @@ public class MoneyIntroHandler : MonoBehaviour {
             while (ttt <= EventManager.scaleTime)
             {
                 ttt += Time.deltaTime;
-                if(obj.GetComponent<Collider>().bounds.size.z < 1f && obj.GetComponent<Collider>().bounds.size.x < 1f)
+                if(obj.GetComponent<Collider>() == null)
+                {
+                    if (obj.GetComponentInChildren<Collider>().bounds.size.z < 1f && obj.GetComponentInChildren<Collider>().bounds.size.x < 1f)
+                        obj.localScale = Vector3.Lerp(defaultModelScale, tarScale, ttt / EventManager.scaleTime);
+                }
+                else if(obj.GetComponent<Collider>().bounds.size.z < 1f && obj.GetComponent<Collider>().bounds.size.x < 1f)
                     obj.localScale = Vector3.Lerp(defaultModelScale, tarScale, ttt / EventManager.scaleTime);
                 yield return null;
             }
-            obj.SetParent(target, true); 
-            obj.GetComponent<Rigidbody>().isKinematic = false;
+            StartCoroutine(FallAndChildTo(obj, target));
             obj.tag = "ModelOnShelf";
+            CreateBagsOfMoney(_month,target);
         }
         yield break;
     }
@@ -132,11 +222,14 @@ public class MoneyIntroHandler : MonoBehaviour {
     {
         yield return new WaitForSeconds(maxTravelTime_crate+defaultScaleTime);
         EventManager.ObjectsPlacedAtShelves();
-        yield return new WaitForSeconds(EventManager.scaleTime);
+        print(maxValueOfAMonth);
+        print("vent i antal sekunder "+(maxValueOfAMonth / BagValue) / spawnBagDelay);
+        yield return new WaitForSeconds(EventManager.scaleTime + (maxValueOfAMonth / BagValue)/spawnBagDelay );
         EventManager.CategoryDone();
     }
     public void MoveMoneyToScreen()
     {
+        maxValueOfAMonth = 0;
         EmptyCrate = new List<int>();
         int sum1000 = 0, sum500 = 0, sum200 = 0, sum100 = 0, sum50 = 0, sum20 = 0, sum10 = 0, sum5 = 0, sum2 = 0, sum1 = 0;
         currencyFound = new List<List<GameObject>>();
@@ -157,6 +250,11 @@ public class MoneyIntroHandler : MonoBehaviour {
             {
                 EmptyCrate.Add(x);
                 pac.FlipCrate(EventManager.CurrentCategory, x); //flipper det lidt for tidligt måske?!
+            }
+            else 
+            {
+                if (res[x]._1000 * 1000 + res[x]._500 * 500 + res[x]._200 * 200 + res[x]._100 * 100 + res[x]._50 * 50 + res[x]._20 * 20 + res[x]._10 * 10 + res[x]._5 * 5 + res[x]._2 * 2 + res[x]._1 > maxValueOfAMonth)
+                    maxValueOfAMonth = res[x]._1000 * 1000 + res[x]._500 * 500 + res[x]._200 * 200 + res[x]._100 * 100 + res[x]._50 * 50 + res[x]._20 * 20 + res[x]._10 * 10 + res[x]._5 * 5 + res[x]._2 * 2 + res[x]._1;
             }
         }
         List<GameObject> _1000 = new List<GameObject>(), _500 = new List<GameObject>(), _200 = new List<GameObject>(), 
