@@ -13,12 +13,18 @@ namespace AK
 {
     namespace EVENTS
     {
-        static const AkUniqueID PLAYSOUNDONHEADPHONES = 951616562U;
-        static const AkUniqueID PLAYSOUNDONPC = 720171548U;
+        static const AkUniqueID AMBIENT = 77978275U;
+        static const AkUniqueID HITPIANO = 167122607U;
+        static const AkUniqueID RIPTAPE = 3482241282U;
+        static const AkUniqueID RIPTAPEPAUSE = 363813520U;
+        static const AkUniqueID RIPTAPERESUME = 1327934027U;
     } // namespace EVENTS
 
     namespace GAME_PARAMETERS
     {
+        static const AkUniqueID HITPIANOVELOCITY = 878780846U;
+        static const AkUniqueID RIPTAPEDIST = 1605327198U;
+        static const AkUniqueID RIPTAPEVELOCITY = 201860055U;
         static const AkUniqueID SS_AIR_FEAR = 1351367891U;
         static const AkUniqueID SS_AIR_FREEFALL = 3002758120U;
         static const AkUniqueID SS_AIR_FURY = 1029930033U;
@@ -39,7 +45,6 @@ namespace AK
 
     namespace BUSSES
     {
-        static const AkUniqueID BUS_2 = 3012075935U;
         static const AkUniqueID MASTER_AUDIO_BUS = 3803692087U;
         static const AkUniqueID MASTER_SECONDARY_BUS = 805203703U;
     } // namespace BUSSES

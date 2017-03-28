@@ -2649,12 +2649,7 @@ public class AkSoundEngine {
     return ret;
   }
 
-    internal static void AddSecondaryOutput(int v1, object akOutput_PC, int v2)
-    {
-        throw new NotImplementedException();
-    }
-
-    public const int _WIN32_WINNT = 0x0602;
+  public const int _WIN32_WINNT = 0x0602;
   public const int AK_SIMD_ALIGNMENT = 16;
   public const int AK_BUFFER_ALIGNMENT = 16;
   public const int AK_XAUDIO2_FLAGS = 0;

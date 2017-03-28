@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PluginInfo Project="med10" Platform="Windows" BasePlatform="Windows">
-	<Plugins>
-		<Plugin Name="Wwise Synth One" ID="9699330" DLL="SynthOne"/>
-	</Plugins>
+	<Plugins/>
 </PluginInfo>

@@ -21,9 +21,26 @@
 			<ShortName>Bank</ShortName>
 			<Path>Bank.bnk</Path>
 			<IncludedEvents>
-				<Event Id="951616562" Name="playSoundOnHeadphones" ObjectPath="\Events\Default Work Unit\playSoundOnHeadphones"/>
-				<Event Id="720171548" Name="playSoundOnPC" ObjectPath="\Events\Default Work Unit\playSoundOnPC"/>
+				<Event Id="77978275" Name="Ambient" ObjectPath="\Events\Default Work Unit\Ambient" MaxAttenuation="10.000000"/>
+				<Event Id="167122607" Name="HitPiano" ObjectPath="\Events\Default Work Unit\HitPiano" MaxAttenuation="100.000000"/>
+				<Event Id="3482241282" Name="RipTape" ObjectPath="\Events\Default Work Unit\RipTape" MaxAttenuation="100.000000"/>
+				<Event Id="363813520" Name="RipTapePause" ObjectPath="\Events\Default Work Unit\RipTapePause" MaxAttenuation="0.000000"/>
+				<Event Id="1327934027" Name="RipTapeResume" ObjectPath="\Events\Default Work Unit\RipTapeResume" MaxAttenuation="0.000000"/>
 			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="14048819" Language="SFX">
+					<ShortName>Music\pianoHit.wav</ShortName>
+					<Path>SFX\Music\pianoHit_9E69E797.wem</Path>
+				</File>
+				<File Id="307548062" Language="SFX">
+					<ShortName>Music\ripTape.wav</ShortName>
+					<Path>SFX\Music\ripTape_458016A2.wem</Path>
+				</File>
+				<File Id="964623156" Language="SFX">
+					<ShortName>The Legend of Zelda- Breath of the Wild OST - Day.wav</ShortName>
+					<Path>SFX\The Legend of Zelda- Breath of the Wild OST - Day_9E69E797.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
 		</SoundBank>
 	</SoundBanks>
 </SoundBanksInfo>
