@@ -148,7 +148,7 @@ public class MoneyIntroHandler : MonoBehaviour {
                 tarPos += target.right * Random.Range(.1f, .4f) + target.up * Random.Range(-.05f, .05f);
         }
         else
-            tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f);
+            tarPos += screen.right * Random.Range(-0.22f, 0.22f) + screen.up * Random.Range(-0.09f, 0.09f) - screen.forward * Random.Range(0.0f,0.001f);
         int s = side ? 1 : -1;
         if (!destroy && obj.tag != "ModelOnTable")
         {
