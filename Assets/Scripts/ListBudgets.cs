@@ -9,17 +9,24 @@ public class ListBudgets : MonoBehaviour {
     [SerializeField]
     private GameObject overlay, eventSystem;
     // Use this for initialization
+    private void Start()
+    {
+        GenerateBudgetList();
+    }
     public void GenerateBudgetList()
     {
         but = Resources.Load<Transform>("budgetListButton");
-        string path = Application.dataPath + "/Excel Budget/";
+        string path = Application.streamingAssetsPath + "/ExcelFiles/Budget/";
         string[] budgetList = Directory.GetFiles(path);
         for (int x = budgetList.Length - 1; x > -1; --x)
         {
-            if (budgetList[x].Contains(".meta"))
+            if (budgetList[x].Contains(".xlsx") && !budgetList[x].Contains(".meta"))
+            {
+                Transform go = Instantiate(but, transform, false);
+                go.GetChild(0).GetComponent<Text>().text = budgetList[x].Substring(path.Length, budgetList[x].Length - path.Length - 5);
+            }
+            else
                 continue;
-            Transform go = Instantiate(but, transform, false);
-            go.GetChild(0).GetComponent<Text>().text = budgetList[x].Substring(path.Length, budgetList[x].Length - path.Length - 5);
         }
         GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
         GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height + transform.childCount * 108);
