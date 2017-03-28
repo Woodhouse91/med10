@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{E49B8537-8FD6-4FBD-AC25-97541B9EDFC6}" SchemaVersion="75">
+	<SoundBanks>
+		<WorkUnit Name="Default Work Unit" ID="{E49B8537-8FD6-4FBD-AC25-97541B9EDFC6}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundBank Name="Bank" ID="{AF7C4455-F36E-4BA6-AE7B-16336B3D408C}">
+					<ObjectInclusionList>
+						<ObjectRef Name="HitPiano" ID="{2B811AAE-A303-4270-8A16-99AA80D99A3A}" WorkUnitID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="Ambient" ID="{543198C6-B16D-446E-B68B-7C44B62B1CAA}" WorkUnitID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="RipTapeResume" ID="{A910DECF-BFEF-484F-8FF4-4569BF958E43}" WorkUnitID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="RipTape" ID="{68328DBA-96CB-4A48-8B0E-56DA665926F1}" WorkUnitID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" Filter="7" Origin="Manual"/>
+						<ObjectRef Name="RipTapePause" ID="{D7FD46B3-00AF-4B4E-8245-BDCA1C1C6207}" WorkUnitID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" Filter="7" Origin="Manual"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+			</ChildrenList>
+		</WorkUnit>
+	</SoundBanks>
+</WwiseDocument>

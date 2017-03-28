@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" SchemaVersion="75">
+	<Events>
+		<WorkUnit Name="Default Work Unit" ID="{C61AAA70-7CAA-4667-927B-9C72953DBA72}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Ambient" ID="{543198C6-B16D-446E-B68B-7C44B62B1CAA}">
+					<ChildrenList>
+						<Action Name="Play" ID="{866EDC43-F28E-47C3-B5C4-35D0466AEFD1}" ShortID="662532095" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{CCD3E0D4-32F1-47EB-92BC-B003E40B4954}" Global="false">
+									<ObjectRef Name="PianoAmbient" ID="{F78D45DF-B77E-45FA-BC9B-032ABA92B07A}" WorkUnitID="{176F76EB-097B-42AE-AF43-085C5F55F94B}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="RipTape" ID="{68328DBA-96CB-4A48-8B0E-56DA665926F1}">
+					<ChildrenList>
+						<Action Name="Play" ID="{817161A0-18B6-4F50-8910-462305E4B77E}" ShortID="954723459" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{BF8A5C61-96CD-4BD1-B96D-B0CE7A0F9678}" Global="false">
+									<ObjectRef Name="RipTape" ID="{5288886A-ABB4-4000-B650-0FC8FBC43FB7}" WorkUnitID="{176F76EB-097B-42AE-AF43-085C5F55F94B}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="HitPiano" ID="{2B811AAE-A303-4270-8A16-99AA80D99A3A}">
+					<ChildrenList>
+						<Action Name="Play" ID="{DC202B87-9017-4F88-B0C0-A0A82FA2C056}" ShortID="275745960" Type="Play" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{8E9EB97C-D0ED-4A13-B56B-E5B02154EF1E}" Global="false">
+									<ObjectRef Name="HitPiano" ID="{20F64E21-5FE8-463D-9CC3-E85FAA8AD51A}" WorkUnitID="{176F76EB-097B-42AE-AF43-085C5F55F94B}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="RipTapePause" ID="{D7FD46B3-00AF-4B4E-8245-BDCA1C1C6207}">
+					<ChildrenList>
+						<Action Name="Pause" ID="{C285F64C-21F0-4578-B774-9B465BD5A666}" ShortID="603476457" Type="Pause" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{C56B5B03-B82C-495F-BBD6-9ABBBF236CC1}" Global="false">
+									<ObjectRef Name="RipTape" ID="{5288886A-ABB4-4000-B650-0FC8FBC43FB7}" WorkUnitID="{176F76EB-097B-42AE-AF43-085C5F55F94B}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="RipTapeResume" ID="{A910DECF-BFEF-484F-8FF4-4569BF958E43}">
+					<ChildrenList>
+						<Action Name="Resume" ID="{C8B49135-5701-4803-958E-DD658798C924}" ShortID="1000556388" Type="Resume" Scope="One" Global="false">
+							<ElementList>
+								<Element ID="{B81E0BAA-EFE2-463E-8057-DA3B0D641AB5}" Global="false">
+									<ObjectRef Name="RipTape" ID="{5288886A-ABB4-4000-B650-0FC8FBC43FB7}" WorkUnitID="{176F76EB-097B-42AE-AF43-085C5F55F94B}"/>
+								</Element>
+							</ElementList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

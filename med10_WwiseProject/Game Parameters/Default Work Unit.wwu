@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{E66612CB-C7C7-4BF9-B9BC-7EA5A3F36F15}" SchemaVersion="75">
+	<GameParameters>
+		<WorkUnit Name="Default Work Unit" ID="{E66612CB-C7C7-4BF9-B9BC-7EA5A3F36F15}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="HitPianoVelocity" ID="{5ACFDB56-2066-42C1-9319-6B14D75150F0}"/>
+				<GameParameter Name="RipTapeDist" ID="{827D3982-9D91-4AB5-B5F1-12E22569A671}"/>
+				<GameParameter Name="RipTapeVelocity" ID="{EC4A7DB4-94D4-41B7-9F19-CBC90AC4122F}"/>
+			</ChildrenList>
+		</WorkUnit>
+	</GameParameters>
+</WwiseDocument>
