@@ -4,23 +4,13 @@ using UnityEngine;
 using System;
 
 public class CategoryDatabase : MonoBehaviour {
-    Dictionary<string, int> lookupDB;
-    List<string[]> genericLookup;
-	// Use this for initialization
-	void Start () {
-    }
-	
+    private static Dictionary<string, int> lookupDB;
+    private static List<string[]> genericLookup;
 
-    public int doGenericLookup(string s)
+    public static int doGenericLookup(string s)
     {
         int ret = -1;
         s = s.ToLower();
-        //string ss = string.Empty;
-        //for(int x = 0; x<s.Length-4; ++x)
-        //{
-        //    if (!(s[x] == 'a' && s[x + 1] == 'f' && s[x + 2] == 't' && s[x + 3] == '.'))
-        //        ss.Insert(x, s[x].ToString());
-        //}
         int res;
         if (lookupDB.TryGetValue(s, out res))
             ret = res;
@@ -40,14 +30,14 @@ public class CategoryDatabase : MonoBehaviour {
         }
         return ret;
     }
-    public void addGeneric(List<string> s)
+    public static void addGeneric(List<string> s)
     {
         if (genericLookup == null)
             genericLookup = new List<string[]>();
         genericLookup.Add(s.ToArray());
 
     }
-    public void genericAddComplete()
+    public static void genericAddComplete()
     {
         if(lookupDB == null)
             lookupDB = new Dictionary<string, int>();
