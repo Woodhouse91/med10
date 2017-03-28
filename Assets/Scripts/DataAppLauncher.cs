@@ -31,7 +31,7 @@ public class DataAppLauncher : MonoBehaviour
         sb.Append("Excel2Text.appref-ms ");
         shortcutPath = sb.ToString();
         startInfo = new ProcessStartInfo();
-        startInfo.CreateNoWindow = false;
+        startInfo.CreateNoWindow = true;
         startInfo.UseShellExecute = true;
         startInfo.WindowStyle = ProcessWindowStyle.Minimized;
         spaceCheck = Application.streamingAssetsPath+","+budgetFile;
