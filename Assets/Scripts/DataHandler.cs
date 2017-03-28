@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DataHandler : MonoBehaviour {
-    [SerializeField]
     public static int[,] expenseData
     {
         get
         {
             return _expenseData;
+        }
+        set
+        {
+            if (_expenseData == null)
+                _expenseData = new int[value.GetLength(0),value.GetLength(1)];
+            _expenseData = value;
         }
     }
     private static int[,] _expenseData;
@@ -20,6 +25,8 @@ public class DataHandler : MonoBehaviour {
         }
         set
         {
+            if (_incomeData == null)
+                _incomeData = new int[value.Length];
             _incomeData = value;
         }
     }
@@ -31,10 +38,13 @@ public class DataHandler : MonoBehaviour {
         }
         set
         {
-            calcRequiredBills();
-            if(_ExposeData)
-                ExposeData(); //Print data to console
-            EventManager.ExcelDataLoaded();
+            if (value)
+            {
+                calcRequiredBills();
+                if(_ExposeData)
+                    ExposeData(); //Print data to console
+                EventManager.ExcelDataLoaded();
+            }
             _dataCompleted = value;
         }
     }
@@ -43,10 +53,8 @@ public class DataHandler : MonoBehaviour {
         public int _1000, _500, _200, _100, _50, _20, _10, _5, _2, _1;
     }
     public static List<billRef[]> BillsAtCategory_Month;
-    private static bool _dataCompleted = false, _ExposeData = false;
+    private static bool _dataCompleted = false, _ExposeData = true;
     private static int[] _incomeData;
-    private enum Months { January, February, March, April, May, June, July, August, September, October, November, December};
-    private static Months month;
     public struct TotalBills
     {
         public int _1000, _500, _200, _100, _50, _20, _10, _5, _2, _1;
@@ -56,20 +64,27 @@ public class DataHandler : MonoBehaviour {
     {
         get
         {
-            return budgetStartMonth;
+            return _budgetStartMonth;
+        }
+        set
+        {
+            _budgetStartMonth = value;
         }
         
     }
-    private static int budgetStartMonth;
+    private static int _budgetStartMonth;
     public static List<string> BudgetCategories
     {
         get
         {
             return _budgetCategories;
         }
+        set
+        {
+            _budgetCategories = value;
+        }
     }
     private static List<string> _budgetCategories;
-    private int catCounter = 0, totalCategories;
     public static int tExpense, tIncome;
   
     private static void ExposeData()
@@ -83,79 +98,14 @@ public class DataHandler : MonoBehaviour {
         print("Income data:");
         for (int p = 0; p < incomeData.Length; ++p)
             print("     " + incomeData[p]);
-        print("Month: "+month);
         print("Categories:");
         for(int l = 0; l<_budgetCategories.Count; ++l)
         {
             print("     " + _budgetCategories[l]);
         }
     }
-    private void Start()
-    {
-        _budgetCategories = new List<string>();
-    }
-    public void AddCategory(string cat)
-    {
-        _budgetCategories.Add(cat);
-    }
-    public void setExpenseArray(int categoryCount)
-    {
-        totalCategories = categoryCount;
-        _expenseData = new int[14, categoryCount];
-        catCounter = 0;
-    }
-    public void setStartMonth(string month)
-    {
-        if (month.Contains("Jan"))
-            DataHandler.month = Months.January;
-        else if (month.Contains("Feb"))
-            DataHandler.month = Months.February;
-        else if (month.Contains("Mar"))
-            DataHandler.month = Months.March;
-        else if (month.Contains("Apr"))
-            DataHandler.month = Months.April;
-        else if (month.Contains("Maj"))
-            DataHandler.month = Months.May;
-        else if (month.Contains("Jun"))
-            DataHandler.month = Months.June;
-        else if (month.Contains("Jul"))
-            DataHandler.month = Months.July;
-        else if (month.Contains("Aug"))
-            DataHandler.month = Months.August;
-        else if (month.Contains("Sep"))
-            DataHandler.month = Months.September;
-        else if (month.Contains("Okt"))
-            DataHandler.month = Months.October;
-        else if (month.Contains("Nov"))
-            DataHandler.month = Months.November;
-        else if (month.Contains("Dec"))
-            DataHandler.month = Months.December;
-        budgetStartMonth = DataHandler.month.GetHashCode();
-        
-    }
-    public void setIncomeData(int[] val)
-    {
-        incomeData = new int[13];
-        incomeData = val;
-    }
-    public void setExpenseData(int[] val)
-    {
-        bool skipCategory = true;
-        _expenseData[0, catCounter] = val[0];
-       // int sum = 0;
-        for(int x = 1; x<val.Length; ++x)
-        {
-            if (val[x] != 0)
-                skipCategory = false;
-            _expenseData[x, catCounter] = val[x];
-         //   sum += val[x];
-        }
-        //_expenseData[13, catCounter] = sum;
-        if (!skipCategory)
-            ++catCounter;
-        else if(catCounter<_budgetCategories.Count)
-            _budgetCategories.Remove(_budgetCategories[catCounter]);
-    }
+
+   
     public static float getScale(int category, int month)
     {
         return _expenseData[month+1, category] * 12f / tExpense; // times 12 because of single crate expanding
