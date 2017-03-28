@@ -116,7 +116,7 @@ public class DataHandler : MonoBehaviour {
         tBills = new TotalBills();
         tExpense = 0;
         tIncome = _incomeData[12];
-        for(int r = 0; r<expenseData.GetLength(1)-1; ++r)
+        for(int r = 0; r<expenseData.GetLength(1); ++r)
         {
             billRef[] res = new billRef[12];
             for(int c = 1; c<expenseData.GetLength(0)-1; ++c)
