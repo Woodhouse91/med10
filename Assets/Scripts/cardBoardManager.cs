@@ -102,7 +102,7 @@ public class cardBoardManager : MonoBehaviour {
         {
             box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(categoryInt);
         }
-        //box.GetComponent<BoxBehaviour>().setCategory(DataHandler.expenseData[category, 0]);
+       
     }
     private void OnApplicationQuit()
     {

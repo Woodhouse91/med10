@@ -120,6 +120,7 @@ public class BoxBehaviour : MonoBehaviour {
         else // SPAWN ALL THE MODELS
         {
             int categoryInt = DataHandler.expenseData[0, EventManager.CurrentCategory];
+            print("CategoryINT: " + categoryInt);
             int numOfObj = 0;
             for (int i = 1; i < 13; i++)
             {
