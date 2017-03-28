@@ -8,6 +8,9 @@ public class ListBudgets : MonoBehaviour {
     private Transform but;
     [SerializeField]
     private GameObject overlay, eventSystem;
+
+    [SerializeField]
+    private TouchManager tm;
     // Use this for initialization
     private void Start()
     {
@@ -37,11 +40,14 @@ public class ListBudgets : MonoBehaviour {
             overlay.SetActive(true);
         if(eventSystem!=null)
             eventSystem.SetActive(false);
+        if (tm != null)
+            tm.enabled = true;
     }
     private void OnEnable()
     {
         overlay.SetActive(false);
         eventSystem.SetActive(true);
+        tm.enabled = false;
     }
 
     public void ScrollControl()
