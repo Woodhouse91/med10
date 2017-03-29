@@ -80,7 +80,7 @@ public class SlideAbleObject : MonoBehaviour
         {
             while (owner!=null)
             {
-                tar = origin + Vector3.up * slider.position.y;
+                tar = origin + Vector3.up * (1+normDist);
                 dir = tar - obj.position;
                 obj.position += dir * (1+dir.sqrMagnitude) * .1f * Time.deltaTime;
                 float t = Time.deltaTime / 2f*dir.magnitude;
@@ -160,58 +160,61 @@ public class SlideAbleObject : MonoBehaviour
     }
     public void setOwnerPosition(Vector3 pos)
     {
-        Vector3 moddedPos = slider.InverseTransformPoint(pos);
-        if(models!=null)
-            for (int x = 0; x < models.Length; ++x)
+        if (DataHandler.dataCompleted)
+        {
+            Vector3 moddedPos = slider.InverseTransformPoint(pos);
+            if(models!=null)
+                for (int x = 0; x < models.Length; ++x)
+                {
+                    models[x].GetComponent<Rigidbody>().isKinematic = true;
+                }
+            switch (DirectionSetting)
             {
-                models[x].GetComponent<Rigidbody>().isKinematic = true;
-            }
-        switch (DirectionSetting)
-        {
-            case DirBehaviour.Horizontal:
-                moddedPos.y = 0;
-                moddedPos.z = 0;
-                break;
-            case DirBehaviour.Vertical:
-                moddedPos.z = 0;
-                moddedPos.x = 0;
-                break;
-        }
-        moddedPos = slider.TransformPoint(moddedPos);
-        normDist = 1f - Vector3.Distance(moddedPos, target.position) / dist;
-        if (normDist<0)
-        {
-            normDist = 0;
-            moddedPos = orgPos;
-        }
-        if(normDist >= 0.95f)
-        {
-            normDist = 1;
-            moddedPos = target.position;
-            owner.releaseSlider();
-            owner = null;
-            if (DirectionSetting == DirBehaviour.Horizontal)
-                bh.setTapeRip(1f);
-            DestinationInvoke();
-           
-            switch (DestinationSetting)
-            {
-                case DestBehaviour.Destroy:
-                    instantReturn();
-                    slider.gameObject.SetActive(false);
-                    area.gameObject.SetActive(false);
-                    target.gameObject.SetActive(false);
-                    return;
-                case DestBehaviour.ReturnToOrigin:
-                    StartCoroutine(Return());
+                case DirBehaviour.Horizontal:
+                    moddedPos.y = 0;
+                    moddedPos.z = 0;
+                    break;
+                case DirBehaviour.Vertical:
+                    moddedPos.z = 0;
+                    moddedPos.x = 0;
                     break;
             }
+            moddedPos = slider.TransformPoint(moddedPos);
+            normDist = 1f - Vector3.Distance(moddedPos, target.position) / dist;
+            if (normDist<0)
+            {
+                normDist = 0;
+                moddedPos = orgPos;
+            }
+            if(normDist >= 0.95f)
+            {
+                normDist = 1;
+                moddedPos = target.position;
+                owner.releaseSlider();
+                owner = null;
+                if (DirectionSetting == DirBehaviour.Horizontal)
+                    bh.setTapeRip(1f);
+                DestinationInvoke();
+           
+                switch (DestinationSetting)
+                {
+                    case DestBehaviour.Destroy:
+                        instantReturn();
+                        slider.gameObject.SetActive(false);
+                        area.gameObject.SetActive(false);
+                        target.gameObject.SetActive(false);
+                        return;
+                    case DestBehaviour.ReturnToOrigin:
+                        StartCoroutine(Return());
+                        break;
+                }
             
+            }
+            if(bh!=null)
+                if (DirectionSetting == DirBehaviour.Horizontal)
+                    bh.setTapeRip(normDist);
+            slider.position = moddedPos;
         }
-        if(bh!=null)
-            if (DirectionSetting == DirBehaviour.Horizontal)
-                bh.setTapeRip(normDist);
-        slider.position = moddedPos;
     }
 
     private void DestinationInvoke()
