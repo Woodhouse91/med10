@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: d2f0bf651e7654640ae2e9564b07c0d4
-timeCreated: 1490706157
-licenseType: Free
+timeCreated: 1469113377
+licenseType: Store
 PluginImporter:
   serializedVersion: 1
   iconMap: {}
@@ -10,8 +10,7 @@ PluginImporter:
   isOverridable: 0
   platformData:
     Any:
-      enabled: 0
-      settings: {}
+      enabled: 1
     Editor:
       enabled: 0
       settings:

@@ -64,9 +64,9 @@ public class PlaceAllCrates : MonoBehaviour {
     {
         float t = 0;
         Vector3 startP = crate.transform.position;
-        Vector3 endP = crate.transform.forward;
+        Vector3 endP = crate.transform.position + crate.transform.forward;
         Quaternion startR = crate.transform.rotation;
-        Quaternion endR = crate.transform.rotation * Quaternion.AngleAxis(Time.deltaTime * 180f, crate.transform.up);
+        Quaternion endR = crate.transform.rotation * Quaternion.AngleAxis(180f, crate.transform.up);
         while (t < 1)
         {
             t += Time.deltaTime;

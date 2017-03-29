@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
+	<RootPaths>
+		<ProjectRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\Users\Krist\OneDrive\Dokumenter\med10\Assets\StreamingAssets\Audio\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="1744429087" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Bank</ObjectPath>
+			<ShortName>Bank</ShortName>
+			<Path>Bank.bnk</Path>
+			<IncludedEvents>
+				<Event Id="77978275" Name="Ambient" ObjectPath="\Events\Default Work Unit\Ambient"/>
+				<Event Id="167122607" Name="HitPiano" ObjectPath="\Events\Default Work Unit\HitPiano"/>
+				<Event Id="3482241282" Name="RipTape" ObjectPath="\Events\Default Work Unit\RipTape"/>
+				<Event Id="363813520" Name="RipTapePause" ObjectPath="\Events\Default Work Unit\RipTapePause"/>
+				<Event Id="1327934027" Name="RipTapeResume" ObjectPath="\Events\Default Work Unit\RipTapeResume"/>
+			</IncludedEvents>
+			<IncludedMemoryFiles>
+				<File Id="14048819" Language="SFX">
+					<ShortName>Music\pianoHit.wav</ShortName>
+					<Path>SFX\Music\pianoHit_9E69E797.wem</Path>
+				</File>
+				<File Id="307548062" Language="SFX">
+					<ShortName>Music\ripTape.wav</ShortName>
+					<Path>SFX\Music\ripTape_3089D0CC.wem</Path>
+				</File>
+				<File Id="964623156" Language="SFX">
+					<ShortName>The Legend of Zelda- Breath of the Wild OST - Day.wav</ShortName>
+					<Path>SFX\The Legend of Zelda- Breath of the Wild OST - Day_4B8CC0C5.wem</Path>
+				</File>
+			</IncludedMemoryFiles>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
