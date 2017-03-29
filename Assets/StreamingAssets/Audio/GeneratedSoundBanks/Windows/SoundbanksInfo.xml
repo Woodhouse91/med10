@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\</ProjectRoot>
-		<SourceFilesRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>C:\Users\Krist\OneDrive\Dokumenter\med10\Assets\StreamingAssets\Audio\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\Users\Future Finance\Documents\med10\Assets\StreamingAssets\Audio\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -38,7 +38,7 @@
 				</File>
 				<File Id="964623156" Language="SFX">
 					<ShortName>The Legend of Zelda- Breath of the Wild OST - Day.wav</ShortName>
-					<Path>SFX\The Legend of Zelda- Breath of the Wild OST - Day_4B8CC0C5.wem</Path>
+					<Path>SFX\The Legend of Zelda- Breath of the Wild OST - Day_9E69E797.wem</Path>
 				</File>
 			</IncludedMemoryFiles>
 		</SoundBank>

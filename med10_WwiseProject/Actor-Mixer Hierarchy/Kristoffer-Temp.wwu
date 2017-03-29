@@ -289,11 +289,6 @@
 							<Custom>
 								<Attenuation Name="Attenuation (Custom)" ID="{30004AAD-0FB0-4DEF-97CB-35A737D09C07}" ShortID="410279750">
 									<PropertyList>
-										<Property Name="ConeUse" Type="bool">
-											<ValueList>
-												<Value>True</Value>
-											</ValueList>
-										</Property>
 										<Property Name="RadiusMax" Type="Real64" Value="10"/>
 									</PropertyList>
 									<CurveUsageInfoList>
@@ -360,7 +355,7 @@
 															<XPos>0</XPos>
 															<YPos>100</YPos>
 															<Flags>5</Flags>
-															<SegmentShape>Log3</SegmentShape>
+															<SegmentShape>Exp3</SegmentShape>
 														</Point>
 														<Point>
 															<XPos>10</XPos>
