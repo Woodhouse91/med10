@@ -1,0 +1,17 @@
+Event	ID	Name			Wwise Object Path	Notes
+	77978275	Ambient			\Default Work Unit\Ambient	
+	167122607	HitPiano			\Default Work Unit\HitPiano	
+	363813520	RipTapePause			\Default Work Unit\RipTapePause	
+	1327934027	RipTapeResume			\Default Work Unit\RipTapeResume	
+	3482241282	RipTape			\Default Work Unit\RipTape	
+
+Game Parameter	ID	Name			Wwise Object Path	Notes
+	201860055	RipTapeVelocity			\Default Work Unit\RipTapeVelocity	
+	878780846	HitPianoVelocity			\Default Work Unit\HitPianoVelocity	
+	1605327198	RipTapeDist			\Default Work Unit\RipTapeDist	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	14048819	HitPiano	C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\SFX\Music\pianoHit_9E69E797.wem		\Actor-Mixer Hierarchy\Kristoffer-Temp\HitPiano		217152
+	307548062	RipTape	C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\SFX\Music\ripTape_3089D0CC.wem		\Actor-Mixer Hierarchy\Kristoffer-Temp\RipTape		366164
+	964623156	PianoAmbient	C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\SFX\The Legend of Zelda- Breath of the Wild OST - Day_9E69E797.wem		\Actor-Mixer Hierarchy\Kristoffer-Temp\PianoAmbient		48568384
+

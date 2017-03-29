@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{D67B5E47-6D76-4D3A-B58F-277D47B83D0D}" SchemaVersion="75">
+	<AudioObjects>
+		<WorkUnit Name="PlaySoundHeadphones" ID="{D67B5E47-6D76-4D3A-B58F-277D47B83D0D}" PersistMode="Standalone">
+			<ChildrenList>
+				<Sound Name="CONFIRM 01" ID="{6F2691EB-6533-49E1-9FB5-4E0196FE4249}" ShortID="793790157" Type="SoundFX">
+					<Comment>Audiokinetic Inc. All rights reserved.
+Content provided by Vincent Gagnon
+© 2014 Vincent Gagnon</Comment>
+					<ReferenceList>
+						<Reference Name="AttachableMixerInput">
+							<Custom>
+								<Effect Name="Auro Panner (Attached)" ID="{C184069A-E3B2-4A59-BBDD-E239443EF7BE}" ShortID="393788191" PluginName="AttachableMixerInput" CompanyID="263" PluginID="1102" PluginType="3"/>
+							</Custom>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{A96CB6DB-C2D9-4B80-9D5C-5643DCE9E22A}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Secondary Bus" ID="{D2E0BC7E-7B3F-4FFE-A670-FAE02761B631}" WorkUnitID="{7CB16305-12DA-4BA8-B9A0-75EE94BC5162}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<SourcePlugin Name="CONFIRM 01" ID="{DE9CF347-2361-413D-9EA6-026A4D8E10BA}" ShortID="690379693" PluginName="Wwise Synth One" CompanyID="0" PluginID="148">
+							<Comment>Audiokinetic Inc. All rights reserved.
+Content provided by Vincent Gagnon
+© 2014 Vincent Gagnon</Comment>
+							<PropertyList>
+								<Property Name="BaseFrequency" Type="Real32" Value="440"/>
+								<Property Name="FrequencyMode" Type="int32" Value="1"/>
+								<Property Name="Osc1Level" Type="Real32" Value="-0.5"/>
+								<Property Name="Osc1Pwm" Type="Real32" Value="45.1"/>
+								<Property Name="Osc1Waveform" Type="int32" Value="2"/>
+								<Property Name="Osc2Level" Type="Real32" Value="1"/>
+								<Property Name="Osc2Pwm" Type="Real32" Value="35"/>
+								<Property Name="Osc2Transpose" Type="int32" Value="1600"/>
+								<Property Name="Osc2Waveform" Type="int32" Value="1"/>
+								<Property Name="OutputLevel" Type="Real32" Value="-15">
+									<RTPCList>
+										<RTPC Name="" ID="{FBB8E74E-AF0F-4EB5-9588-C72E6B78DCBB}" ShortID="673153600">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<Custom CreatedFrom="{37063F1C-9F2B-427B-8A1B-731B6302F270}">
+														<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{8E4DE76B-48C5-4FFF-8980-CC8CBE43178A}" ShortID="914599797">
+															<PropertyList>
+																<Property Name="EnvelopeAttackCurve" Type="Real64" Value="18"/>
+																<Property Name="EnvelopeAttackTime" Type="Real64" Value="0"/>
+																<Property Name="EnvelopeAutoRelease" Type="bool" Value="True"/>
+																<Property Name="EnvelopeDecayTime" Type="Real64" Value="0.221"/>
+																<Property Name="EnvelopeReleaseTime" Type="Real64" Value="0"/>
+																<Property Name="EnvelopeSustainLevel" Type="Real64" Value="0"/>
+															</PropertyList>
+														</ModulatorEnvelope>
+													</Custom>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{5C79DFCE-4310-4607-AFC7-2A9F3FE969A9}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="3"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>-120</YPos>
+														<Flags>21</Flags>
+													</Point>
+													<Point>
+														<XPos>1</XPos>
+														<YPos>9.98008</YPos>
+														<Flags>53</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+										<RTPC Name="" ID="{007D256B-1564-45B1-AD4A-98949E6FC019}" ShortID="856085007">
+											<ReferenceList>
+												<Reference Name="ControlInput">
+													<ObjectRef Name="MIDI note velocity" ID="{B618CC3D-04FA-4149-A36B-37B8A1F2B642}"/>
+												</Reference>
+											</ReferenceList>
+											<Curve Name="" ID="{BC79DA66-4719-41C7-98B5-7AE53D830A86}">
+												<PropertyList>
+													<Property Name="Flags" Type="int32" Value="3"/>
+												</PropertyList>
+												<PointList>
+													<Point>
+														<XPos>0</XPos>
+														<YPos>-20</YPos>
+														<Flags>5</Flags>
+													</Point>
+													<Point>
+														<XPos>127</XPos>
+														<YPos>0</YPos>
+														<Flags>37</Flags>
+													</Point>
+												</PointList>
+											</Curve>
+										</RTPC>
+									</RTPCList>
+								</Property>
+							</PropertyList>
+							<Language>SFX</Language>
+						</SourcePlugin>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="CONFIRM 01" ID="{DE9CF347-2361-413D-9EA6-026A4D8E10BA}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>
