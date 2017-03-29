@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="75">
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="2762359578" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Actor-Mixer Hierarchy\Factory SoundSeed Air Objects.wwu" DateLow="2764164369" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Actor-Mixer Hierarchy\Factory Synth One.wwu" DateLow="2769969796" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Actor-Mixer Hierarchy\Kristoffer-Temp.wwu" DateLow="2774932999" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Actor-Mixer Hierarchy\SoundTest\PlaySoundHeadphones.wwu" DateLow="2775434322" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Actor-Mixer Hierarchy\SoundTest\PlaySoundPC.wwu" DateLow="2775725117" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="2775815334" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="2775865463" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="2776076027" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="2776116134" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="2776757839" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="2776797941" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Default Work Unit.wwu" DateLow="2776878159" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory Auro Headphone.wwu" DateLow="2777549944" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory Effects.wwu" DateLow="2780668221" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Box Modeler.wwu" DateLow="2781400175" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Delay.wwu" DateLow="2781640810" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Dynamics.wwu" DateLow="2781851374" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Filters.wwu" DateLow="2782001774" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Hybrid Reverb Effects.wwu" DateLow="2782222356" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Multiband Distortion.wwu" DateLow="2782463000" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory iZotope Singleband Distortion.wwu" DateLow="2782683581" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Effects\Factory McDSP Effects.wwu" DateLow="2781019163" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Events\Default Work Unit.wwu" DateLow="2782793879" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="2782854039" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Game Parameters\Factory SoundSeed Air Game Syncs.wwu" DateLow="2783134780" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="2803298367" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="2803368553" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\med10.wproj" DateLow="2844183903" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="2803418691" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="2803488873" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Presets\Default Work Unit.wwu" DateLow="2842238738" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Queries\Default Work Unit.wwu" DateLow="2842288871" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Queries\Factory Queries.wwu" DateLow="2842619822" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="2842689937" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="2842860385" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\States\Default Work Unit.wwu" DateLow="2842940603" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Switches\Default Work Unit.wwu" DateLow="2843020816" DateHigh="30582875"/>
+	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\med10\med10_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="2843091003" DateHigh="30582875"/>
 	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1297403321" DateHigh="30576074"/>
 	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\Actor-Mixer Hierarchy\Factory SoundSeed Air Objects.wwu" DateLow="4001016645" DateHigh="30576063"/>
 	<ValidationCacheItem File="C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\Actor-Mixer Hierarchy\Factory Synth One.wwu" DateLow="870269817" DateHigh="30576077"/>
