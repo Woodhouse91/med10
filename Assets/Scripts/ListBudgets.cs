@@ -4,17 +4,106 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TouchScript;
-public class ListBudgets : MonoBehaviour {
+using System;
+
+public class ListBudgets : MonoBehaviour{
     private Transform but;
     [SerializeField]
-    private GameObject overlay, eventSystem;
+    private GameObject overlay;
 
-    [SerializeField]
-    private TouchManager tm;
-    // Use this for initialization
+    private float moveTH = Screen.height / 20f;
+    private float touchMove = 0;
+    private Vector2 prevPoint, v2Null = Vector3.one*-10000;
+    private int curTrackedID = -1;
+
+
     private void Start()
     {
         GenerateBudgetList();
+    }
+    private void OnEnable()
+    {
+        if(overlay != null)
+            overlay.SetActive(false);
+        Sub();
+    }
+    private void Sub()
+    {
+        prevPoint = v2Null;
+        TouchManager.Instance.TouchesBegan += TouchStart;
+        TouchManager.Instance.TouchesMoved += TouchMoved;
+        TouchManager.Instance.TouchesEnded += TouchEnd;
+    }
+
+    private void TouchEnd(object sender, TouchEventArgs e)
+    {
+        bool lostTrack = true;
+        for(int x = 0; x<TouchManager.Instance.NumberOfTouches; ++x)
+        {
+            if (TouchManager.Instance.ActiveTouches[x].Id == curTrackedID)
+                lostTrack = false;
+        }
+        if(lostTrack)
+        {
+            prevPoint = v2Null;
+            touchMove = 0;
+        }
+    }
+
+    private void TouchMoved(object sender, TouchEventArgs e)
+    {
+        if (prevPoint == v2Null)
+        {
+            prevPoint = TouchManager.Instance.ActiveTouches[0].Position;
+            curTrackedID = TouchManager.Instance.ActiveTouches[0].Id;
+        }
+        for(int x = 0; x<TouchManager.Instance.NumberOfTouches; ++x)
+        {
+            if(TouchManager.Instance.ActiveTouches[x].Id==curTrackedID)
+            {
+                float frameDist = TouchManager.Instance.ActiveTouches[x].Position.y - prevPoint.y;
+                touchMove += frameDist;
+                prevPoint = TouchManager.Instance.ActiveTouches[x].Position;
+                if (Math.Abs(touchMove) >= moveTH)
+                {
+                    GetComponent<RectTransform>().localPosition += Vector3.up * frameDist;
+                }
+            }
+        }
+    }
+
+    private void TouchStart(object sender, TouchEventArgs e)
+    {
+        if (prevPoint == v2Null)
+        {
+            prevPoint = TouchManager.Instance.ActiveTouches[0].Position;
+            curTrackedID = TouchManager.Instance.ActiveTouches[0].Id;
+        }
+    }
+
+    private void Unsub()
+    {
+        try
+        {
+            TouchManager.Instance.TouchesBegan -= TouchStart;
+            TouchManager.Instance.TouchesMoved -= TouchMoved;
+            TouchManager.Instance.TouchesEnded -= TouchEnd;
+        }
+        catch { }
+    }
+    private void OnDestroy()
+    {
+        Unsub();
+    }
+    private void OnApplicationQuit()
+    {
+        Unsub();
+    }
+    private void OnDisable()
+    {
+        Unsub();
+        if (overlay != null)
+            overlay.SetActive(true);
     }
     public void GenerateBudgetList()
     {
@@ -31,33 +120,32 @@ public class ListBudgets : MonoBehaviour {
             else
                 continue;
         }
-        GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
+        if (transform.childCount > 5)
+        {
+            GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
+        }
+        else
+        {
+            GetComponent<RectTransform>().localPosition = Vector3.zero;
+        }
+        
         GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height + transform.childCount * 108);
-    }
-    private void OnDisable()
-    {
-        if(overlay!=null)
-            overlay.SetActive(true);
-        if(eventSystem!=null)
-            eventSystem.SetActive(false);
-        if (tm != null)
-            tm.enabled = true;
-    }
-    private void OnEnable()
-    {
-        overlay.SetActive(false);
-        eventSystem.SetActive(true);
-        tm.enabled = false;
     }
 
     public void ScrollControl()
     {
-        if(transform.GetChild(transform.childCount - 1).GetComponent<RectTransform>().position.y >= 52){
-            GetComponent<RectTransform>().localPosition = Vector3.up*(transform.childCount*26+52);
-        }
-        if (transform.GetChild(0).GetComponentInChildren<RectTransform>().position.y <= Screen.height - 52)
+        if (transform.childCount > 1)
         {
-            GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
+            if (transform.GetChild(transform.childCount - 1).GetComponent<RectTransform>().position.y >= 52)
+            {
+                GetComponent<RectTransform>().localPosition = Vector3.up * (transform.childCount * 26 + 52);
+            }
+            if (transform.GetChild(0).GetComponentInChildren<RectTransform>().position.y <= Screen.height - 52)
+            {
+                GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
+            }
         }
+        else
+            GetComponent<RectTransform>().localPosition = Vector3.zero;
     }
 }
