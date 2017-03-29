@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="11" SoundbankVersion="120">
 	<RootPaths>
-		<ProjectRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\</ProjectRoot>
-		<SourceFilesRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\GeneratedSoundBanks\Windows\</SoundBanksRoot>
+		<ProjectRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\GeneratedSoundBanks\Windows\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>C:\Users\Krist\OneDrive\Dokumenter\WwiseProjects\med10\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>C:\Users\Future Finance\Documents\med10\med10_WwiseProject\GeneratedSoundBanks\Windows\</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
