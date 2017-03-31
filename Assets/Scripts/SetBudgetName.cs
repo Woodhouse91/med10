@@ -11,23 +11,32 @@ public class SetBudgetName : MonoBehaviour{
     Image myCol;
     [SerializeField]
     private Color normal, highlighted, pressed;
-    private float minX, maxX, minY, maxY;
+    private float minX = 0, maxX, minY, maxY;
     RectTransform myRect;
     List<TouchPoint> t;
     private void Awake()
     {
         myRect = GetComponent<RectTransform>();
         float sW = Screen.width / 2f, sH = Screen.height / 2f;
-        print(myRect.anchoredPosition.x+sW+" , "+(myRect.anchoredPosition.y-sH));
-        maxX = myRect.position.x + (myRect.sizeDelta.x / 2f);
-        minY = myRect.position.y - (myRect.sizeDelta.y / 2f);
-        maxY = myRect.position.y + (myRect.sizeDelta.y / 2f);
+
         mySet = GetComponent<Button>();
         myCol = GetComponent<Image>();
         myCol.color = normal;
         t = new List<TouchPoint>();
         TouchManager.Instance.TouchesBegan += touchStart;
         TouchManager.Instance.TouchesEnded += touchEnd;
+        TouchManager.Instance.TouchesMoved += touchMove;
+    }
+
+    private void touchMove(object sender, TouchEventArgs e)
+    {
+        for(int x = 0; x<e.Touches.Count; ++x)
+        {
+            if (!hit(e.Touches[x].Position))
+                t.Remove(e.Touches[x]);
+            else if (!t.Contains(e.Touches[x]))
+                t.Add(e.Touches[x]);
+        }
     }
 
     private void touchEnd(object sender, TouchEventArgs e)
@@ -85,11 +94,13 @@ public class SetBudgetName : MonoBehaviour{
             myCol.color = pressed;
         else
             myCol.color = normal;
-        if (Input.GetKeyDown(KeyCode.Return))
-            setName();
     }
     private bool hit(Vector2 p)
     {
+        minX = myRect.position.x - (myRect.sizeDelta.x / 2f);
+        maxX = myRect.position.x + (myRect.sizeDelta.x / 2f);
+        minY = myRect.position.y - (myRect.sizeDelta.y / 2f);
+        maxY = myRect.position.y + (myRect.sizeDelta.y / 2f);
         return ((p.x > minX && p.x < maxX) && (p.y > minY && p.y < maxY));
     }
 }

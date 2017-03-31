@@ -123,7 +123,6 @@ public class PlaceAllCrates : MonoBehaviour {
 
     public IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
     {
-        print(percent);
         int month = Month + 1; 
         Vector3 start = originCrateSize;
         Vector3 end = originCrateSize + Vector3.up * percent;

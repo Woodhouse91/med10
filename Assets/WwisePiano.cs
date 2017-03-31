@@ -10,7 +10,6 @@ public class WwisePiano : MonoBehaviour {
     {
         if(collision.relativeVelocity.magnitude > 1f)
         {
-            print("piano hit with velocity of: "+collision.relativeVelocity.magnitude);
             AkSoundEngine.SetRTPCValue("PianoHitVelocity", collision.relativeVelocity.magnitude);
             AkSoundEngine.PostEvent("HitPiano", gameObject);
         }
