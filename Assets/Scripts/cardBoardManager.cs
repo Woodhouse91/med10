@@ -61,15 +61,22 @@ public class cardBoardManager : MonoBehaviour {
     void CreateAllBoxes()
     {
         int budgetCatCount = DataHandler.BudgetCategories.Count;
+        List<int> differentCats = new List<int>();
+        for (int k = 0; k < budgetCatCount; k++)
+        {
+            if(!differentCats.Contains(DataHandler.expenseData[0, k]))
+                differentCats.Add(DataHandler.expenseData[0, k]);
+        }
         //int budgetCatCount = 1; //test
         int i = 0;
-        while(budgetCatCount > i)
+        budgetCatCount = differentCats.Count;
+        while (budgetCatCount > i)
         {
             budgetCatCount -= i;
             ++i;
         } // finds the correct number of rows
 
-        budgetCatCount = DataHandler.BudgetCategories.Count;
+        budgetCatCount = differentCats.Count;
         //budgetCatCount = 1; //test
         for (int h = 0; h < i; h++)
         {
@@ -84,7 +91,7 @@ public class cardBoardManager : MonoBehaviour {
                     box.transform.rotation = transform.rotation;
                     CardBoxList.Add(box);
                     CardBoxList.Insert(0, box);
-                    PaintBox(box,budgetCatCount);
+                    PaintBox(box,differentCats[differentCats.Count-budgetCatCount]);
                     budgetCatCount--;
                 }
             }
@@ -92,15 +99,15 @@ public class cardBoardManager : MonoBehaviour {
     }
     void PaintBox(GameObject box, int category)
     {
-        box.GetComponentInChildren<TextMesh>().text = DataHandler.BudgetCategories[category-1];
-        int categoryInt = DataHandler.expenseData[0, category - 1];
-        if (categoryInt == -1)
+        
+        box.GetComponentInChildren<TextMesh>().text = CategoryDatabase.GetName(category);
+        if (category== -1)
         {
             box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(-1);
         }
         else
         {
-            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(categoryInt);
+            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(category);
         }
        
     }

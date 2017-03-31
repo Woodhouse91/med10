@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 public class CategoryDatabase : MonoBehaviour {
     private static Dictionary<string, int> lookupDB;
@@ -30,6 +31,12 @@ public class CategoryDatabase : MonoBehaviour {
         }
         return ret;
     }
+    
+    public static string GetName(int i)
+    {
+        return i.ToString();
+    }   
+
     public static void addGeneric(List<string> s)
     {
         if (genericLookup == null)
