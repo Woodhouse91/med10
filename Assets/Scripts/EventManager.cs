@@ -87,7 +87,6 @@ public class EventManager : MonoBehaviour {
     public static void CategoryDone()
     {
         _currentCategory++;
-        print("catat"+_currentCategory);
         if(_currentCategory >= DataHandler.BudgetCategories.Count)
         {
             if (OnCategoryFinished != null)

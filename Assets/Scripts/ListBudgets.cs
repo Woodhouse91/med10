@@ -112,10 +112,10 @@ public class ListBudgets : MonoBehaviour{
         string[] budgetList = Directory.GetFiles(path);
         for (int x = budgetList.Length - 1; x > -1; --x)
         {
-            if (budgetList[x].Contains(".xlsx") && !budgetList[x].Contains(".meta"))
+            if (budgetList[x].Contains(".xls") && !budgetList[x].Contains(".meta"))
             {
                 Transform go = Instantiate(but, transform, false);
-                go.GetChild(0).GetComponent<Text>().text = budgetList[x].Substring(path.Length, budgetList[x].Length - path.Length - 5);
+                go.GetChild(0).GetComponent<Text>().text = budgetList[x].Substring(path.Length, budgetList[x].Length - path.Length - 4);
             }
             else
                 continue;

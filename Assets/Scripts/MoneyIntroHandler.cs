@@ -222,8 +222,6 @@ public class MoneyIntroHandler : MonoBehaviour {
     {
         yield return new WaitForSeconds(maxTravelTime_crate+defaultScaleTime);
         EventManager.ObjectsPlacedAtShelves();
-        print(maxValueOfAMonth);
-        print("vent i antal sekunder "+(maxValueOfAMonth / BagValue) / spawnBagDelay);
         yield return new WaitForSeconds(EventManager.scaleTime + (maxValueOfAMonth / BagValue)/spawnBagDelay );
         EventManager.CategoryDone();
     }

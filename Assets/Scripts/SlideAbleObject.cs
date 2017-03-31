@@ -25,6 +25,7 @@ public class SlideAbleObject : MonoBehaviour
     private BoxBehaviour bh;
     private cardBoardManager cbm;
     private GameObject[] models;
+    private bool canSlide = false;
 
     private void Start()
     {
@@ -35,9 +36,20 @@ public class SlideAbleObject : MonoBehaviour
         cbm = FindObjectOfType<cardBoardManager>();
         EventManager.OnUIPlaced += SetVariables;
         if (DirectionSetting == DirBehaviour.Horizontal)
+        {
             EventManager.OnBoxAtTable += NextCategory;
+            EventManager.OnMoneyInstantiated += nowWeSlide;
+        }
         else
-           EventManager.OnBoxEmptied += NextObject;
+        {
+            EventManager.OnBoxEmptied += NextObject;
+            canSlide = true;
+        }
+    }
+
+    private void nowWeSlide()
+    {
+        canSlide = true;
     }
 
     private void NextCategory()
@@ -160,7 +172,7 @@ public class SlideAbleObject : MonoBehaviour
     }
     public void setOwnerPosition(Vector3 pos)
     {
-        if (DataHandler.dataCompleted)
+        if (canSlide)
         {
             Vector3 moddedPos = slider.InverseTransformPoint(pos);
             if(models!=null)

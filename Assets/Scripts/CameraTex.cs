@@ -45,19 +45,12 @@ public class CameraTex : MonoBehaviour
 
         aspect *= Mathf.Abs(du / dv);
         
-        target.localScale = new Vector3(1, 1.0f / aspect, 1);
+       // target.localScale = new Vector3(1, 1.0f / aspect, 1);
         if (source.hasTracking)
         {
             var t = source.transform;
             target.localPosition = t.pos;
             target.localRotation = t.rot;
         }
-        print(aspect);
-        print(texture.width);
-        print(texture.height);
-        print(du);
-        print(dv);
-        print(bounds.uMin);
-        print(bounds.vMin);
     }
 }
