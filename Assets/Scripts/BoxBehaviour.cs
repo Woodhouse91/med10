@@ -11,6 +11,7 @@ public class BoxBehaviour : MonoBehaviour {
     public float SpawnRate;
     private Transform spawnArea;
     private float Ax,Ay,Az;
+    public AnimationCurve AC;
 
     // Use this for initialization
     void Start () {
@@ -28,30 +29,15 @@ public class BoxBehaviour : MonoBehaviour {
     // Update is called once per frame
     public void tapeRipped()
     {
-        StartCoroutine(FlipUp());
+        if (GetComponent<AddMoneyToTable>() == null)
+            StartCoroutine(FlipUp());
+        else
+            StartCoroutine(MoneyToTable());
     }
     public void setTapeRip(float dist)
     {
         tape.SetTapeDist(dist);
     }
-
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.layer == LayerMask.NameToLayer("Currency"))
-    //    {
-    //        StartCoroutine(LayerChange(other.transform, true, 0f));
-    //    }
-
-    //}
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if (other.gameObject.layer == LayerMask.NameToLayer("ignoreCur"))
-    //    {
-    //        StartCoroutine(LayerChange(other.transform, false, Random.Range(1f, 2f)));
-    //        StartCoroutine(makeKinematic(Random.Range(2f, 3f), other.transform));
-    //    }
-    //}
 
     IEnumerator makeKinematic(float t, Transform obj)
     {
@@ -70,23 +56,15 @@ public class BoxBehaviour : MonoBehaviour {
     }
 
 
-
-    IEnumerator FlipUp()
+    IEnumerator MoneyToTable()
     {
         rig.isKinematic = true;
         //first we raise it.
         float t = 0;
         Vector3 startPos = transform.position;
-        Vector3 endPos;
-        if (GetComponent<AddMoneyToTable>() != null)
-        {
-            endPos = EventManager.Table.position + EventManager.Table.up * 2f + EventManager.Table.right/2f;
-        }
-        else
-        {
-            endPos = EventManager.Table.position + EventManager.Table.up * 2f - EventManager.Table.right/2f;
-        }
-        while (t<1)
+        Vector3 endPos = EventManager.Table.position + EventManager.Table.up * 2f + EventManager.Table.right / 2f;
+           
+        while (t < 1)
         {
             transform.position = Vector3.Lerp(startPos, endPos, t);
             t += Time.deltaTime;
@@ -110,35 +88,61 @@ public class BoxBehaviour : MonoBehaviour {
         t = 0;
         while (t < 1)
         {
-            leftLid.localRotation = Quaternion.Slerp(startRotL, endRotL, t);
-            rightLid.localRotation = Quaternion.Slerp(startRotR, endRotR, t);
+            leftLid.localRotation = Quaternion.Slerp(startRotL, endRotL, AC.Evaluate(t));
+            rightLid.localRotation = Quaternion.Slerp(startRotR, endRotR, AC.Evaluate(t));
             t += Time.deltaTime;
             yield return null;
         }
-        if(GetComponent<AddMoneyToTable>() != null)
-            GetComponent<AddMoneyToTable>().ShowMeTheMoney(); // SPAWN ALL THE MONIES PLZ
-        else // SPAWN ALL THE MODELS
-        {
-            int categoryInt = DataHandler.expenseData[0, EventManager.CurrentCategory];
-            int numOfObj = 0;
-            for (int i = 1; i < 13; i++)
-            {
-                if (DataHandler.expenseData[i, EventManager.CurrentCategory] > 0)
-                    numOfObj++;
-            }
-            for (int i = 0; i < numOfObj; i++)
-            {
-                Transform model = CategoryModelHandler.GetAt(categoryInt).transform; // MODELS HERE THO
-                Vector3 pos = new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
-                pos = transform.TransformPoint(pos);
-                Instantiate(model,pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
-                yield return new WaitForSeconds(1f/SpawnRate);
-            }
-            yield return new WaitForSeconds(0.5f);
-            EventManager.BoxEmptied();
-            Throw();
-        }
+        GetComponent<AddMoneyToTable>().ShowMeTheMoney(); // SPAWN ALL THE MONIES PLZ
+       
         yield break;
+        
+    }
+    IEnumerator FlipUp()
+    {
+        Vector3 shakeVec;
+        Vector3 startpos = transform.position;
+        float t = 0;
+
+        while (t < 1)
+        {
+            shakeVec = new Vector3(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
+            transform.position = startpos + shakeVec;
+            t += Time.deltaTime * 2;
+        }
+        //then we open the lids
+        Quaternion startRotL = leftLid.localRotation;
+        Quaternion startRotR = rightLid.localRotation;
+        Quaternion endRotL = leftLid.localRotation * Quaternion.AngleAxis(-135f, Vector3.forward); // ROTATE LIDS 135
+        Quaternion endRotR = rightLid.localRotation * Quaternion.AngleAxis(135f, Vector3.forward);
+        while (t < 1)
+        {
+            leftLid.localRotation = Quaternion.Slerp(startRotL, endRotL, AC.Evaluate(t));
+            rightLid.localRotation = Quaternion.Slerp(startRotR, endRotR, AC.Evaluate(t));
+            t += Time.deltaTime *2;
+            yield return null;
+        }
+        //SPAWN MODELS
+        int categoryInt = DataHandler.expenseData[0, EventManager.CurrentCategory];
+        int numOfObj = 0;
+        for (int i = 1; i < 13; i++)
+        {
+            if (DataHandler.expenseData[i, EventManager.CurrentCategory] > 0)
+                numOfObj++;
+        }
+        for (int i = 0; i < numOfObj; i++)
+        {
+            Transform model = CategoryModelHandler.GetAt(categoryInt).transform; // MODELS HERE THO
+            Vector3 pos = new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
+            pos = transform.TransformPoint(pos);
+            Instantiate(model, pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
+            yield return new WaitForSeconds(1f / SpawnRate);
+        }
+        yield return new WaitForSeconds(0.5f);
+        EventManager.BoxEmptied();
+        Throw();
+      
+        yield return null;
     }
     public void Throw()
     {
