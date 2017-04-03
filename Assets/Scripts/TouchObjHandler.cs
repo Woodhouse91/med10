@@ -17,17 +17,21 @@ public class TouchObjHandler : MonoBehaviour/*,IPointerDownHandler, IPointerUpHa
         public int id;
     }
     TouchRef[] touch = new TouchRef[10];
-    void Start()
+    void OnEnable()
     {
+        if(VrUi == null)
         VrUi = GameObject.Find("VRInterface").transform;
-        pref = Resources.Load<GameObject>("TouchObject");
-        for(int x = 0; x<10; ++x)
+        if(pref == null)
         {
-            touch[x].GO = Instantiate(pref);
-            touch[x].GO.transform.parent = VrUi;
-            touch[x].GO.transform.position = Vector3.one * 1000;
-            touch[x].GO.SetActive(false); 
-            touch[x].id = -10;
+            pref = Resources.Load<GameObject>("TouchObject");
+            for (int x = 0; x < 10; ++x)
+            {
+                touch[x].GO = Instantiate(pref);
+                touch[x].GO.transform.parent = VrUi;
+                touch[x].GO.transform.position = Vector3.one * 1000;
+                touch[x].GO.SetActive(false);
+                touch[x].id = -10;
+            }
         }
         Subscribe();
     }

@@ -16,10 +16,11 @@ public class EventManager : MonoBehaviour {
     public static event IntroAction OnCategorySliderDone;
     public static event IntroAction OnStartNextCategory;
     public static event IntroAction OnCategoryDone;
-    public static event IntroAction OnBoxAtTable;
     public static event IntroAction OnObjectsPlacedAtShelves;
     public static event IntroAction OnStartScale;
     public static event IntroAction OnCategoryFinished;
+    public delegate void BoxIntroAction(BoxBehaviour script);
+    public static event BoxIntroAction OnBoxAtTable;
     public static float scaleTime
     {
         get
@@ -49,10 +50,10 @@ public class EventManager : MonoBehaviour {
         if (OnObjectsPlacedAtShelves != null)
             OnObjectsPlacedAtShelves();
     }
-    public static void BoxAtTable()
+    public static void BoxAtTable(BoxBehaviour script)
     {
         if (OnBoxAtTable != null)
-            OnBoxAtTable();
+            OnBoxAtTable(script);
     }
     public static void UIPlaced()
     {

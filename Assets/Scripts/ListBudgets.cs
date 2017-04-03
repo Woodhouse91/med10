@@ -8,17 +8,24 @@ using System;
 
 public class ListBudgets : MonoBehaviour{
     private Transform but;
-    [SerializeField]
     private GameObject overlay;
 
     private float moveTH = Screen.height / 20f;
     private float touchMove = 0;
     private Vector2 prevPoint, v2Null = Vector3.one*-10000;
     private int curTrackedID = -1;
+    bool subbed = false;
 
-
-    private void Start()
+    public void setOverlay(GameObject go)
     {
+        overlay = go;
+        if (overlay != null)
+            overlay.SetActive(false);
+        Sub();
+    }
+    private void Awake()
+    {
+        overlay = GameObject.Find("Overlay (Canvas)");
         GenerateBudgetList();
     }
     private void OnEnable()
@@ -29,10 +36,13 @@ public class ListBudgets : MonoBehaviour{
     }
     private void Sub()
     {
+        if (subbed)
+            return;
         prevPoint = v2Null;
         TouchManager.Instance.TouchesBegan += TouchStart;
         TouchManager.Instance.TouchesMoved += TouchMoved;
         TouchManager.Instance.TouchesEnded += TouchEnd;
+        subbed = true;
     }
 
     private void TouchEnd(object sender, TouchEventArgs e)
@@ -90,6 +100,7 @@ public class ListBudgets : MonoBehaviour{
             TouchManager.Instance.TouchesEnded -= TouchEnd;
         }
         catch { }
+        subbed = false;
     }
     private void OnDestroy()
     {
@@ -101,6 +112,7 @@ public class ListBudgets : MonoBehaviour{
     }
     private void OnDisable()
     {
+        transform.parent.GetComponent<Image>().enabled = false;
         Unsub();
         if (overlay != null)
             overlay.SetActive(true);
