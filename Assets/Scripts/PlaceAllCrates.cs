@@ -12,6 +12,7 @@ public class PlaceAllCrates : MonoBehaviour {
     public float AngleRotate;
     public GameObject Crate, MonthCrate;
     Vector3 originCrateSize;
+    bool firstCratesPlaced = false;
     
 
     // Use this for initialization
@@ -32,7 +33,7 @@ public class PlaceAllCrates : MonoBehaviour {
         ListOfCrates = new GameObject[14, SizeOfBudget];
         PlaceThemAll(SizeOfBudget);
         PlaceTheMonths();
-        PlaceAllRows();
+        //PlaceAllRows(); CardboardManager kalder det
     }
 
     public Transform GetCrate(int category, int month)
@@ -199,6 +200,7 @@ public class PlaceAllCrates : MonoBehaviour {
         crate2.transform.position = crate.transform.position + crate.transform.right * SizeOfCrate.x; 
         crate2.transform.rotation = transform.rotation;
         PlaceThemRepeat(5, crate2.transform.position, crate2.transform.rotation, true);
+        firstCratesPlaced = true;
     }
      void PlaceThemRepeat(int x, Vector3 prevPos, Quaternion prevRot, bool clockwise)
     {
@@ -272,11 +274,15 @@ public class PlaceAllCrates : MonoBehaviour {
                 return "Null";
         }
     }
-    public void PlaceAllRows() //place the rest of all the rows needed
+    public IEnumerator PlaceAllRows(int _sizeOfBudget) //place the rest of all the rows needed
     {
+        while (!firstCratesPlaced) //wait for the crates to be placed
+            yield return new WaitForEndOfFrame();
+
+
         for (int i = 1; i < 13 ; i++) //runs through all the crates
         {
-            for (int k = 1; k < SizeOfBudget; k++)
+            for (int k = 1; k < _sizeOfBudget; k++)
             {
                 ListOfCrates[i,k] = Instantiate(Crate, transform);
                 ListOfCrates[i,k].transform.position = ListOfCrates[i, 0].transform.position + Vector3.down * SizeOfCrate.y * k;

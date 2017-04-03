@@ -70,6 +70,7 @@ public class cardBoardManager : MonoBehaviour {
         //int budgetCatCount = 1; //test
         int i = 0;
         budgetCatCount = differentCats.Count;
+        StartCoroutine(FindObjectOfType<PlaceAllCrates>().PlaceAllRows(budgetCatCount));
         while (budgetCatCount > i)
         {
             budgetCatCount -= i;
@@ -99,17 +100,11 @@ public class cardBoardManager : MonoBehaviour {
     }
     void PaintBox(GameObject box, int category)
     {
-        
-        box.GetComponentInChildren<TextMesh>().text = CategoryDatabase.GetName(category);
-        if (category== -1)
-        {
-            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(-1);
-        }
-        else
-        {
-            box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(category);
-        }
-       
+        box.GetComponentInChildren<TextMesh>().text = CategoryDatabase.GetName(category); // her skal være text
+        box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(category);
+
+        //her fylder vi dens liste
+        box.GetComponent<BoxBehaviour>().modelsForShelves(category);
     }
     private void OnApplicationQuit()
     {

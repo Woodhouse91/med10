@@ -18,7 +18,7 @@ public class RipTheTape : MonoBehaviour {
         ps2 = transform.GetChild(1).GetComponent<ParticleSystem>();
 
         tape = GetComponent<LineRenderer>();
-        tape.numPositions = NumOfPos;
+        tape.positionCount = NumOfPos;
         pos = new Vector3[NumOfPos];
         for (int i = 0; i < pos.Length; i++)
         {

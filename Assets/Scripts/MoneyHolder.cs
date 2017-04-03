@@ -100,7 +100,7 @@ public class MoneyHolder : MonoBehaviour
         for (int i = 0; i < allCurrency.Count; i++)
         {
             GameObject temp = allCurrency[i];
-            int randomIndex = Random.Range(i, allCurrency.Count);
+            int randomIndex = Random.Range(i, allCurrency.Count-1);
             allCurrency[i] = allCurrency[randomIndex];
             allCurrency[randomIndex] = temp;
         }
