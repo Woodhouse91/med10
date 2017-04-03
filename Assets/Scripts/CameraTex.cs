@@ -52,5 +52,10 @@ public class CameraTex : MonoBehaviour
             target.localPosition = t.pos;
             target.localRotation = t.rot;
         }
+        print("aspect "+aspect);
+        print("dv " + dv);
+        print("du " + du);
+        print("umin " + bounds.uMin);
+        print("umax " + bounds.vMin);
     }
 }

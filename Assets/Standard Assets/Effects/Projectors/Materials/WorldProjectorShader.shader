@@ -4,7 +4,6 @@
 Shader "Projector/World" {
 	Properties{
 		_ShadowTex("Cookie", 2D) = "" {}
-		_Alpha("_Alpha", float) = 1
 	}
 
 	Subshader
@@ -24,7 +23,6 @@ Shader "Projector/World" {
 
 			sampler2D _ShadowTex;
 			float4x4 unity_Projector;
-			float _Alpha;
 
 			struct v2f {
 				float4 uvShadow : TEXCOORD0;
@@ -46,7 +44,7 @@ Shader "Projector/World" {
 				float4 texS = tex2Dproj(_ShadowTex, uv);
 				if (uv.x / uv.w > 0.0 && uv.x / uv.w < 1.0 && uv.y / uv.w > 0.0 && uv.y / uv.w < 1.0)
 				{
-					return float4(texS.r*_Alpha, texS.g*_Alpha, texS.b*_Alpha, _Alpha);
+					return float4(texS.r, texS.g, texS.b, 1);
 				}
 				else
 					return float4(0.0, 0.0, 0.0, 0.0);
