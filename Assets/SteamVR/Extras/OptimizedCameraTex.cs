@@ -12,7 +12,7 @@ public class OptimizedCameraTex : MonoBehaviour
     private Vector2 texOffSet = new Vector2(0.25f, 0.75f), texScale = new Vector2(du, dv);
     private Texture2D texture;
     private bool distorted;
-    private int curTex = 0;
+    private int curTex = 1;
     private struct camData
     {
         public float dv, du, texOffsetX, texOffsetY;
@@ -23,12 +23,14 @@ public class OptimizedCameraTex : MonoBehaviour
     {
         CameraSurface[curTex].SetActive(false);
         Projector[curTex].SetActive(false);
+        if(material != null)
+            material.mainTexture = null;
         curTex = curTex + 1 > 1 ? 0 : 1;
         distorted = curTex == 1;
         CameraSurface[curTex].SetActive(true);
         Projector[curTex].SetActive(true);
         material = settingMat[curTex];
-        texOffSet = new Vector2(camSetting[curTex].texOffsetX, camSetting[0].texOffsetY);
+        texOffSet = new Vector2(camSetting[curTex].texOffsetX, camSetting[curTex].texOffsetY);
         texScale = new Vector2(camSetting[curTex].du, camSetting[curTex].dv);
 
     }
@@ -37,19 +39,18 @@ public class OptimizedCameraTex : MonoBehaviour
         if(camSetting==null)
         {
             camSetting = new camData[2];
-            camSetting[0].dv = -0.4999999f;
-            camSetting[0].du = 0.5f;
-            camSetting[0].texOffsetX = 0.25f;
-            camSetting[0].texOffsetY = 0.75f;
-            camSetting[1].dv = -1f;
+            camSetting[1].dv = -0.4999999f;
+            camSetting[1].du = 0.5f;
+            camSetting[1].texOffsetX = 0.25f;
+            camSetting[1].texOffsetY = 0.75f;
+            camSetting[0].dv = -1f;
             camSetting[0].du = 1f;
             camSetting[0].texOffsetX = 0f;
             camSetting[0].texOffsetY = 1f;
-
         }
         source = SteamVR_TrackedCamera.Source(distorted);
 		source.Acquire();
-
+        changeCamera();
 		if (!source.hasCamera)
 			enabled = false;
 	}

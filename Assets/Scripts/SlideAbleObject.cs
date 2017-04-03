@@ -52,7 +52,7 @@ public class SlideAbleObject : MonoBehaviour
         canSlide = true;
     }
 
-    private void NextCategory()
+    private void NextCategory(BoxBehaviour b)
     {
         bh = cbm.CardBoxList[EventManager.CurrentCategory].GetComponent<BoxBehaviour>();
         for (int x = 0; x < transform.childCount; ++x)

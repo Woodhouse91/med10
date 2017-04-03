@@ -42,7 +42,7 @@ public class cardBoardManager : MonoBehaviour {
             yield return null;
         }
         newBox.GetComponent<Rigidbody>().isKinematic = false;
-        EventManager.BoxAtTable();
+        EventManager.BoxAtTable(newBox.GetComponent<BoxBehaviour>());
     }
 
     void StartAfterLoad()

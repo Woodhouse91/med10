@@ -33,6 +33,7 @@ public class fadeBlack : MonoBehaviour {
             yield return null;
         }
         mat.enabled = false;
+        global.GetComponent<OptimizedCameraTex>().changeCamera();
         yield return null;
     }
     public void fade()
