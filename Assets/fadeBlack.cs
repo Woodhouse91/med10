@@ -5,15 +5,14 @@ using UnityEngine;
 
 public class fadeBlack : MonoBehaviour {
 
-    MeshRenderer mat, projTar;
-    GameObject proj;
+    MeshRenderer mat;
     public float fadeTime;
+    GameObject global;
 
 	// Use this for initialization
 	void Start () {
         mat = GetComponent <MeshRenderer>();
-        proj = GameObject.Find("RealWorldProj");
-        projTar = GameObject.Find("ProjectorTarget").GetComponent<MeshRenderer>();
+        global = GameObject.Find("Global Components");
 	}
 	
 	// Update is called once per frame
@@ -31,12 +30,9 @@ public class fadeBlack : MonoBehaviour {
         {
             t += Time.deltaTime / fadeTime;
             mat.material.SetFloat("_Fade", 1-t*t);
-            proj.GetComponent<Projector>().material.SetFloat("_Alpha", 1 - t * t);
             yield return null;
         }
         mat.enabled = false;
-        proj.SetActive(false);
-        GameObject.Find("REALWORLD").SetActive(false);
         yield return null;
     }
     public void fade()

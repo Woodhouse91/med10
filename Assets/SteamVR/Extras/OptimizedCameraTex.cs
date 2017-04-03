@@ -1,17 +1,53 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
+
 public class OptimizedCameraTex : MonoBehaviour
 {
-	public Material material;
+	private Material material;
+    public Material[] settingMat;
 	public Transform target;
+    public GameObject[] CameraSurface, Projector;
     private const float aspect = 1.330435f, du = 0.5f, dv = -0.4999999f;
     private Vector2 texOffSet = new Vector2(0.25f, 0.75f), texScale = new Vector2(du, dv);
-    private Vector3 scale = new Vector3(1.0f, 1.0f / aspect, 1);
-    Texture2D texture;
+    private Texture2D texture;
+    private bool distorted;
+    private int curTex = 0;
+    private struct camData
+    {
+        public float dv, du, texOffsetX, texOffsetY;
+    }
+    private camData[] camSetting;
     SteamVR_TrackedCamera.VideoStreamTexture source;
-    void OnEnable()
+    public void changeCamera()
+    {
+        CameraSurface[curTex].SetActive(false);
+        Projector[curTex].SetActive(false);
+        curTex = curTex + 1 > 1 ? 0 : 1;
+        distorted = curTex == 1;
+        CameraSurface[curTex].SetActive(true);
+        Projector[curTex].SetActive(true);
+        material = settingMat[curTex];
+        texOffSet = new Vector2(camSetting[curTex].texOffsetX, camSetting[0].texOffsetY);
+        texScale = new Vector2(camSetting[curTex].du, camSetting[curTex].dv);
+
+    }
+    void Start()
 	{
-        source = SteamVR_TrackedCamera.Undistorted();
+        if(camSetting==null)
+        {
+            camSetting = new camData[2];
+            camSetting[0].dv = -0.4999999f;
+            camSetting[0].du = 0.5f;
+            camSetting[0].texOffsetX = 0.25f;
+            camSetting[0].texOffsetY = 0.75f;
+            camSetting[1].dv = -1f;
+            camSetting[0].du = 1f;
+            camSetting[0].texOffsetX = 0f;
+            camSetting[0].texOffsetY = 1f;
+
+        }
+        source = SteamVR_TrackedCamera.Source(distorted);
 		source.Acquire();
 
 		if (!source.hasCamera)
@@ -21,19 +57,19 @@ public class OptimizedCameraTex : MonoBehaviour
 	private void OnDisable()
 	{
 		material.mainTexture = null;
-        source = SteamVR_TrackedCamera.Undistorted();
+        source = SteamVR_TrackedCamera.Source(distorted);
         source.Release();
 	}
     private void OnApplicationQuit()
     {
         material.mainTexture = null;
-        source = SteamVR_TrackedCamera.Undistorted();
+        source = SteamVR_TrackedCamera.Source(distorted);
         source.Release();
     }
 
     void Update()
 	{
-        source = SteamVR_TrackedCamera.Undistorted();
+        source = SteamVR_TrackedCamera.Source(distorted);
         texture = source.texture;
 		if (texture == null)
 		{
