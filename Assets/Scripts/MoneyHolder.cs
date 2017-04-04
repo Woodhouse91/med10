@@ -97,13 +97,13 @@ public class MoneyHolder : MonoBehaviour
         while (spawning)
             yield return null;
         spawning = true;
-        for (int i = 0; i < allCurrency.Count; i++)
+        /*for (int i = 0; i < allCurrency.Count; i++)
         {
             GameObject temp = allCurrency[i];
             int randomIndex = Random.Range(i, allCurrency.Count-1);
             allCurrency[i] = allCurrency[randomIndex];
             allCurrency[randomIndex] = temp;
-        }
+        }*/
         EventManager.MoneyInstantiated();
         yield break;
     }

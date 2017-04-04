@@ -15,7 +15,7 @@ public class BoxBehaviour : MonoBehaviour {
     private int categoryModel;
     public List<string> CategoryString;
     public List<int> CategoryInt;
-    List<int> modelsForCrates;
+    public int[] moneyAtCrate;
 
     private float BagValue;
     private int maxValueOfAMonth;
@@ -52,6 +52,7 @@ public class BoxBehaviour : MonoBehaviour {
         categoryModel = category;
         CategoryInt = new List<int>();
         CategoryString = new List<string>();
+        moneyAtCrate = new int[12];
         for (int k = 0; k < DataHandler.BudgetCategories.Count; k++)
         {
             if (DataHandler.expenseData[0, k] == category)
@@ -60,16 +61,23 @@ public class BoxBehaviour : MonoBehaviour {
                 CategoryInt.Add(k);
             }
         }
-        modelsForCrates = new List<int>();
-        for (int k = 1; k < 13; k++)
+        //modelsForCrates = new List<int>();
+        //for (int k = 1; k < 13; k++)
+        //{
+        //    for (int i = 0; i < CategoryInt.Count; i++)
+        //    {
+        //        if( DataHandler.expenseData[k, CategoryInt[i]] != 0)
+        //        {
+        //            modelsForCrates.Add(k - 1);
+        //            break;
+        //        }
+        //    }
+        //}
+        for (int i = 1; i < 13; i++)
         {
-            for (int i = 0; i < CategoryInt.Count; i++)
+            for (int j = 0; j < CategoryInt.Count; j++)
             {
-                if( DataHandler.expenseData[k, CategoryInt[i]] != 0)
-                {
-                    modelsForCrates.Add(k - 1);
-                    break;
-                }
+                moneyAtCrate[i - 1] += DataHandler.expenseData[i, CategoryInt[j]];
             }
         }
     }
@@ -151,18 +159,19 @@ public class BoxBehaviour : MonoBehaviour {
         Vector3 shakeVec;
         Vector3 startpos = transform.position;
         float t = 0;
-        /* Ryster den senere
+        
         while (t < 1)
         {
             t += Time.deltaTime * 2f;
             shakeVec = new Vector3(Random.Range(-AC.Evaluate(t), AC.Evaluate(t)), Random.Range(-AC.Evaluate(t), AC.Evaluate(t)), Random.Range(-AC.Evaluate(t), AC.Evaluate(t)));
-            transform.position = startpos + shakeVec;
+            transform.position = startpos + shakeVec / 100f;
+            yield return null;
         }
-        */
+        
         //then we open the lids
         Quaternion startRotL = leftLid.localRotation;
         Quaternion startRotR = rightLid.localRotation;
-        Quaternion endRotL = leftLid.localRotation * Quaternion.AngleAxis(-160f, Vector3.forward); // ROTATE LIDS 135
+        Quaternion endRotL = leftLid.localRotation * Quaternion.AngleAxis(-160f, Vector3.forward); // ROTATE LIDS 70% of 160 
         Quaternion endRotR = rightLid.localRotation * Quaternion.AngleAxis(160f, Vector3.forward);
         t = 0;
         while (t < 1)
@@ -173,19 +182,26 @@ public class BoxBehaviour : MonoBehaviour {
             yield return null;
         }
         //SPAWN MODELS
-        int numOfObj = modelsForCrates.Count;
+       
 
-        for (int i = 0; i < numOfObj; i++)
+        for (int i = 0; i < 12; i++)
         {
-            GameObject model = CategoryModelHandler.GetAt(categoryModel).gameObject; // MODELS HERE THO
-            Vector3 pos = transform.position + new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
-            Vector3 forceUp = new Vector3(0.1f, 7.5f, 0.1f);
-            //pos = transform.TransformPoint(pos);
-            model = Instantiate(model, pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
-            model.GetComponent<Rigidbody>().isKinematic = false;
-            model.GetComponent<Rigidbody>().AddForce(forceUp, ForceMode.VelocityChange);
-            yield return new WaitForSeconds(1f / SpawnRate);
-            StartCoroutine(FlyModelsToShelves(model.transform,modelsForCrates[i]));
+            if(moneyAtCrate[i] > 0)
+            {
+                GameObject model = CategoryModelHandler.GetAt(categoryModel).gameObject; // MODELS HERE THO
+                Vector3 pos = transform.position + new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
+                Vector3 forceUp = new Vector3(0.1f, 5.5f, 0.1f);
+                //pos = transform.TransformPoint(pos);
+                model = Instantiate(model, pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
+                model.GetComponent<Rigidbody>().isKinematic = false;
+                model.GetComponent<Rigidbody>().AddForce(forceUp, ForceMode.VelocityChange);
+                StartCoroutine(FlyModelsToShelves(model.transform,i));
+                yield return new WaitForSeconds(1f / SpawnRate);
+            }
+            else
+            {
+                FlipCrateScale(i);
+            }
         }
         yield return new WaitForSeconds(0.5f);
         EventManager.BoxEmptied();
@@ -193,18 +209,26 @@ public class BoxBehaviour : MonoBehaviour {
         yield return null;
     }
 
+    private void FlipCrateScale(int i)
+    {
+        pac.FlipCrate(EventManager.CurrentCategory, i);
+    }
+
     private IEnumerator FlyModelsToShelves(Transform model,int CrateMonth)
     {
-       
-        while (model.GetComponent<Rigidbody>().velocity.y > -1.0f)
+        float t = 0;
+        while (model.GetComponent<Rigidbody>().velocity.y > -1.0f && t< 1f)
+        {
+            t += Time.deltaTime;
             yield return null;
+        }
         model.GetComponent<Rigidbody>().isKinematic = true;
         Transform target = pac.GetCrate(EventManager.CurrentCategory, CrateMonth);
         Vector3 endPos = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).position + Vector3.up * .5f;
         Vector3 startPos = model.position;
         Quaternion startRot = model.rotation;
         Quaternion endRot = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).rotation;
-        float t = 0;
+        t = 0;
         while (t<1f)
         {
             t += Time.deltaTime / 2f;
@@ -222,8 +246,8 @@ public class BoxBehaviour : MonoBehaviour {
             yield return null;
         }
         ttt = 0;
-        tarScale = defaultModelScale * (1f + DataHandler.getScale(EventManager.CurrentCategory, CrateMonth));
-        StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, CrateMonth, DataHandler.getScale(EventManager.CurrentCategory, CrateMonth)));
+        tarScale = defaultModelScale * (1f + moneyAtCrate[CrateMonth]*12f / DataHandler.tExpense); // times 12 because of single crate expanding
+        StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, CrateMonth, moneyAtCrate[CrateMonth] * 12f / DataHandler.tExpense));
         while (ttt <= EventManager.scaleTime)
         {
             ttt += Time.deltaTime;
@@ -251,7 +275,7 @@ public class BoxBehaviour : MonoBehaviour {
     }
     void CreateBagsOfMoney(int _month, Transform target)
     {
-        float bags = DataHandler.expenseData[_month + 1, EventManager.CurrentCategory] / BagValue;
+        float bags = moneyAtCrate[_month] / BagValue;
 
         for (int i = 0; i < bags; i++)
         {
