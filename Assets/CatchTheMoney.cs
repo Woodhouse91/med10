@@ -49,6 +49,7 @@ public class CatchTheMoney : MonoBehaviour {
             other.rotation = Quaternion.Lerp(startRot, endRot, t);
             yield return null;
         }
+        Destroy(other.GetComponent<Rigidbody>());
         yield return null;
     }
 }

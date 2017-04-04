@@ -65,7 +65,7 @@ public class PlaceAllCrates : MonoBehaviour {
     {
         float t = 0;
         Vector3 startS = crate.transform.localScale;
-        Vector3 endS = crate.transform.localScale - crate.transform.forward * crate.transform.localScale.z * 2f;
+        Vector3 endS = crate.transform.localScale - Vector3.forward * crate.transform.localScale.z * 2f;
         while(t<1)
         {
             t += Time.deltaTime;

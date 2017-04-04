@@ -12,6 +12,7 @@ public class fadeBlack : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         mat = GetComponent <MeshRenderer>();
+        mat.enabled = true;
         global = GameObject.Find("Global Components");
 	}
 	

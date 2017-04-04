@@ -32,16 +32,16 @@ public class BoxBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        defaultModelScale = Vector3.one * 4;
+        defaultModelScale = Vector3.one * 3;
         pac = FindObjectOfType<PlaceAllCrates>();
         rig = GetComponent<Rigidbody>();
         leftLid = transform.GetChild(0);
         rightLid = transform.GetChild(1);
         tape = GetComponentInChildren<RipTheTape>();
         spawnArea = transform.GetChild(2); //the lids are 0 and 1
-        Ax = spawnArea.lossyScale.x / 2f;
-        Ay = spawnArea.lossyScale.y / 2f;
-        Az = spawnArea.lossyScale.z / 2f;
+        Ax = spawnArea.lossyScale.x / 2.5f;
+        Ay = spawnArea.lossyScale.y / 2.5f;
+        Az = spawnArea.lossyScale.z / 2.5f;
         if(GetComponent<AddMoneyToTable>()==null)
             BagValue = DataHandler.incomeData[12] / 100f;
     }
@@ -61,18 +61,6 @@ public class BoxBehaviour : MonoBehaviour {
                 CategoryInt.Add(k);
             }
         }
-        //modelsForCrates = new List<int>();
-        //for (int k = 1; k < 13; k++)
-        //{
-        //    for (int i = 0; i < CategoryInt.Count; i++)
-        //    {
-        //        if( DataHandler.expenseData[k, CategoryInt[i]] != 0)
-        //        {
-        //            modelsForCrates.Add(k - 1);
-        //            break;
-        //        }
-        //    }
-        //}
         for (int i = 1; i < 13; i++)
         {
             for (int j = 0; j < CategoryInt.Count; j++)
@@ -200,18 +188,13 @@ public class BoxBehaviour : MonoBehaviour {
             }
             else
             {
-                FlipCrateScale(i);
+                pac.FlipCrate(EventManager.CurrentCategory, i);
             }
         }
         yield return new WaitForSeconds(0.5f);
         EventManager.BoxEmptied();
         Throw();
         yield return null;
-    }
-
-    private void FlipCrateScale(int i)
-    {
-        pac.FlipCrate(EventManager.CurrentCategory, i);
     }
 
     private IEnumerator FlyModelsToShelves(Transform model,int CrateMonth)
