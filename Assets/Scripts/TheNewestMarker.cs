@@ -1,25 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TheNewestMarker : MonoBehaviour
 {
 
     private Ray ray;
     private RaycastHit hit;
-    private int touchScreenLayer, dragLayer, butLayer;
+    private int touchScreenLayer, dragLayer, textLayer;
     private Vector3 prevPos, dragDir, orgDrop, dragOffset;
     private Transform draggedTar, hoverTar;
     private bool slideReleaseWait = true;
+    bool isHitting = false;
+    bool isClicking = false;
+    Transform clickTarget;
     MoneyIntoButton mb;
+    BoxInterfaceScreen Bis;
 
 
     private void Awake()
     {
-
+        Bis = FindObjectOfType<BoxInterfaceScreen>();
         touchScreenLayer = 1 << LayerMask.NameToLayer("TouchScreen");
         dragLayer = 1 << LayerMask.NameToLayer("DragLayer");
-        butLayer = 1 << LayerMask.NameToLayer("ButtonLayer");
+        textLayer = 1 << LayerMask.NameToLayer("TextField");
     }
 
     private void Update()
@@ -27,32 +33,34 @@ public class TheNewestMarker : MonoBehaviour
         ray.origin = transform.position - transform.forward * 0.5f;
         ray.direction = transform.forward;
         dragDir = transform.position - prevPos;
-        if (Physics.Raycast(ray, out hit, 1, butLayer))
+        if(!isHitting)
         {
-            hoverTar = hit.transform.parent;
-            mb = hoverTar.GetComponent<MoneyIntoButton>();
-            mb.curState = MoneyIntoButton.state.Hovered;
-        }
-        else if(hoverTar!=null)
-        {
-            mb.curState = MoneyIntoButton.state.Normal;
-            mb = null;
-            hoverTar = null;
-        }
+            if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
+            {
+                draggedTar = hit.transform;
+                dragOffset = transform.position - draggedTar.position;
+                draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
+            }
+            if (draggedTar != null)
+            {
+                draggedTar.parent.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
+            }
 
-        if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
-        {
-            draggedTar = hit.transform;
-            dragOffset = transform.position - draggedTar.position;
-            draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
-        }
-        transform.Translate(Vector3.up * Input.GetAxis("Vertical") * Time.deltaTime * 0.15f);
-        transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * 0.15f);
-        if (draggedTar != null)
-        {
-            draggedTar.parent.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
+            if (Physics.Raycast(ray, out hit, 1, textLayer))
+            {
+                isHitting = true;
+                if (hit.transform.parent.name == "FullTextField")
+                    StartCoroutine(HitTextField(hit));
+                if (hit.transform.parent.name == "SliderHorizontal")
+                    StartCoroutine(HitBoxSlider(hit));
+                if (hit.transform.parent.name == "SliderNextSlide")
+                    StartCoroutine(HitNextSlidePlz(hit));
+            }
         }
     }
+
+   
+
     public void releaseSlider()
     {
         draggedTar = null;
@@ -65,8 +73,66 @@ public class TheNewestMarker : MonoBehaviour
         slideReleaseWait = true;
         yield break;
     }
+    private IEnumerator HitNextSlidePlz(RaycastHit hit)
+    {
+        Vector3 startPos = transform.position;
+        Vector3 scrollStartPos = hit.transform.parent.localPosition;
+        while (gameObject.activeSelf)
+        {
+            if (Vector3.Distance(transform.position, startPos) < 0.01f)
+            {
+                //waiting for OnDisable()
+            }
+            else
+            {
+                Bis.isScrolling = true;
+                hit.transform.parent.localPosition = scrollStartPos - Vector3.right * Vector3.Distance(transform.position,startPos);
+            }
+            yield return null;
+        }
+        isClicking = true;
+        yield return isHitting = false;
+    }
+    IEnumerator HitBoxSlider(RaycastHit hit)
+    {
+        //Needs implementation later (nicos works fine now)
+        yield return isHitting = false;
+    }
+    IEnumerator HitTextField(RaycastHit hit)
+    {
+        Vector3 startPos = transform.localPosition;
+        Vector3 scrollStartPos = hit.transform.parent.localPosition;
+        clickTarget = hit.transform;
+        isClicking = true;
+        while (gameObject.activeSelf)
+        {
+            if (Vector3.Distance(transform.localPosition, startPos) < 0.01f && isClicking == true)
+            {
+                //waiting for OnDisable()
+            }
+            else
+            {
+                clickTarget = null;
+                isClicking = false;
+                hit.transform.parent.localPosition = scrollStartPos + Vector3.up * (transform.localPosition.y - startPos.y);
+                Bis.isScrolling = true;
+                //Scrolling
+            }
+            yield return null;
+        }
+        yield return isHitting = false; 
+    }
+
     private void OnDisable()
     {
+        isHitting = false;
+        Bis.isScrolling = false;
+        if (clickTarget != null)
+        {
+            Bis.ClickTextField(clickTarget.GetSiblingIndex());
+            clickTarget = null;
+        }
+
         slideReleaseWait = true;
         if (draggedTar != null)
         {
