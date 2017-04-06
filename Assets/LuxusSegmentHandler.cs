@@ -18,27 +18,32 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private float moneyMoveTime = 2f;
     private float moneyH = 0.072f;
     private float moneyW = 0.165f;
+    private float coinS = 0.00285f;
+    private float coinsPerCol = 5;
     private int billsPerColumn = 25;
+    private float hangHeight = 0.2f;
+    private float hangTime = 2f;
     private bool stillMoving;
     private static List<List<Transform>> bills;
     private static List<List<Transform>> coins;
+    private Transform targetWall;
+    private float luxusOffset;
+
 
     // Use this for initialization
     private void Start ()
     {
+        targetWall = GameObject.Find("Tavlefar").transform;
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
         activeSegments = new List<Transform>();
-        StaticStart();
         EventManager.OnBoxAtTable += GenerateTable;
         EventManager.OnRipTapeSliderDone += MoveMoneyToTable;
-	}
-    private static void StaticStart()
-    {
         segmentPrefab = Resources.Load<Transform>("LuxusSegment");
         holder = GameObject.Find("Segmentholder").transform;
         EventManager.OnExcelDataLoaded += PoolSegments;
-    }
+        EventManager.OnCategoryDone += ReleaseTable;
+	}
     void Unsub()
     {
         try
@@ -46,6 +51,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             EventManager.OnBoxAtTable -= GenerateTable;
             EventManager.OnRipTapeSliderDone -= MoveMoneyToTable;
             EventManager.OnExcelDataLoaded -= PoolSegments;
+            EventManager.OnCategoryDone -= ReleaseTable;
         }
         catch { }
     }
@@ -64,30 +70,71 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private void MoveMoneyToTable()
     {
         Transform tar;
-        Vector3 down;
         for(int x = 0; x<activeSegments.Count; ++x)
         {
-            List<Vector3> offset = new List<Vector3>();
+            List<float> offset = new List<float>();
             tar = activeSegments[x].GetChild(1).GetChild(0);
-            down = -(activeSegments[x].GetChild(1).GetChild(0).up*moneyH/5f);
+            float down = -moneyH/5f;
             int cols = bills[x].Count / billsPerColumn+1;
             int downOffset = 0;
+
+            float coinRight = coinS;
+            float coinDown = down;
+
+            int coinDownCount = 0;
+            int coinColCount = 0;
+
             for (int k = 0; k<cols; ++k)
             {
-                offset.Add(activeSegments[x].GetChild(1).GetChild(0).right * (moneyW * (((-cols/2f) +k)+.5f)));
+                offset.Add((moneyW * (((-cols/2f) +k)+.5f)));
             }
-            for (int y = 0; y < bills[x].Count; ++y)
+            if (x < bills.Count)
             {
-                StartCoroutine(DoMovement(bills[x][y], tar, (down * downOffset) + offset[y % offset.Count]));
-                if (cols == 1)
-                    ++downOffset;
-                else if (y % cols == 1)
-                    ++downOffset;
+                for (int y = 0; y < bills[x].Count; ++y)
+                {
+                    if ((y+1) % (cols+1) == 0)
+                        ++downOffset;
+                    StartCoroutine(DoMovement(bills[x][y], tar, down * downOffset, offset[y % offset.Count]));
+                }
+            }
+            if (x < coins.Count)
+            {
+                for(int y = 0; y<coins[x].Count; ++y)
+                {
+                    StartCoroutine(doCoinMovement(coins[x][y], tar, coinDown*coinDownCount, coinRight*coinColCount));
+                    coinColCount++;
+                    if ((y+1) % (coinsPerCol+1) == 0)
+                    {
+                        coinColCount = 0;
+                        coinDownCount++;
+                    }
+                }
             }
         }
     }
 
-    private IEnumerator DoMovement(Transform obj, Transform tar, Vector3 offset)
+    private IEnumerator doCoinMovement(Transform obj, Transform tar, float downOff, float rightOff)
+    {
+        while (stillMoving)
+            yield return null;
+        float t = 0;
+        Vector3 orgPos = obj.position;
+        Vector3 target = tar.position + tar.up * downOff + tar.right * rightOff;
+        Quaternion orgRot = obj.rotation;
+        Quaternion tarRot = tar.rotation * Quaternion.AngleAxis(15, -Vector3.forward);
+        while (t <= 1)
+        {
+            t += Time.deltaTime / moneyMoveTime;
+            obj.position = Vector3.Lerp(orgPos, target, t);
+            obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
+            yield return null;
+        }
+         obj.gameObject.AddComponent<ChildTo>();
+        obj.GetComponent<ChildTo>().Initiate(tar);
+        yield break;
+    }
+
+    private IEnumerator DoMovement(Transform obj, Transform tar, float downOff, float colOff)
     {
         while (stillMoving)
             yield return null;
@@ -95,28 +142,32 @@ public class LuxusSegmentHandler : MonoBehaviour {
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
         Quaternion tarRot = tar.rotation*Quaternion.AngleAxis(15, -Vector3.right);
+        Vector3 target = tar.position + tar.up * downOff + tar.right * colOff;
         while (t <= 1)
         {
             t += Time.deltaTime/moneyMoveTime;
-            obj.position = Vector3.Lerp(orgPos, tar.position+offset, t);
+            obj.position = Vector3.Lerp(orgPos, target, t);
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
             yield return null;
         }
+        obj.gameObject.AddComponent<ChildTo>();
+        obj.GetComponent<ChildTo>().Initiate(tar);
         yield break;
     }
-
     private void GenerateTable(BoxBehaviour s)
     {
         nHolder = Instantiate(holder);
         int scaleFactor = 0;
+        float prevScaled = 0;
+        bool scaled = false;
         for (int x = 0; x < s.CategoryString.Count; ++x)
         {
             activeSegments.Add(segment[0]);
             segment.Remove(segment[0]);
             activeSegments[x].SetParent(holder);
             scaleFactor = buildMoneyList(s.CategoryInt[x])/billsPerColumn;
-            activeSegments[x].localPosition = offset * x + offset * scaledOffset;
-            scaledOffset += (scaleFactor / 2f);
+            activeSegments[x].localPosition = (offset * x) + offset * scaledOffset + offset * (scaleFactor/2f);
+            scaledOffset += (scaleFactor);
             activeSegments[x].localScale += Vector3.up*scaleFactor;
             activeSegments[x].localRotation = Quaternion.Euler(90, -180, 0);
             activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = s.CategoryString[x];
@@ -126,12 +177,18 @@ public class LuxusSegmentHandler : MonoBehaviour {
             activeSegments[x].GetChild(0).GetChild(0).localScale = texScale;
             activeSegments[x].GetChild(0).GetChild(1).localScale = texScale;
             activeSegments[x].gameObject.SetActive(true);
+            prevScaled = scaleFactor;
         }
+        scaledOffset += scaled ? .5f : 0;
         ExposeTable();
     }
     private string formatCurrency(int val)
     {
-        string res = val.ToString();
+        decimal moneyvalue = val;
+        string res = String.Format("{0:N}", moneyvalue);
+        res = res.Remove(res.Length - 3);
+        res = res.Replace(",", ".");
+        res += ",-";
         return res;
     }
     private void ExposeTable()
@@ -167,15 +224,53 @@ public class LuxusSegmentHandler : MonoBehaviour {
         stillMoving = false;
         yield break;
     }
-    public static void ReleaseTable()
+    public void ReleaseTable()
     {
         activeSegments.Clear();
         nHolder.SetParent(holder.parent);
         nHolder.localPosition = Vector3.zero;
         nHolder.localRotation = Quaternion.identity;
-
-
+        StartCoroutine(doRelease(holder));
         holder = nHolder;
+    }
+
+    private IEnumerator doRelease(Transform obj)
+    {
+        Transform myRef = obj;
+        Vector3 orgPos = obj.position;
+        Quaternion orgRot = obj.rotation;
+        Vector3 target = targetWall.position - targetWall.right * (4.5f-luxusOffset) + targetWall.forward*0.02f + targetWall.up*hangHeight;
+        luxusOffset = scaledOffset;
+        if (luxusOffset > 10f)
+        {
+            luxusOffset = 0;
+            hangHeight = -.95f;
+            target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
+        }
+        Quaternion tarRot = targetWall.rotation;
+        float t = 0;
+        while (t < 1)
+        {
+            t += Time.deltaTime / hangTime;
+            obj.position = Vector3.Lerp(orgPos, target, t);
+            obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
+            yield return null;
+        }
+        for(int x = 0; x<coins.Count; ++x)
+        {
+            for(int y = 0; y<coins[x].Count; ++y)
+            {
+                Destroy(coins[x][y].GetComponent<ChildTo>());
+            }
+        }
+        for(int x = 0; x<bills.Count; ++x)
+        {
+            for(int y = 0; y<bills[x].Count; ++y)
+            {
+                Destroy(bills[x][y].GetComponent<ChildTo>());
+            }
+        }
+        yield break;
     }
     private static int buildMoneyList(int cat)
     {
