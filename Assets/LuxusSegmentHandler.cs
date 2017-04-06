@@ -236,6 +236,11 @@ public class LuxusSegmentHandler : MonoBehaviour {
 
     private IEnumerator doRelease(Transform obj)
     {
+        List<List<Transform>> billRef = bills;
+        List<List<Transform>> coinRef = coins;
+        bills = new List<List<Transform>>();
+        coins = new List<List<Transform>>();
+        print(bills.Count);
         Transform myRef = obj;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
@@ -256,18 +261,18 @@ public class LuxusSegmentHandler : MonoBehaviour {
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
             yield return null;
         }
-        for(int x = 0; x<coins.Count; ++x)
+        for(int x = 0; x<coinRef.Count; ++x)
         {
-            for(int y = 0; y<coins[x].Count; ++y)
+            for(int y = 0; y< coinRef[x].Count; ++y)
             {
-                Destroy(coins[x][y].GetComponent<ChildTo>());
+                Destroy(coinRef[x][y].GetComponent<ChildTo>());
             }
         }
-        for(int x = 0; x<bills.Count; ++x)
+        for(int x = 0; x<billRef.Count; ++x)
         {
-            for(int y = 0; y<bills[x].Count; ++y)
+            for(int y = 0; y< billRef[x].Count; ++y)
             {
-                Destroy(bills[x][y].GetComponent<ChildTo>());
+                Destroy(billRef[x][y].GetComponent<ChildTo>());
             }
         }
         yield break;
