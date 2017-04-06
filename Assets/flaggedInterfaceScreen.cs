@@ -71,7 +71,12 @@ public class flaggedInterfaceScreen : MonoBehaviour
         isShowing = true;
     }
 
- 
+    public void AddCategory(GameObject textfield)
+    {
+        flaggedCategories.Add(textfield.GetComponentInChildren<Text>().text);
+        tTextField[flaggedCategories.Count - 1].GetComponentInChildren<Text>().text = flaggedCategories[flaggedCategories.Count - 1];
+
+    }
 
     public void DisableHeleLortet() //CHILD DEPENDING
     {
