@@ -118,27 +118,28 @@ public class MoneyHolder : MonoBehaviour
             CurrencySpawnedPerFrame = 1;
         while (i < count)
         {
-            allCurrency.Add(Instantiate(go));
+            GameObject myRef = Instantiate(go);
+                allCurrency.Add(myRef);
             if (go == pref1000)
-                _1000.Add(allCurrency[i].transform);
+                _1000.Add(myRef.transform);
             else if (go == pref500)
-                _500.Add(allCurrency[i].transform);
+                _500.Add(myRef.transform);
             else if (go == pref200)
-                _200.Add(allCurrency[i].transform);
+                _200.Add(myRef.transform);
             else if (go == pref100)
-                _100.Add(allCurrency[i].transform);
+                _100.Add(myRef.transform);
             else if (go == pref50)
-                _50.Add(allCurrency[i].transform);
+                _50.Add(myRef.transform);
             else if (go == pref20)
-                _20.Add(allCurrency[i].transform);
+                _20.Add(myRef.transform);
             else if (go == pref10)
-                _10.Add(allCurrency[i].transform);
+                _10.Add(myRef.transform);
             else if (go == pref5)
-                _5.Add(allCurrency[i].transform);
+                _5.Add(myRef.transform);
             else if (go == pref2)
-                _2.Add(allCurrency[i].transform);
+                _2.Add(myRef.transform);
             else if (go == pref1)
-                _1.Add(allCurrency[i].transform);
+                _1.Add(myRef.transform);
             ++curSpawned;
             i++;
             if (i % CurrencySpawnedPerFrame == 0)
@@ -149,50 +150,58 @@ public class MoneyHolder : MonoBehaviour
     }
     public static Transform getCurrency(int currency)
     {
-        Transform res;
-        switch (currency)
+        Transform res = null;
+        if(currency == 1000)
         {
-            case 1000:
-                res = _1000[0];
-                _1000.Remove(_1000[0]);
-                return res;
-            case 500:
-                res = _500[0];
-                _500.Remove(_500[0]);
-                return res;
-            case 200:
-                res = _200[0];
-                _200.Remove(_200[0]);
-                return res;
-            case 100:
-                res = _100[0];
-                _100.Remove(_100[0]);
-                return res;
-            case 50:
-                res = _50[0];
-                _1000.Remove(_50[0]);
-                return res;
-            case 20:
-                res = _20[0];
-                _20.Remove(_20[0]);
-                return res;
-            case 10:
-                res = _10[0];
-                _10.Remove(_10[0]);
-                return res;
-            case 5:
-                res = _5[0];
-                _5.Remove(_5[0]);
-                return res;
-            case 2:
-                res = _2[0];
-                _2.Remove(_5[0]);
-                return res;
-            case 1:
-                res = _1[0];
-                _1.Remove(_1[0]);
-                return res;
+            res = _1000[0];
+            _1000.Remove(_1000[0]);
+
         }
-        return null;
+        else if(currency == 500)
+        {
+            res = _500[0];
+            _500.Remove(_500[0]);
+        }
+        else if (currency == 200)
+        {
+            res = _200[0];
+            _200.Remove(_200[0]);
+        }
+        else if (currency == 100)
+        {
+            res = _100[0];
+            _100.Remove(_100[0]);
+        }
+        else if (currency == 50)
+        {
+            res = _50[0];
+            _50.Remove(_50[0]);
+        }
+        else if (currency == 20)
+        {
+            res = _20[0];
+            _20.Remove(_20[0]);
+        }
+        else if (currency == 10)
+        {
+            res = _10[0];
+            _10.Remove(_10[0]);
+        }
+        else if (currency == 5)
+        {
+            res = _5[0];
+            _5.Remove(_5[0]);
+        }
+        else if (currency == 2)
+        {
+            res = _2[0];
+            _2.Remove(_5[0]);
+        }
+        else if (currency == 1)
+        {
+            res = _1[0];
+            _1.Remove(_1[0]);
+        }
+        return res;
     }
 }
