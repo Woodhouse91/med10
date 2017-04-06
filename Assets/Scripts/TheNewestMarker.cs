@@ -10,7 +10,7 @@ public class TheNewestMarker : MonoBehaviour
     private Ray ray;
     private RaycastHit hit;
     private int touchScreenLayer, dragLayer, textLayer;
-    private Vector3 prevPos, dragDir, orgDrop, dragOffset;
+    private Vector3 prevPos, orgDrop, dragOffset;
     private Transform draggedTar, hoverTar;
     private bool slideReleaseWait = true;
     bool isHitting = false;
@@ -32,20 +32,9 @@ public class TheNewestMarker : MonoBehaviour
     {
         ray.origin = transform.position - transform.forward * 0.5f;
         ray.direction = transform.forward;
-        dragDir = transform.position - prevPos;
+        
         if(!isHitting)
         {
-            if (Physics.Raycast(ray, out hit, 1, dragLayer) && draggedTar == null && slideReleaseWait)
-            {
-                draggedTar = hit.transform;
-                dragOffset = transform.position - draggedTar.position;
-                draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
-            }
-            if (draggedTar != null)
-            {
-                draggedTar.parent.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
-            }
-
             if (Physics.Raycast(ray, out hit, 1, textLayer))
             {
                 isHitting = true;
@@ -95,13 +84,22 @@ public class TheNewestMarker : MonoBehaviour
     }
     IEnumerator HitBoxSlider(RaycastHit hit)
     {
-        //Needs implementation later (nicos works fine now)
+        draggedTar = hit.transform;
+        dragOffset = transform.position - draggedTar.position;
+        draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
+
+        while(gameObject.activeSelf)
+        {
+            draggedTar.parent.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
+            yield return null;
+        }
         yield return isHitting = false;
     }
     IEnumerator HitTextField(RaycastHit hit)
     {
         Vector3 startPos = transform.localPosition;
         Vector3 scrollStartPos = hit.transform.parent.localPosition;
+        Vector3 clickTargetStartPos = hit.transform.localPosition;
         clickTarget = hit.transform;
         isClicking = true;
         while (gameObject.activeSelf)
@@ -110,13 +108,24 @@ public class TheNewestMarker : MonoBehaviour
             {
                 //waiting for OnDisable()
             }
-            else
+            else if (Mathf.Abs(transform.localPosition.y - startPos.y) > Mathf.Abs(transform.localPosition.x - startPos.x)  && Mathf.Abs(transform.localPosition.x - startPos.x) < 0.1f)
             {
-                clickTarget = null;
+                //clickTarget = null;
                 isClicking = false;
                 hit.transform.parent.localPosition = scrollStartPos + Vector3.up * (transform.localPosition.y - startPos.y);
                 Bis.isScrolling = true;
-                //Scrolling
+                //Scrolling up/down
+            }
+            else
+            {
+                //clickTarget = null;
+                isClicking = false;
+                hit.transform.localPosition = clickTargetStartPos + Vector3.right * (transform.localPosition.x - startPos.x);
+                if (hit.transform.localPosition.x > clickTargetStartPos.x)
+                    hit.transform.localPosition = clickTargetStartPos;
+                Bis.SlideTextfieldLeft(hit.transform.localPosition.x);
+                Bis.isScrolling = true;
+                //scrolling left/right
             }
             yield return null;
         }

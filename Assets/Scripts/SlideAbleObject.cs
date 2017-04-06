@@ -160,15 +160,15 @@ public class SlideAbleObject : MonoBehaviour
         target.position = transform.TransformPoint(tar);
         normDist = 0;
         dist = Vector3.Distance(slider.position, target.position);
-        if (DirectionSetting == DirBehaviour.Horizontal)
-            EventManager.OnBoxAtTable += NextCategory;
-        else
-        {
-            for (int x = 0; x < transform.childCount; ++x)
-            {
-                transform.GetChild(x).gameObject.SetActive(false);
-            }
-        }
+        //if (DirectionSetting == DirBehaviour.Horizontal)
+        //    EventManager.OnBoxAtTable += NextCategory;
+        //else
+        //{
+        //    for (int x = 0; x < transform.childCount; ++x)
+        //    {
+        //        transform.GetChild(x).gameObject.SetActive(false);
+        //    }
+        //}
     }
     public void setOwnerPosition(Vector3 pos)
     {
