@@ -110,11 +110,16 @@ public class BoxInterfaceScreen : MonoBehaviour {
         
 
     }
-    public void SlideTextfieldLeft(float x)
+    public void SlideTextfieldLeft(Transform textfield, bool clicked)
     {
+        float x = textfield.localPosition.x;
         if(x<-0.15f) // is slided left
         {
             Fis.ShowTable();
+            if(clicked)
+            {
+                Fis.AddCategory(textfield.gameObject);
+            }
         }
     }
     public void ClickTextField(int childIndex)

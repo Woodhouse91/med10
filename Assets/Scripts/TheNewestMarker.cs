@@ -123,7 +123,7 @@ public class TheNewestMarker : MonoBehaviour
                 hit.transform.localPosition = clickTargetStartPos + Vector3.right * (transform.localPosition.x - startPos.x);
                 if (hit.transform.localPosition.x > clickTargetStartPos.x)
                     hit.transform.localPosition = clickTargetStartPos;
-                Bis.SlideTextfieldLeft(hit.transform.localPosition.x);
+                Bis.SlideTextfieldLeft(hit.transform,false);
                 Bis.isScrolling = true;
                 //scrolling left/right
             }
@@ -136,6 +136,7 @@ public class TheNewestMarker : MonoBehaviour
     {
         isHitting = false;
         Bis.isScrolling = false;
+        Bis.SlideTextfieldLeft(hit.transform, true);
         if (clickTarget != null)
         {
             Bis.ClickTextField(clickTarget.GetSiblingIndex());
