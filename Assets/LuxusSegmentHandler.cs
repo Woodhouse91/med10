@@ -15,6 +15,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static float RotAngle = 55f;
     private static float slideTime = 2f;
     private static float rotTime = 1.5f;
+    private int releases = 0;
     private float moneyMoveTime = 2f;
     private float moneyH = 0.072f;
     private float moneyW = 0.165f;
@@ -220,6 +221,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     public void ReleaseTable()
     {
+        releases++;
         activeSegments.Clear();
         nHolder.SetParent(holder.parent);
         nHolder.localPosition = Vector3.zero;
@@ -230,22 +232,19 @@ public class LuxusSegmentHandler : MonoBehaviour {
 
     private IEnumerator doRelease(Transform obj)
     {
-        List<List<Transform>> billRef = bills;
-        List<List<Transform>> coinRef = coins;
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
-        print(bills.Count);
         Transform myRef = obj;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
         Vector3 target = targetWall.position - targetWall.right * (defaultLeft-luxusOffset) + targetWall.forward*hangHeight + targetWall.up*0.02f;
-        luxusOffset = scaledOffset;
-        if (luxusOffset > 10f)
-        {
-            luxusOffset = 0;
-            hangHeight = -.95f;
-            target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
-        }
+        luxusOffset += scaledOffset/2f+(0.0175f);
+        //if (luxusOffset > 10f)
+        //{
+        //    luxusOffset = 0;
+        //    hangHeight = -.95f;
+        //    target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
+        //}
         Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);
         float t = 0;
         while (t < 1)
