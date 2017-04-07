@@ -19,9 +19,10 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private float moneyH = 0.072f;
     private float moneyW = 0.165f;
     private float coinS = 0.00285f;
-    private float coinsPerCol = 5;
+    private int coinsPerCol = 4;
     private int billsPerColumn = 25;
-    private float hangHeight = 0.2f;
+    private float hangHeight = .3f;
+    private float defaultLeft = 6f;
     private float hangTime = 2f;
     private bool stillMoving;
     private static List<List<Transform>> bills;
@@ -75,11 +76,10 @@ public class LuxusSegmentHandler : MonoBehaviour {
             List<float> offset = new List<float>();
             tar = activeSegments[x].GetChild(1).GetChild(0);
             float down = -moneyH/5f;
-            int cols = bills[x].Count / billsPerColumn+1;
-            int downOffset = 0;
+            int cols = (bills[x].Count / billsPerColumn)+1;
 
-            float coinRight = coinS;
-            float coinDown = down;
+            float coinRight = coinS*3f;
+            float coinDown = -coinS*6f;
 
             int coinDownCount = 0;
             int coinColCount = 0;
@@ -92,22 +92,17 @@ public class LuxusSegmentHandler : MonoBehaviour {
             {
                 for (int y = 0; y < bills[x].Count; ++y)
                 {
-                    if ((y+1) % (cols+1) == 0)
-                        ++downOffset;
-                    StartCoroutine(DoMovement(bills[x][y], tar, down * downOffset, offset[y % offset.Count]));
+                    StartCoroutine(doBillMovement(bills[x][y], tar, down * (y/cols), offset[y % offset.Count]));
                 }
             }
             if (x < coins.Count)
             {
                 for(int y = 0; y<coins[x].Count; ++y)
                 {
-                    StartCoroutine(doCoinMovement(coins[x][y], tar, coinDown*coinDownCount, coinRight*coinColCount));
-                    coinColCount++;
-                    if ((y+1) % (coinsPerCol+1) == 0)
-                    {
+                    StartCoroutine(doCoinMovement(coins[x][y], tar, coinDown*(y/coinsPerCol)-coinDown, coinRight*coinColCount));
+                    ++coinColCount;
+                    if ((y + 1) % (coinsPerCol) == 0)
                         coinColCount = 0;
-                        coinDownCount++;
-                    }
                 }
             }
         }
@@ -119,9 +114,10 @@ public class LuxusSegmentHandler : MonoBehaviour {
             yield return null;
         float t = 0;
         Vector3 orgPos = obj.position;
-        Vector3 target = tar.position + tar.up * downOff + tar.right * rightOff;
+        Vector3 target = tar.position + tar.up * downOff + tar.right * rightOff-tar.forward*0.02f;
         Quaternion orgRot = obj.rotation;
-        Quaternion tarRot = tar.rotation * Quaternion.AngleAxis(15, -Vector3.forward);
+        Quaternion tarRot = tar.rotation*Quaternion.AngleAxis(-105, Vector3.right);
+        tarRot *= Quaternion.AngleAxis(-15, Vector3.forward);
         while (t <= 1)
         {
             t += Time.deltaTime / moneyMoveTime;
@@ -129,12 +125,11 @@ public class LuxusSegmentHandler : MonoBehaviour {
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
             yield return null;
         }
-         obj.gameObject.AddComponent<ChildTo>();
-        obj.GetComponent<ChildTo>().Initiate(tar);
+        obj.SetParent(tar.parent.parent.parent);
         yield break;
     }
 
-    private IEnumerator DoMovement(Transform obj, Transform tar, float downOff, float colOff)
+    private IEnumerator doBillMovement(Transform obj, Transform tar, float downOff, float colOff)
     {
         while (stillMoving)
             yield return null;
@@ -150,8 +145,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
             yield return null;
         }
-        obj.gameObject.AddComponent<ChildTo>();
-        obj.GetComponent<ChildTo>().Initiate(tar);
+        obj.SetParent(tar.parent.parent.parent);
         yield break;
     }
     private void GenerateTable(BoxBehaviour s)
@@ -236,10 +230,15 @@ public class LuxusSegmentHandler : MonoBehaviour {
 
     private IEnumerator doRelease(Transform obj)
     {
+        List<List<Transform>> billRef = bills;
+        List<List<Transform>> coinRef = coins;
+        bills = new List<List<Transform>>();
+        coins = new List<List<Transform>>();
+        print(bills.Count);
         Transform myRef = obj;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
-        Vector3 target = targetWall.position - targetWall.right * (4.5f-luxusOffset) + targetWall.forward*0.02f + targetWall.up*hangHeight;
+        Vector3 target = targetWall.position - targetWall.right * (defaultLeft-luxusOffset) + targetWall.forward*hangHeight + targetWall.up*0.02f;
         luxusOffset = scaledOffset;
         if (luxusOffset > 10f)
         {
@@ -247,7 +246,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             hangHeight = -.95f;
             target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
         }
-        Quaternion tarRot = targetWall.rotation;
+        Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);
         float t = 0;
         while (t < 1)
         {
@@ -256,20 +255,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
             yield return null;
         }
-        for(int x = 0; x<coins.Count; ++x)
-        {
-            for(int y = 0; y<coins[x].Count; ++y)
-            {
-                Destroy(coins[x][y].GetComponent<ChildTo>());
-            }
-        }
-        for(int x = 0; x<bills.Count; ++x)
-        {
-            for(int y = 0; y<bills[x].Count; ++y)
-            {
-                Destroy(bills[x][y].GetComponent<ChildTo>());
-            }
-        }
+      
         yield break;
     }
     private static int buildMoneyList(int cat)
