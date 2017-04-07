@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class flaggedInterfaceScreen : MonoBehaviour
 {
-    Transform tTitle, tFullTextField, tMask;
+    Transform tTitle, tFullTextField, tMask, tBis;
     Transform[] tTextField;
     List<String> flaggedCategories;
 
@@ -19,6 +19,7 @@ public class flaggedInterfaceScreen : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        tBis = transform.parent.GetChild(1); // ListOfBoxCategories // CHILD DEPENDED
         flaggedCategories = new List<String>();
         //DisableHeleLortet();
     }
@@ -116,6 +117,8 @@ public class flaggedInterfaceScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.localPosition = tBis.localPosition - Vector3.right * 0.6f; //Screen length
+
         if (!isScrolling)
         {
             if (tFullTextField.transform.localPosition.y < -0.0005f)

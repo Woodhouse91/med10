@@ -37,7 +37,6 @@ public class TheNewestMarker : MonoBehaviour
             ray.direction = transform.forward;
             if (Physics.Raycast(ray, out hit, 1, textLayer))
             {
-                print(hit);
                 if (hit.transform.parent.name == "FullTextField")
                 {
                     hitTarget = HitTarget.FullTextField;
@@ -56,7 +55,7 @@ public class TheNewestMarker : MonoBehaviour
                     StartCoroutine(HitNextSlidePlz(hit));
                     return;
                 }
-                if (hit.transform.parent.name == "SliderFlagCategories")
+                if (hit.transform.parent.name == "SliderFlagCategories") // Deleting this soon! maybe
                 {
                     hitTarget = HitTarget.SliderFlagCategories;
                     StartCoroutine(HitFlagSlider(hit));
@@ -114,13 +113,14 @@ public class TheNewestMarker : MonoBehaviour
             else
             {
                 Bis.isScrolling = true;
-                hit.transform.parent.localPosition = scrollStartPos - Vector3.right * Vector3.Distance(transform.position,startPos);
+                hit.transform.parent.localPosition = scrollStartPos - Vector3.right * (transform.position.z - startPos.z);
             }
             yield return null;
         }
         isClicking = true;
         yield return null;
     }
+    
     IEnumerator HitBoxSlider(RaycastHit hit) //SliderHorizontal
     {
         draggedTar = hit.transform;

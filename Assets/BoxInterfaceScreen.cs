@@ -12,6 +12,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     flaggedInterfaceScreen Fis;
     bool categoryDoneBool = false;
     int enabledTextFields = 0;
+    bool NowWeAreAtFlaggedCats = false;
     bool interactable = false;
     public bool isScrolling = false;
     int tTextfieldplaceInt;
@@ -151,7 +152,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         tMask.gameObject.SetActive(false);
         tTitle.gameObject.SetActive(false);
         tFullTextField.gameObject.SetActive(false);
-        tNextSlidePlz.gameObject.SetActive(false);    
+        tNextSlidePlz.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -165,9 +166,15 @@ public class BoxInterfaceScreen : MonoBehaviour {
                 isScrolling = true;
                 EventManager.CategoryDone();
             }
+            if(tNextSlidePlz.localPosition.x > 0.55f)
+            {
+                NowWeAreAtFlaggedCats = true;
+                isScrolling = true;
+            }
             else
                 transform.localPosition = tNextSlidePlz.localPosition;
         }
+        
         if (!isScrolling)
         {
             for (int i = 0; i < enabledTextFields; i++)
@@ -186,14 +193,30 @@ public class BoxInterfaceScreen : MonoBehaviour {
             {
                 tFullTextField.transform.localPosition += Vector3.up * (0.2333333f * tTextfieldplaceInt - 0.7f - tFullTextField.transform.localPosition.y) * 10f * Time.deltaTime;
             }
-            if (tNextSlidePlz.transform.localPosition.x < -0.01f)
+            if(!NowWeAreAtFlaggedCats)
             {
-                if (tNextSlidePlz.localPosition.x > -0.55f)
+                if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode()*0.6f < -0.01f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
                 {
-                    tNextSlidePlz.transform.localPosition -= Vector3.right * tNextSlidePlz.transform.localPosition.x * 10f * Time.deltaTime;
+                    if (tNextSlidePlz.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f > -0.55f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
+                    {
+                        tNextSlidePlz.transform.localPosition -= Vector3.right * tNextSlidePlz.transform.localPosition.x * 10f * Time.deltaTime;
+                    }
+                    if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f > -0.015f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
+                        tNextSlidePlz.transform.localPosition = Vector3.zero + Vector3.right * NowWeAreAtFlaggedCats.GetHashCode() * 0.6f;
                 }
-                if (tNextSlidePlz.transform.localPosition.x > -0.015f)
-                    tNextSlidePlz.transform.localPosition = Vector3.zero;
+                if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f > 0.01f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
+                {
+                    if (tNextSlidePlz.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f < 0.55f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
+                    {
+                        tNextSlidePlz.transform.localPosition += Vector3.right * tNextSlidePlz.transform.localPosition.x * 10f * Time.deltaTime;
+                    }
+                    if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode()*0.6f < 0.015f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
+                        tNextSlidePlz.transform.localPosition = Vector3.zero + Vector3.right * NowWeAreAtFlaggedCats.GetHashCode() * 0.6f;
+                }
+            }
+            else
+            {
+
             }
         }
 	}
