@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ChildTo : MonoBehaviour {
     Transform Parent;
-    Vector3 offset;
+    Vector3 posOffset;
+    Vector3 rotOffset;
     public void Initiate(Transform parent)
     {
         Parent = parent;
@@ -16,10 +17,12 @@ public class ChildTo : MonoBehaviour {
             Destroy(GetComponentInChildren<Rigidbody>());
        // if (GetComponentInChildren<Collider>() != null)
        //     Destroy(GetComponentInChildren<Collider>());
-        offset = transform.position - parent.position;
+        posOffset = transform.position - parent.position;
     }
     void Update () {
         if(Parent != null)
-            transform.position = Parent.position + offset;
+        {
+            transform.position = Parent.position + posOffset;
+        }
 	}
 }
