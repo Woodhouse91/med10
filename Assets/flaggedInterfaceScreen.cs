@@ -11,10 +11,10 @@ public class flaggedInterfaceScreen : MonoBehaviour
     List<String> flaggedCategories;
 
     int enabledTextFields = 0;
-    public float waitUntilFade = 0.1f;
+    float waitUntilFade = 0.1f;
     bool interactable = false;
     public bool isScrolling = false;
-    public bool isShowing = false;
+    public bool isShowing = true;
     int tTextfieldplaceInt;
     // Use this for initialization
     void Start()
@@ -73,8 +73,22 @@ public class flaggedInterfaceScreen : MonoBehaviour
 
     public void AddCategory(GameObject textfield)
     {
-        flaggedCategories.Add(textfield.GetComponentInChildren<Text>().text);
-        tTextField[flaggedCategories.Count - 1].GetComponentInChildren<Text>().text = flaggedCategories[flaggedCategories.Count - 1];
+        if(!flaggedCategories.Contains(textfield.GetComponentInChildren<Text>().text))
+        {
+            flaggedCategories.Add(textfield.GetComponentInChildren<Text>().text);
+            tTextField[flaggedCategories.Count - 1].GetComponentInChildren<Text>().text = flaggedCategories[flaggedCategories.Count - 1];
+            //Update the textfields as ShowTable()
+            enabledTextFields = flaggedCategories.Count;
+            tTextfieldplaceInt = enabledTextFields;
+            if (tTextfieldplaceInt < 3)
+                tTextfieldplaceInt = 3;
+            for (int i = 0; i < enabledTextFields; i++)
+            {
+                tTextField[i].gameObject.SetActive(true);
+                tTextField[i].GetComponentInChildren<Text>().text = flaggedCategories[i];
+                tTextField[i].GetComponent<Selectable>().enabled = interactable;
+            }
+        }
 
     }
 
