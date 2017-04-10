@@ -25,10 +25,12 @@ public class CatchTheMoney : MonoBehaviour {
     }
     IEnumerator LayDown(Transform other)
     {
-        other.GetComponent<Rigidbody>().isKinematic = true;
-        float dist = Vector3.Distance(other.position, other.transform.position - transform.up * (other.position.y - transform.position.y));
+        Destroy(other.GetComponent<Collider>());
+        Destroy(other.GetComponent<Rigidbody>());
+        //other.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 startPos = other.transform.position;
-        Vector3 endPos = other.transform.position - transform.up * (other.position.y - transform.position.y);
+        Vector3 endPos = other.transform.position - transform.up * (other.position.y - transform.position.y) + Vector3.up * 0.25f;
+        float dist = Vector3.Distance(other.position, endPos);
         Quaternion startRot = other.rotation;
         float roty = startRot.eulerAngles.y;
         float rotz = startRot.eulerAngles.z;
@@ -41,6 +43,7 @@ public class CatchTheMoney : MonoBehaviour {
             endRot = Quaternion.identity * Quaternion.AngleAxis(90f,Vector3.right) * Quaternion.AngleAxis(roty, Vector3.forward) * Quaternion.AngleAxis(rotz, Vector3.up);
         else
             endRot = Quaternion.identity * Quaternion.AngleAxis(startRot.y, Vector3.up);
+
         float t= 0;
         while (t<1)
         {
@@ -49,7 +52,8 @@ public class CatchTheMoney : MonoBehaviour {
             other.rotation = Quaternion.Lerp(startRot, endRot, t);
             yield return null;
         }
-        Destroy(other.GetComponent<Rigidbody>());
+       // Destroy(other.GetComponent<Collider>()); 
+      //  Destroy(other.GetComponent<Rigidbody>());
         yield return null;
     }
 }

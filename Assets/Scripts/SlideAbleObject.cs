@@ -202,7 +202,7 @@ public class SlideAbleObject : MonoBehaviour
             {
                 normDist = 1;
                 moddedPos = target.position;
-                owner.releaseSlider();
+               // owner.releaseSlider();
                 owner = null;
                 if (DirectionSetting == DirBehaviour.Horizontal)
                     bh.setTapeRip(1f);

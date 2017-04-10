@@ -14,7 +14,7 @@ public class TheNewestMarker : MonoBehaviour
     private Transform draggedTar, hoverTar;
     private bool slideReleaseWait = true;
     bool isClicking = false;
-    private enum HitTarget { FullTextField, SliderHorizontal, SliderNextSlide, SliderFlagCategories, None}
+    private enum HitTarget { FullTextField, SliderHorizontal, SliderNextSlide, ColorImage, None}
     HitTarget hitTarget = HitTarget.None;
     Transform clickTarget;
     MoneyIntoButton mb;
@@ -24,9 +24,27 @@ public class TheNewestMarker : MonoBehaviour
     private void Awake()
     {
         Bis = FindObjectOfType<BoxInterfaceScreen>();
+        EventManager.OnDisableAllMarkers += DisableMarker;
         touchScreenLayer = 1 << LayerMask.NameToLayer("TouchScreen");
         dragLayer = 1 << LayerMask.NameToLayer("DragLayer");
         textLayer = 1 << LayerMask.NameToLayer("TextField");
+    }
+    private void Unsub()
+    {
+        EventManager.OnDisableAllMarkers -= DisableMarker;
+    }
+    private void OnApplicationQuit()
+    {
+        Unsub();
+    }
+    private void OnDestroy()
+    {
+        Unsub();
+    }
+   
+    private void DisableMarker()
+    {
+        gameObject.SetActive(false);
     }
 
     private void Update()
@@ -39,70 +57,60 @@ public class TheNewestMarker : MonoBehaviour
             {
                 if (hit.transform.parent.name == "FullTextField")
                 {
+                    hit.collider.enabled = false;
                     hitTarget = HitTarget.FullTextField;
                     StartCoroutine(HitTextField(hit));
                     return;
                 }
                 if (hit.transform.parent.name == "SliderHorizontal")
                 {
+                    hit.collider.enabled = false;
                     hitTarget = HitTarget.SliderHorizontal;
                     StartCoroutine(HitBoxSlider(hit));
                     return;
                 }
                 if (hit.transform.parent.name == "SliderNextSlide")
                 {
+                    hit.collider.enabled = false;
                     hitTarget = HitTarget.SliderNextSlide;
                     StartCoroutine(HitNextSlidePlz(hit));
                     return;
                 }
-                if (hit.transform.parent.name == "SliderFlagCategories") // Deleting this soon! maybe
+                if(hit.transform.name == "ColorImage")
                 {
-                    hitTarget = HitTarget.SliderFlagCategories;
-                    StartCoroutine(HitFlagSlider(hit));
+                    hit.collider.enabled = false;
+                    hitTarget = HitTarget.ColorImage;
+                    StartCoroutine(HitColorImage(hit));
                     return;
                 }
-
             }
         }
     }
 
-    private IEnumerator HitFlagSlider(RaycastHit hit) //SliderFlagCategories
+    IEnumerator HitColorImage(RaycastHit hit)
     {
-        Vector3 startPos = transform.position;
-        Vector3 scrollStartPos = hit.transform.parent.localPosition;
+       
         while (gameObject.activeSelf)
         {
-            if (Vector3.Distance(transform.position, startPos) < 0.01f)
+            if (Vector3.Distance(transform.position,hit.transform.position)< 0.025f)
             {
-                //waiting for OnDisable()
+                isClicking = true;
+                hit.transform.GetComponent<Image>().color = new Color(0.8f, 0.8f, 0.8f, 1f);
             }
             else
             {
-                Bis.isScrolling = true;
-                hit.transform.parent.localPosition = scrollStartPos + Vector3.right * Vector3.Distance(transform.position, startPos);
+                isClicking = false;
+                hit.transform.GetComponent<Image>().color = Color.white;
             }
             yield return null;
         }
-        isClicking = true;
         yield return null;
 
     }
 
-    public void releaseSlider()
-    {
-        draggedTar = null;
-        StartCoroutine(slideWait());
-    }
-    IEnumerator slideWait()
-    {
-        slideReleaseWait = false;
-        yield return new WaitForSeconds(.5f);
-        slideReleaseWait = true;
-        yield break;
-    }
     private IEnumerator HitNextSlidePlz(RaycastHit hit) //SliderNextSlide
     {
-        Vector3 startPos = transform.position;
+        Vector3 startPos = transform.localPosition;
         Vector3 scrollStartPos = hit.transform.parent.localPosition;
         while (gameObject.activeSelf)
         {
@@ -113,27 +121,30 @@ public class TheNewestMarker : MonoBehaviour
             else
             {
                 Bis.isScrolling = true;
-                hit.transform.parent.localPosition = scrollStartPos - Vector3.right * (transform.position.z - startPos.z);
+                Bis.Moving();
+                hit.transform.parent.parent.localPosition = scrollStartPos + Vector3.right * (transform.localPosition.x - startPos.x); //Moving BoxInterfaceScreen
+                
             }
             yield return null;
         }
-        isClicking = true;
         yield return null;
     }
     
     IEnumerator HitBoxSlider(RaycastHit hit) //SliderHorizontal
     {
-        draggedTar = hit.transform;
-        dragOffset = transform.position - draggedTar.position;
-        draggedTar.parent.GetComponent<SlideAbleObject>().TakeControl(this);
-
+        RipTapeSlider RTS = hit.transform.parent.GetComponent<RipTapeSlider>();
+        BoxInterfaceScreen Bis = transform.parent.GetComponentInChildren<BoxInterfaceScreen>();
+        Vector3 startPos = transform.localPosition;
+        Vector3 sliderStartPos = hit.transform.localPosition;
         while(gameObject.activeSelf)
         {
-            draggedTar.parent.GetComponent<SlideAbleObject>().setOwnerPosition(transform.position - dragOffset);
+            hit.transform.localPosition = sliderStartPos + Vector3.right * (transform.localPosition.x - startPos.x);
+            Bis.TapeRipSlide(RTS.Dist(Bis));
             yield return null;
         }
         yield return null;
     }
+
     IEnumerator HitTextField(RaycastHit hit) //FullTextField
     {
         Vector3 startPos = transform.localPosition;
@@ -147,7 +158,7 @@ public class TheNewestMarker : MonoBehaviour
             {
                 //waiting for OnDisable()
             }
-            else if (Mathf.Abs(transform.localPosition.y - startPos.y) > Mathf.Abs(transform.localPosition.x - startPos.x)  && Mathf.Abs(transform.localPosition.x - startPos.x) < 0.1f)
+            else
             {
                 //clickTarget = null;
                 isClicking = false;
@@ -155,17 +166,7 @@ public class TheNewestMarker : MonoBehaviour
                 Bis.isScrolling = true;
                 //Scrolling up/down
             }
-            else
-            {
-                //clickTarget = null;
-                isClicking = false;
-                hit.transform.localPosition = clickTargetStartPos + Vector3.right * (transform.localPosition.x - startPos.x);
-                if (hit.transform.localPosition.x > clickTargetStartPos.x)
-                    hit.transform.localPosition = clickTargetStartPos;
-                Bis.SlideTextfieldLeft(hit.transform,false);
-                Bis.isScrolling = true;
-                //scrolling left/right
-            }
+            
             yield return null;
         }
         yield return null; 
@@ -177,8 +178,8 @@ public class TheNewestMarker : MonoBehaviour
         switch (hitTarget)
         {
             case HitTarget.FullTextField:
+                hit.collider.enabled = true;
                 Bis.isScrolling = false;
-                Bis.SlideTextfieldLeft(hit.transform, true);
                 if (clickTarget != null)
                 {
                     Bis.ClickTextField(clickTarget.GetSiblingIndex());
@@ -186,15 +187,19 @@ public class TheNewestMarker : MonoBehaviour
                 }
                 break;
             case HitTarget.SliderHorizontal:
-                slideReleaseWait = true;
-                if(draggedTar != null)
-                    draggedTar.parent.GetComponent<SlideAbleObject>().ReleaseControl();
-                draggedTar = null;
+                hit.transform.parent.GetComponent<RipTapeSlider>().ReturnToStart();
                 break;
             case HitTarget.SliderNextSlide:
+                hit.collider.enabled = true;
                 Bis.isScrolling = false;
                 break;
-            case HitTarget.SliderFlagCategories:
+            case HitTarget.ColorImage:
+                if(isClicking)
+                {
+                    Bis.FlagIt(hit.transform.parent);
+                }
+                hit.transform.GetComponent<Image>().color = Color.white;
+                hit.collider.enabled = true;
                 break;
             default:
                 break;

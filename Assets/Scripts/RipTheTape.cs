@@ -36,24 +36,17 @@ public class RipTheTape : MonoBehaviour {
     {
         if(dist >= 1f && destroyed == false)
         {
-
-            AkSoundEngine.PostEvent("RipTapeResume", ps1.gameObject);
             destroyed = true;
             StartCoroutine(fadeOut());
         }
         else if (dist != distance)
         {
-            AkSoundEngine.SetRTPCValue("RipTapeVelocity", (dist - distance) * 100f);
-            AkSoundEngine.SetRTPCValue("RipTapeDist",dist*100);
-            AkSoundEngine.PostEvent("RipTapeResume", ps1.gameObject);
-
             if (dist - distance>0)
             {
                 ps1.Emit( 1 + (int)((dist-distance)*100f));
                 
                 ps1.transform.localPosition = new Vector3(-10f * dist,0f,0f);
             } 
-            
             distance = dist;
             for (int i = 0; i < pos.Length; i++)
             {
@@ -64,10 +57,6 @@ public class RipTheTape : MonoBehaviour {
                     pos[i] = new Vector3(-10f * ((float)i / NumOfPos), 0f,0f);
             }
             tape.SetPositions(pos);
-        }
-        else if (dist == distance)
-        {
-            AkSoundEngine.PostEvent("RipTapePause", ps1.gameObject);
         }
      
     }

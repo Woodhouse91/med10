@@ -17,6 +17,8 @@ public class BoxBehaviour : MonoBehaviour {
     public List<int> CategoryInt;
     public int[] moneyAtCrate;
 
+    BoxInterfaceScreen bis;
+
     private float BagValue;
     private int maxValueOfAMonth;
     float bagSize;
@@ -34,6 +36,7 @@ public class BoxBehaviour : MonoBehaviour {
     void Start () {
         defaultModelScale = Vector3.one * 3;
         pac = FindObjectOfType<PlaceAllCrates>();
+        bis = FindObjectOfType<BoxInterfaceScreen>();
         rig = GetComponent<Rigidbody>();
         leftLid = transform.GetChild(0);
         rightLid = transform.GetChild(1);
@@ -72,10 +75,12 @@ public class BoxBehaviour : MonoBehaviour {
     // Update is called once per frame
     public void tapeRipped()
     {
+        EventManager.RipTapeSliderDone();
         if (GetComponent<AddMoneyToTable>() == null)
             StartCoroutine(FlipUp());
         else
             StartCoroutine(MoneyToTable());
+        
     }
     public void setTapeRip(float dist)
     {

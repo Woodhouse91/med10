@@ -18,6 +18,7 @@ public class EventManager : MonoBehaviour {
     public static event IntroAction OnCategoryDone;
     public static event IntroAction OnObjectsPlacedAtShelves;
     public static event IntroAction OnStartScale;
+    public static event IntroAction OnDisableAllMarkers;
     public static event IntroAction OnCategoryFinished;
     public delegate void BoxIntroAction(BoxBehaviour script);
     public static event BoxIntroAction OnBoxAtTable;
@@ -44,6 +45,11 @@ public class EventManager : MonoBehaviour {
     {
         if (OnStartScale != null)
             OnStartScale();
+    }
+    public static void DisableAllMarkers()
+    {
+        if (OnDisableAllMarkers != null)
+            OnDisableAllMarkers();
     }
     public static void ObjectsPlacedAtShelves()
     {

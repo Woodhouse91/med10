@@ -7,21 +7,26 @@ using UnityEngine.UI;
 public class BoxInterfaceScreen : MonoBehaviour {
 
 
-    Transform tTitle, tFullTextField, tMask, tNextSlidePlz;
+    Transform tTitle, tFullTextField, tMask, tNextSlidePlz, tSlider;
     Transform[] tTextField;
-    flaggedInterfaceScreen Fis;
+    public List<int> FlaggedItem;
+    Vector3 ReturnToPos;
+    public Sprite Flagged, Unflagged;
+    BoxBehaviour BB;
     bool categoryDoneBool = false;
     int enabledTextFields = 0;
-    bool NowWeAreAtFlaggedCats = false;
     bool interactable = false;
     public bool isScrolling = false;
     int tTextfieldplaceInt;
+    
 	// Use this for initialization
 	void Start () {
-        Fis = transform.parent.GetComponentInChildren<flaggedInterfaceScreen>();
+        FlaggedItem = new List<int>();
         DisableHeleLortet();
+        ReturnToPos = Vector3.zero; // START POSITION
         EventManager.OnBoxAtTable += boxAtTable;
         EventManager.OnBoxEmptied += boxEmptied;
+        EventManager.OnMoneyInstantiated += MoneyInstantiated;
         EventManager.OnCategoryDone += categoryDone;
 	}
 
@@ -30,6 +35,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         EventManager.OnBoxAtTable -= boxAtTable;
         EventManager.OnBoxEmptied -= boxEmptied;
         EventManager.OnCategoryDone -= categoryDone;
+        EventManager.OnMoneyInstantiated -= MoneyInstantiated;
     }
     private void OnApplicationQuit()
     {
@@ -44,22 +50,61 @@ public class BoxInterfaceScreen : MonoBehaviour {
         Unsub();
     }
 
-
+    private void MoneyInstantiated()
+    {
+        tSlider.gameObject.SetActive(true);
+        BB = GameObject.Find("Table").GetComponentInChildren<BoxBehaviour>();
+    }
     private void categoryDone()
     {
         StartCoroutine(FadeOutScreen());
+        
     }
-
+    public void FlagIt(Transform target)
+    {
+        int flagNum = FindTransform(target);
+        if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
+            FlaggedItem.Add(BB.CategoryInt[flagNum]);
+        else
+            FlaggedItem.Remove(BB.CategoryInt[flagNum]);
+        UpdateImages();
+    }
+    private void UpdateImages()
+    {
+        
+        for (int i = 0; i < tTextField.Length; i++)
+        {
+            for (int j = 0; j < FlaggedItem.Count; j++)
+            {
+                if (tTextField[i].GetChild(1).GetComponent<Text>().text == DataHandler.BudgetCategories[FlaggedItem[j]])
+                {
+                    tTextField[i].GetChild(0).GetComponent<Image>().sprite = Flagged;
+                    break;
+                }
+                else
+                    tTextField[i].GetChild(0).GetComponent<Image>().sprite = Unflagged;
+            }
+            if(FlaggedItem.Count == 0)
+            {
+                tTextField[i].GetChild(0).GetComponent<Image>().sprite = Unflagged;
+            }
+        }
+    }
+    private int FindTransform(Transform searching)
+    {
+        for (int i = 0; i < tTextField.Length; i++)
+        {
+            if (searching.GetInstanceID() == tTextField[i].GetInstanceID())
+                return i;
+        }
+        Debug.LogError("Could not find the correct transform, best regards Kris");
+        return -100;
+    }
     private IEnumerator FadeOutScreen()
     {
         // FADE LORTET HER PLZ
         //Fis.FadeOutScreen();
-        List<GameObject> markers = new List<GameObject>();
-        markers.AddRange(GameObject.FindGameObjectsWithTag("Marker"));
-        for (int i = 0; i < markers.Count; i++)
-        {
-            markers[i].SetActive(false);
-        }
+        EventManager.DisableAllMarkers();
         
         List<CanvasRenderer> fadeList = new List<CanvasRenderer>();
         fadeList.AddRange(transform.parent.GetComponentsInChildren<CanvasRenderer>());
@@ -93,8 +138,10 @@ public class BoxInterfaceScreen : MonoBehaviour {
 
     private void boxAtTable(BoxBehaviour BB)
     {
+        this.BB = BB;
         interactable = false;
         tTitle.gameObject.SetActive(true);
+        tSlider.gameObject.SetActive(true);
         tTitle.GetComponent<Text>().text = BB.GetComponentInChildren<TextMesh>().text;
         tMask.gameObject.SetActive(true);
         tFullTextField.gameObject.SetActive(true);
@@ -108,21 +155,9 @@ public class BoxInterfaceScreen : MonoBehaviour {
             tTextField[i].GetComponentInChildren<Text>().text = BB.CategoryString[i];
             tTextField[i].GetComponent<Selectable>().enabled = interactable;
         }
-        
+        UpdateImages();
+    }
 
-    }
-    public void SlideTextfieldLeft(Transform textfield, bool clicked)
-    {
-        float x = textfield.localPosition.x;
-        if(x<-0.15f) // is slided left
-        {
-            Fis.ShowTable();
-            if(clicked)
-            {
-                Fis.AddCategory(textfield.gameObject);
-            }
-        }
-    }
     public void ClickTextField(int childIndex)
     {
         for (int i = 0; i < tTextField.Length; i++)
@@ -137,10 +172,11 @@ public class BoxInterfaceScreen : MonoBehaviour {
     {
         if(tTitle == null)
         {
-            tTitle = transform.GetChild(0);
-            tMask = transform.GetChild(1);
-            tFullTextField = tMask.GetChild(0);
-            tNextSlidePlz = transform.parent.GetChild(3); //SliderNextSlide
+            tTitle = transform.GetChild(0); //Title
+            tMask = transform.GetChild(1); //Mask
+            tFullTextField = tMask.GetChild(0); //FullTextField
+            tNextSlidePlz = transform.GetChild(2); //SliderNextSlide
+            tSlider = transform.GetChild(3); //SliderHorizontal
             tTextField = new Transform[tFullTextField.childCount];
         }
         for (int i = 0; i < tFullTextField.childCount; i++)
@@ -149,31 +185,50 @@ public class BoxInterfaceScreen : MonoBehaviour {
                 tTextField[i] = tFullTextField.GetChild(i);
             tTextField[i].gameObject.SetActive(false);
         }
+      
         tMask.gameObject.SetActive(false);
         tTitle.gameObject.SetActive(false);
         tFullTextField.gameObject.SetActive(false);
         tNextSlidePlz.gameObject.SetActive(false);
+        tSlider.gameObject.SetActive(false);
     }
+    /*
+    public void ChangeOriginPos()
+    {
+        NowWeAreAtFlaggedCats = !NowWeAreAtFlaggedCats;
+        if (NowWeAreAtFlaggedCats)
+            ReturnToPos = Vector3.zero;
+        else
+            ReturnToPos = Vector3.right * 0.6f;
 
-    // Update is called once per frame
-    void Update () {
-       
-        if(tNextSlidePlz.transform.localPosition != transform.localPosition && categoryDoneBool == false)
+    }
+    */
+    public void Moving()
+    {
+        if (categoryDoneBool == false)
         {
-            if(tNextSlidePlz.localPosition.x < -0.55f)
+            if (transform.localPosition.x < -0.50f)
             {
                 categoryDoneBool = true;
                 isScrolling = true;
                 EventManager.CategoryDone();
             }
-            if(tNextSlidePlz.localPosition.x > 0.55f)
-            {
-                NowWeAreAtFlaggedCats = true;
-                isScrolling = true;
-            }
-            else
-                transform.localPosition = tNextSlidePlz.localPosition;
         }
+    }
+    
+    public void TapeRipSlide(float f)
+    {
+        BB.setTapeRip(f);
+        if (f > 0.95f)
+        {
+            EventManager.DisableAllMarkers();
+            BB.setTapeRip(1.0f);
+
+        }
+    }
+
+    // Update is called once per frame
+    void Update () {
         
         if (!isScrolling)
         {
@@ -193,31 +248,12 @@ public class BoxInterfaceScreen : MonoBehaviour {
             {
                 tFullTextField.transform.localPosition += Vector3.up * (0.2333333f * tTextfieldplaceInt - 0.7f - tFullTextField.transform.localPosition.y) * 10f * Time.deltaTime;
             }
-            if(!NowWeAreAtFlaggedCats)
-            {
-                if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode()*0.6f < -0.01f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
-                {
-                    if (tNextSlidePlz.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f > -0.55f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
-                    {
-                        tNextSlidePlz.transform.localPosition -= Vector3.right * tNextSlidePlz.transform.localPosition.x * 10f * Time.deltaTime;
-                    }
-                    if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f > -0.015f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
-                        tNextSlidePlz.transform.localPosition = Vector3.zero + Vector3.right * NowWeAreAtFlaggedCats.GetHashCode() * 0.6f;
-                }
-                if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f > 0.01f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
-                {
-                    if (tNextSlidePlz.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f < 0.55f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
-                    {
-                        tNextSlidePlz.transform.localPosition += Vector3.right * tNextSlidePlz.transform.localPosition.x * 10f * Time.deltaTime;
-                    }
-                    if (tNextSlidePlz.transform.localPosition.x + NowWeAreAtFlaggedCats.GetHashCode()*0.6f < 0.015f + NowWeAreAtFlaggedCats.GetHashCode() * 0.6f)
-                        tNextSlidePlz.transform.localPosition = Vector3.zero + Vector3.right * NowWeAreAtFlaggedCats.GetHashCode() * 0.6f;
-                }
-            }
-            else
-            {
 
+            if(transform.localPosition != ReturnToPos)
+            {
+                transform.localPosition = Vector3.MoveTowards(transform.localPosition, ReturnToPos, Time.deltaTime);
             }
+
         }
 	}
 }
