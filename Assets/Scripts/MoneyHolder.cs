@@ -195,7 +195,7 @@ public class MoneyHolder : MonoBehaviour
         else if (currency == 2)
         {
             res = _2[0];
-            _2.Remove(_5[0]);
+            _2.Remove(_2[0]);
         }
         else if (currency == 1)
         {

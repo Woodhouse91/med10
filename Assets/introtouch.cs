@@ -9,11 +9,6 @@ public class introtouch : MonoBehaviour {
     GameObject fader, sibling, overlay;
 	// Use this for initialization
 	void Start () {
-        sibling = transform.parent.GetChild(1).gameObject;
-        overlay = GameObject.Find("Overlay (Canvas)");
-        overlay.SetActive(false);
-        //sibling.GetComponent<ListBudgets>().enabled = false;
-        sibling.SetActive(false);
         fader = GameObject.Find("BlackOut");
         TouchManager.Instance.TouchesBegan += go;
 	}
@@ -22,15 +17,6 @@ public class introtouch : MonoBehaviour {
     {
         fader.GetComponent<fadeBlack>().fade();
         GetComponent<Text>().enabled = false;
-        StartCoroutine(lateActive());
-    }
-    IEnumerator lateActive()
-    {
-        yield return new WaitForSeconds(fader.GetComponent<fadeBlack>().fadeTime);
-        sibling.SetActive(true);
-        sibling.AddComponent<ListBudgets>();
-        sibling.GetComponent<ListBudgets>().setOverlay(overlay);
-        gameObject.SetActive(false);
     }
     private void OnDisable()
     {
@@ -39,9 +25,8 @@ public class introtouch : MonoBehaviour {
             TouchManager.Instance.TouchesBegan -= go;
         }catch { }
     }
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
+    public void setOverlay(GameObject o)
+    {
+        overlay = o;
+    }
 }
