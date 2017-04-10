@@ -110,6 +110,7 @@ public class ListBudgets : MonoBehaviour{
     }
     private void OnDisable()
     {
+        sibling.GetComponent<introtouch>().setOverlay(overlay);
         Unsub();
     }
     public void GenerateBudgetList()
@@ -139,20 +140,8 @@ public class ListBudgets : MonoBehaviour{
         GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height + transform.childCount * 108);
     }
 
-    public void ScrollControl()
+    private void Update()
     {
-        if (transform.childCount > 1)
-        {
-            if (transform.GetChild(transform.childCount - 1).GetComponent<RectTransform>().position.y >= 52)
-            {
-                GetComponent<RectTransform>().localPosition = Vector3.up * (transform.childCount * 26 + 52);
-            }
-            if (transform.GetChild(0).GetComponentInChildren<RectTransform>().position.y <= Screen.height - 52)
-            {
-                GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
-            }
-        }
-        else
-            GetComponent<RectTransform>().localPosition = Vector3.up*26;
+
     }
 }
