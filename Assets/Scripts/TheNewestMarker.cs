@@ -182,6 +182,7 @@ public class TheNewestMarker : MonoBehaviour
                 Bis.isScrolling = false;
                 if (clickTarget != null)
                 {
+                    LuxusSegmentHandler.HighlightCategory(Bis.FindTransform(hit.transform));
                     Bis.ClickTextField(clickTarget.GetSiblingIndex());
                     clickTarget = null;
                 }

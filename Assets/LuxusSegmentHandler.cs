@@ -59,6 +59,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
         holder = GameObject.Find("Segmentholder").transform;
         EventManager.OnExcelDataLoaded += PoolSegments;
         EventManager.OnCategoryDone += ReleaseTable;
+        staticStart();
 	}
     private static void staticStart()
     {
