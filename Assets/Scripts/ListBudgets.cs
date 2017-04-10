@@ -15,17 +15,15 @@ public class ListBudgets : MonoBehaviour{
     private Vector2 prevPoint, v2Null = Vector3.one*-10000;
     private int curTrackedID = -1;
     bool subbed = false;
+    Transform sibling;
 
-    public void setOverlay(GameObject go)
-    {
-        overlay = go;
-        if (overlay != null)
-            overlay.SetActive(false);
-        Sub();
-    }
     private void Awake()
     {
         overlay = GameObject.Find("Overlay (Canvas)");
+        overlay.SetActive(false);
+        sibling = transform.parent.GetChild(0);
+        sibling.gameObject.SetActive(false);
+        Sub();
         GenerateBudgetList();
     }
     private void OnEnable()
@@ -112,10 +110,7 @@ public class ListBudgets : MonoBehaviour{
     }
     private void OnDisable()
     {
-        transform.parent.GetComponent<Image>().enabled = false;
         Unsub();
-        if (overlay != null)
-            overlay.SetActive(true);
     }
     public void GenerateBudgetList()
     {
@@ -158,6 +153,6 @@ public class ListBudgets : MonoBehaviour{
             }
         }
         else
-            GetComponent<RectTransform>().localPosition = Vector3.zero;
+            GetComponent<RectTransform>().localPosition = Vector3.up*26;
     }
 }

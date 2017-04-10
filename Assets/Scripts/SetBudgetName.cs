@@ -18,7 +18,6 @@ public class SetBudgetName : MonoBehaviour{
     {
         myRect = GetComponent<RectTransform>();
         float sW = Screen.width / 2f, sH = Screen.height / 2f;
-
         mySet = GetComponent<Button>();
         myCol = GetComponent<Image>();
         myCol.color = normal;
@@ -87,6 +86,7 @@ public class SetBudgetName : MonoBehaviour{
     {
         DataAppLauncher.LaunchApplication(transform.GetChild(0).GetComponent<Text>().text);
         transform.parent.gameObject.SetActive(false);
+        transform.parent.parent.GetChild(0).gameObject.SetActive(true);
     }
     private void Update()
     {

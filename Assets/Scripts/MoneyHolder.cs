@@ -145,31 +145,6 @@ public class MoneyHolder : MonoBehaviour
             if (i % CurrencySpawnedPerFrame == 0)
                 yield return null;
         }
-        print("############### 20 #################");
-        for(int x = 0; x<_20.Count; ++x)
-        {
-            print(_20[x]);
-        }
-        print("############### 10 #################");
-        for (int x = 0; x < _10.Count; ++x)
-        {
-            print(_10[x]);
-        }
-        print("############### 5 #################");
-        for (int x = 0; x < _5.Count; ++x)
-        {
-            print(_5[x]);
-        }
-        print("############### 2 #################");
-        for (int x = 0; x < _2.Count; ++x)
-        {
-            print(_2[x]);
-        }
-        print("############### 1 #################");
-        for (int x = 0; x < _1.Count; ++x)
-        {
-            print(_1[x]);
-        }
         spawning = false;
         yield break;
     }
