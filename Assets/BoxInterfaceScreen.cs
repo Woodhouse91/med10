@@ -18,9 +18,11 @@ public class BoxInterfaceScreen : MonoBehaviour {
     bool interactable = false;
     public bool isScrolling = false;
     int tTextfieldplaceInt;
+    LuxusSegmentHandler LSH;
     
 	// Use this for initialization
 	void Start () {
+        LSH = FindObjectOfType<LuxusSegmentHandler>();
         FlaggedItem = new List<int>();
         DisableHeleLortet();
         ReturnToPos = Vector3.zero; // START POSITION
@@ -63,6 +65,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public void FlagIt(Transform target)
     {
         int flagNum = FindTransform(target);
+        LuxusSegmentHandler.FlagCategory(flagNum);
         if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
             FlaggedItem.Add(BB.CategoryInt[flagNum]);
         else
@@ -90,7 +93,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
             }
         }
     }
-    private int FindTransform(Transform searching)
+    public int FindTransform(Transform searching)
     {
         for (int i = 0; i < tTextField.Length; i++)
         {
