@@ -15,6 +15,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Material NormalMat, MarkedMat, FlaggedMat;
     private static List<int> flaggedList;
     private static GameObject flagPref;
+    private static GameObject[] markObj;
     public static List<Transform> completedSegments
     {
         get
@@ -42,6 +43,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static List<List<Transform>> coins;
     private Transform targetWall;
     private float luxusOffset = 0;
+    private static int markedCount = 0;
 
 
     // Use this for initialization
@@ -63,7 +65,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static void staticStart()
     {
         flagPref = Resources.Load<GameObject>("flagObj");
-        MarkedMat = Resources.Load<Material>("MarkedSection");
+        MarkedMat = Resources.Load<Material>("MarkedSectionMat");
         NormalMat = Resources.Load<Material>("SectionMat");
         FlaggedMat = Resources.Load<Material>("FlaggedSectionMat");
         flaggedList = new List<int>();
@@ -196,7 +198,12 @@ public class LuxusSegmentHandler : MonoBehaviour {
             prevScaled = scaleFactor;
         }
         scaledOffset += scaled ? .5f : 0;
+        markObjGen(activeSegments.Count);
         ExposeTable();
+    }
+    private static void markObjGen(int c)
+    {
+        markObj = new GameObject[c];
     }
     private string formatCurrency(int val)
     {
@@ -263,8 +270,10 @@ public class LuxusSegmentHandler : MonoBehaviour {
         releases++;
         for(int x =0; x<activeSegments.Count; ++x)
         {
-            if(!flaggedList.Contains(x))
+            if (!flaggedList.Contains(x))
                 setMat(x, NormalMat);
+            else
+                setMat(x, MarkedMat);
         }
         flaggedList.Clear();
         int segs = activeSegments.Count;
@@ -402,7 +411,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     {
         if (prevHighlight != -1)
         {
-            if (flaggedList.Contains(prevHighlight))
+            if (!flaggedList.Contains(prevHighlight))
                 setMat(prevHighlight, NormalMat);
             else
                 setMat(prevHighlight, FlaggedMat);
@@ -421,14 +430,15 @@ public class LuxusSegmentHandler : MonoBehaviour {
         {
             setMat(cat, NormalMat);
             flaggedList.Remove(cat);
-            Destroy(activeSegments[cat].GetChild(activeSegments[cat].childCount - 1).gameObject);
+            Destroy(markObj[cat]);
             return;
         }
-        GameObject go = Instantiate(flagPref, activeSegments[cat].position, Quaternion.identity);
-        go.transform.SetParent(activeSegments[cat]);
-        go.transform.SetAsLastSibling();
-        setMat(cat, FlaggedMat);
+        markObj[cat] = Instantiate(flagPref, activeSegments[cat].position, Quaternion.identity);
+        markObj[cat].transform.SetParent(activeSegments[0].parent);
+        markObj[cat].transform.SetAsLastSibling();
         flaggedList.Add(cat);
+        if(prevHighlight!=cat)
+        setMat(cat, FlaggedMat);
     }
     private static void setMat(int cat, Material dst)
     {
