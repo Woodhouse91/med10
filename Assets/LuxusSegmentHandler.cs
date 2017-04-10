@@ -15,7 +15,6 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Material NormalMat, MarkedMat, FlaggedMat;
     private static List<int> flaggedList;
     private static GameObject flagPref;
-   
     public static List<Transform> completedSegments
     {
         get
