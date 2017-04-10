@@ -12,6 +12,18 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Transform holder, nHolder;
     private static List<Transform> segment;
     private static List<Transform> activeSegments;
+    private static Material NormalMat, MarkedMat, FlaggedMat;
+    private static List<int> flaggedList;
+    private static GameObject flagPref;
+   
+    public static List<Transform> completedSegments
+    {
+        get
+        {
+            return _completedSegments;
+        }
+    }
+    private static List<Transform> _completedSegments;
     private static float RotAngle = 55f;
     private static float slideTime = 2f;
     private static float rotTime = 1.5f;
@@ -26,16 +38,18 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private float defaultLeft = 6f;
     private float hangTime = 2f;
     private bool stillMoving;
+    private static int prevHighlight = -1;
     private static List<List<Transform>> bills;
     private static List<List<Transform>> coins;
     private Transform targetWall;
-    private float luxusOffset;
+    private float luxusOffset = 0;
 
 
     // Use this for initialization
     private void Start ()
     {
         targetWall = GameObject.Find("Tavlefar").transform;
+        _completedSegments = new List<Transform>();
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
         activeSegments = new List<Transform>();
@@ -46,6 +60,14 @@ public class LuxusSegmentHandler : MonoBehaviour {
         EventManager.OnExcelDataLoaded += PoolSegments;
         EventManager.OnCategoryDone += ReleaseTable;
 	}
+    private static void staticStart()
+    {
+        flagPref = Resources.Load<GameObject>("flagObj");
+        MarkedMat = Resources.Load<Material>("MarkedSection");
+        NormalMat = Resources.Load<Material>("SectionMat");
+        FlaggedMat = Resources.Load<Material>("FlaggedSectionMat");
+        flaggedList = new List<int>();
+    }
     void Unsub()
     {
         try
@@ -82,7 +104,6 @@ public class LuxusSegmentHandler : MonoBehaviour {
             float coinRight = coinS*3f;
             float coinDown = -coinS*6f;
 
-            int coinDownCount = 0;
             int coinColCount = 0;
 
             for (int k = 0; k<cols; ++k)
@@ -165,7 +186,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             scaledOffset += (scaleFactor);
             activeSegments[x].localScale += Vector3.up*scaleFactor;
             activeSegments[x].localRotation = Quaternion.Euler(90, -180, 0);
-            activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = s.CategoryString[x];
+            activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = formatCat(s.CategoryString[x]);
             activeSegments[x].GetChild(0).GetChild(1).GetComponent<TextMesh>().text = formatCurrency(DataHandler.expenseData[13, s.CategoryInt[x]]);
             Vector3 texScale = activeSegments[x].GetChild(0).GetChild(0).localScale;
             texScale.x /= (scaleFactor+1);
@@ -185,6 +206,24 @@ public class LuxusSegmentHandler : MonoBehaviour {
         res = res.Replace(",", ".");
         res += ",-";
         return res;
+    }
+    private string formatCat(string s)
+    {
+        if (s.Contains("aft."))
+        {
+            int id = 0;
+            s = s.Replace("aft.", "<");
+            for(int x = 0; x<s.Length; ++x)
+            {
+                if (s[x] == '<')
+                {
+                    id = x-3;
+                    break;
+                }
+            }
+            s = s.Substring(0, id);
+        }
+        return s;
     }
     private void ExposeTable()
     {
@@ -222,15 +261,22 @@ public class LuxusSegmentHandler : MonoBehaviour {
     public void ReleaseTable()
     {
         releases++;
+        for(int x =0; x<activeSegments.Count; ++x)
+        {
+            if(!flaggedList.Contains(x))
+                setMat(x, NormalMat);
+        }
+        flaggedList.Clear();
+        int segs = activeSegments.Count;
         activeSegments.Clear();
         nHolder.SetParent(holder.parent);
         nHolder.localPosition = Vector3.zero;
         nHolder.localRotation = Quaternion.identity;
-        StartCoroutine(doRelease(holder));
+        StartCoroutine(doRelease(holder, segs));
         holder = nHolder;
     }
 
-    private IEnumerator doRelease(Transform obj)
+    private IEnumerator doRelease(Transform obj, int s)
     {
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
@@ -238,14 +284,17 @@ public class LuxusSegmentHandler : MonoBehaviour {
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
         Vector3 target = targetWall.position - targetWall.right * (defaultLeft-luxusOffset) + targetWall.forward*hangHeight + targetWall.up*0.02f;
-        luxusOffset += scaledOffset/2f+(0.0175f);
-        //if (luxusOffset > 10f)
-        //{
-        //    luxusOffset = 0;
-        //    hangHeight = -.95f;
-        //    target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
-        //}
-        Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);
+        for (int x = 0; x < s; ++x)
+        {
+            luxusOffset += obj.GetChild(x).GetComponent<MeshCollider>().bounds.size.x;
+        }
+            //if (luxusOffset > 10f)
+            //{
+            //    luxusOffset = 0;
+            //    hangHeight = -.95f;
+            //    target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
+            //}
+            Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);
         float t = 0;
         while (t < 1)
         {
@@ -254,7 +303,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
             yield return null;
         }
-      
+        scaledOffset = 0;
         yield break;
     }
     private static int buildMoneyList(int cat)
@@ -349,5 +398,44 @@ public class LuxusSegmentHandler : MonoBehaviour {
             segment[x].gameObject.SetActive(false);
         }
     }
-
+    public static void HighlightCategory(int cat)
+    {
+        if (prevHighlight != -1)
+        {
+            if (flaggedList.Contains(prevHighlight))
+                setMat(prevHighlight, NormalMat);
+            else
+                setMat(prevHighlight, FlaggedMat);
+        }
+        if (prevHighlight == cat)
+        {
+            prevHighlight = -1;
+            return;
+        }
+        prevHighlight = cat;
+        setMat(cat, MarkedMat);
+    }
+    public static void FlagCategory(int cat)
+    {
+        if (flaggedList.Contains(cat))
+        {
+            setMat(cat, NormalMat);
+            flaggedList.Remove(cat);
+            Destroy(activeSegments[cat].GetChild(activeSegments[cat].childCount - 1).gameObject);
+            return;
+        }
+        GameObject go = Instantiate(flagPref, activeSegments[cat].position, Quaternion.identity);
+        go.transform.SetParent(activeSegments[cat]);
+        go.transform.SetAsLastSibling();
+        setMat(cat, FlaggedMat);
+        flaggedList.Add(cat);
+    }
+    private static void setMat(int cat, Material dst)
+    {
+        activeSegments[cat].GetComponent<MeshRenderer>().material = dst;
+        for (int i = 0; i < 2; i++)
+        {
+            activeSegments[cat].GetChild(i).GetComponent<MeshRenderer>().material = dst;
+        }
+    }
 }

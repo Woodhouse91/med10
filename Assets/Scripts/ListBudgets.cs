@@ -15,6 +15,10 @@ public class ListBudgets : MonoBehaviour{
     private Vector2 prevPoint, v2Null = Vector3.one*-10000;
     private int curTrackedID = -1;
     bool subbed = false;
+    private bool scrolling;
+    [SerializeField]
+    private float scrollSpeed = 1;
+    float tarY;
     Transform sibling;
 
     private void Awake()
@@ -45,6 +49,7 @@ public class ListBudgets : MonoBehaviour{
 
     private void TouchEnd(object sender, TouchEventArgs e)
     {
+        scrolling = false;
         bool lostTrack = true;
         for(int x = 0; x<TouchManager.Instance.NumberOfTouches; ++x)
         {
@@ -82,6 +87,7 @@ public class ListBudgets : MonoBehaviour{
 
     private void TouchStart(object sender, TouchEventArgs e)
     {
+        scrolling = true;
         if (prevPoint == v2Null)
         {
             prevPoint = TouchManager.Instance.ActiveTouches[0].Position;
@@ -128,20 +134,24 @@ public class ListBudgets : MonoBehaviour{
             else
                 continue;
         }
-        if (transform.childCount > 5)
-        {
-            GetComponent<RectTransform>().localPosition = Vector3.up * -(transform.childCount * 26 + 52);
-        }
-        else
-        {
-            GetComponent<RectTransform>().localPosition = Vector3.zero;
-        }
-        
-        GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height + transform.childCount * 108);
+        tarY = Screen.height / 2f - ((transform.childCount) * 54);
+        GetComponent<RectTransform>().localPosition = Vector3.up * tarY;
+        GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height * 2 + transform.childCount*108);
     }
 
     private void Update()
     {
+        if (scrolling)
+        {
 
+        }
+        else
+        {
+            if (GetComponent<RectTransform>().localPosition.y <= tarY)
+                GetComponent<RectTransform>().localPosition += ((Vector3.up * tarY)-GetComponent<RectTransform>().localPosition).normalized*scrollSpeed*Time.deltaTime;
+            if (GetComponent<RectTransform>().localPosition.y >= -tarY)
+                GetComponent<RectTransform>().localPosition += ((Vector3.up * -tarY) - GetComponent<RectTransform>().localPosition).normalized * scrollSpeed * Time.deltaTime;
+        }
+        GetComponent<RectTransform>().localPosition = new Vector3(0, GetComponent<RectTransform>().localPosition.y, 0);
     }
 }
