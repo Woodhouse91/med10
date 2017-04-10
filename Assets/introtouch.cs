@@ -15,11 +15,13 @@ public class introtouch : MonoBehaviour {
 
     private void go(object sender, TouchEventArgs e)
     {
+        overlay.SetActive(true);
         fader.GetComponent<fadeBlack>().fade();
-        GetComponent<Text>().enabled = false;
+        transform.parent.gameObject.SetActive(false);
     }
     private void OnDisable()
     {
+        TouchManager.Instance.TouchesBegan -= go;
         try
         {
             TouchManager.Instance.TouchesBegan -= go;
