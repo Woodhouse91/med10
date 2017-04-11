@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 public class PlaceAllCrates : MonoBehaviour {
 
     public GameObject[,] ListOfCrates;
@@ -11,13 +10,15 @@ public class PlaceAllCrates : MonoBehaviour {
     public int TestMonth;
     public float AngleRotate;
     public GameObject Crate, MonthCrate;
+    BoxInterfaceScreen bis;
     Vector3 originCrateSize;
+    GameObject flagObj;
     bool firstCratesPlaced = false;
     
 
     // Use this for initialization
     void Start () {
-
+        bis = FindObjectOfType<BoxInterfaceScreen>();
         originCrateSize = Crate.transform.lossyScale;
         EventManager.OnExcelDataLoaded += InitiateStart;
         EventManager.OnCategoryDone += raiseAllCrate;
@@ -52,6 +53,44 @@ public class PlaceAllCrates : MonoBehaviour {
             }
         }
         return 0;
+    }
+    public void FlagCategory(int category)
+    {
+        print("plz");
+        if (flagObj == null)
+            flagObj = Resources.Load("flagObj",typeof(GameObject)) as GameObject;
+        List<Transform> TempFlagList = new List<Transform>();
+        TempFlagList = new List<Transform>();
+        for (int i = 1; i < 13; i++)
+        {
+            if (DataHandler.expenseData[i, category] > 0)
+            {
+                TempFlagList.Add(GetCrate(category, i-1));
+            }
+        }
+
+        if (bis.FlaggedItem.Contains(category))
+        {
+            //Flag it
+            for (int i = 0; i < TempFlagList.Count; i++)
+            {
+                GameObject flag = Instantiate(flagObj, TempFlagList[i]).gameObject;
+                flag.transform.localScale = Vector3.one;
+                flag.transform.position = TempFlagList[i].position;
+                flag.transform.rotation = TempFlagList[i].rotation;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < TempFlagList.Count; i++)
+            {
+                Destroy(TempFlagList[i].GetChild(0));
+            }
+        }
+    }
+    public void HighlightCategory(int category)
+    {
+
     }
     // Update is called once per frame
     void Update () {

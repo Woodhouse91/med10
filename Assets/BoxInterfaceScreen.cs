@@ -13,6 +13,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     Vector3 ReturnToPos;
     public Sprite Flagged, Unflagged;
     BoxBehaviour BB;
+    PlaceAllCrates pac;
     bool categoryDoneBool = false;
     int enabledTextFields = 0;
     bool interactable = false;
@@ -22,7 +23,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-        LSH = FindObjectOfType<LuxusSegmentHandler>();
+        pac = FindObjectOfType<PlaceAllCrates>();
         FlaggedItem = new List<int>();
         DisableHeleLortet();
         ReturnToPos = Vector3.zero; // START POSITION
@@ -66,6 +67,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     {
         int flagNum = FindTransform(target);
         LuxusSegmentHandler.FlagCategory(flagNum);
+        pac.FlagCategory(flagNum);
         if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
             FlaggedItem.Add(BB.CategoryInt[flagNum]);
         else
