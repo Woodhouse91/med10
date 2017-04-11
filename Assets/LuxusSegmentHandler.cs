@@ -15,7 +15,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Material NormalMat, MarkedMat, FlaggedMat;
     private static List<int> flaggedList;
     private static GameObject flagPref;
-    private static GameObject[] markObj;
+    private static GameObject[] flagObj;
     public static List<Transform> completedSegments
     {
         get
@@ -45,6 +45,11 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private Transform targetWall;
     private float luxusOffset = 0;
     private static int markedCount = 0;
+    private static Vector3 flagScale = Vector3.one * 0.1f;
+    private static float _xRot = 0, _yRot = 0, _zRot = 0;
+    private static Quaternion xRot = Quaternion.AngleAxis(_xRot, Vector3.right);
+    private static Quaternion yRot = Quaternion.AngleAxis(_yRot, Vector3.up);
+    private static Quaternion zRot = Quaternion.AngleAxis(_zRot, Vector3.forward);
 
 
     // Use this for initialization
@@ -204,7 +209,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     private static void markObjGen(int c)
     {
-        markObj = new GameObject[c];
+        flagObj = new GameObject[c];
     }
     private string formatCurrency(int val)
     {
@@ -256,7 +261,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             if (!flaggedList.Contains(x))
                 setMat(x, NormalMat);
             else
-                setMat(x, MarkedMat);
+                setMat(x, FlaggedMat);
         }
         flaggedList.Clear();
         int segs = activeSegments.Count;
@@ -417,15 +422,16 @@ public class LuxusSegmentHandler : MonoBehaviour {
         {
             setMat(cat, NormalMat);
             flaggedList.Remove(cat);
-            Destroy(markObj[cat]);
+            Destroy(flagObj[cat]);
             return;
         }
-        markObj[cat] = Instantiate(flagPref, activeSegments[cat].position, Quaternion.identity);
-        markObj[cat].transform.SetParent(activeSegments[0].parent);
-        markObj[cat].transform.SetAsLastSibling();
+        flagObj[cat] = Instantiate(flagPref, activeSegments[cat].position, activeSegments[0].parent.rotation*xRot*yRot*zRot);
+        flagObj[cat].transform.SetParent(activeSegments[0].parent);
+        flagObj[cat].transform.localScale = flagScale;
+        flagObj[cat].transform.SetAsLastSibling();
         flaggedList.Add(cat);
         if(prevHighlight!=cat)
-        setMat(cat, FlaggedMat);
+            setMat(cat, FlaggedMat);
     }
     private static void setMat(int cat, Material dst)
     {
