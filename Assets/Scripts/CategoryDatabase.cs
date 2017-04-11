@@ -34,7 +34,7 @@ public class CategoryDatabase : MonoBehaviour {
     
     public static string GetName(int i)
     {
-        return i.ToString();
+        return genericLookup[i][0].ToUpper();
     }   
 
     public static void addGeneric(List<string> s)

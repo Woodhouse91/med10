@@ -100,7 +100,7 @@ public class cardBoardManager : MonoBehaviour {
     }
     void PaintBox(GameObject box, int category)
     {
-        box.GetComponentInChildren<TextMesh>().text = CategoryDatabase.GetName(category); // her skal være text
+        box.GetComponentInChildren<TextMesh>().text = FormatHandler.FormatCategory(CategoryDatabase.GetName(category)); // her skal være text
         box.GetComponentInChildren<SpriteRenderer>().sprite = CategorySpriteHandler.GetAt(category);
 
         //her fylder vi dens liste
