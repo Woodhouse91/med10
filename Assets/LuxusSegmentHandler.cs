@@ -46,7 +46,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private float luxusOffset = 0;
     private static int markedCount = 0;
     private static Vector3 flagScale = Vector3.one * 0.1f;
-    private static float _xRot = 0, _yRot = 0, _zRot = 0;
+    private static float _xRot = 0, _yRot = 0, _zRot = 60;
     private static Quaternion xRot = Quaternion.AngleAxis(_xRot, Vector3.right);
     private static Quaternion yRot = Quaternion.AngleAxis(_yRot, Vector3.up);
     private static Quaternion zRot = Quaternion.AngleAxis(_zRot, Vector3.forward);
