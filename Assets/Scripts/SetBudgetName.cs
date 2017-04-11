@@ -13,6 +13,18 @@ public class SetBudgetName : MonoBehaviour{
     private Color normal, highlighted, pressed;
     private float minX = 0, maxX, minY, maxY;
     RectTransform myRect;
+    public bool Scrolling
+    {
+        get
+        {
+            return _scrolling;
+        }
+        set
+        {
+            _scrolling = value;
+        }
+    }
+    private bool _scrolling;
     List<TouchPoint> t;
     private void Awake()
     {
@@ -29,6 +41,8 @@ public class SetBudgetName : MonoBehaviour{
 
     private void touchMove(object sender, TouchEventArgs e)
     {
+        if (_scrolling)
+            return;
         for(int x = 0; x<e.Touches.Count; ++x)
         {
             if (!hit(e.Touches[x].Position))
@@ -40,6 +54,12 @@ public class SetBudgetName : MonoBehaviour{
 
     private void touchEnd(object sender, TouchEventArgs e)
     {
+        if (_scrolling)
+        {
+            t.Clear();
+            _scrolling = false;
+            return;
+        }
         for(int x = 0; x<e.Touches.Count; ++x)
         {
             if (hit(e.Touches[x].Position) && t.Contains(e.Touches[x]))
@@ -84,6 +104,11 @@ public class SetBudgetName : MonoBehaviour{
     }
     public void setName()
     {
+        if (_scrolling)
+        {
+            _scrolling = false;
+            return;
+        }
         DataAppLauncher.LaunchApplication(transform.GetChild(0).GetComponent<Text>().text);
         transform.parent.gameObject.SetActive(false);
         transform.parent.parent.GetChild(0).gameObject.SetActive(true);
@@ -91,8 +116,12 @@ public class SetBudgetName : MonoBehaviour{
     private void Update()
     {
         if (t.Count > 0)
+        {
             myCol.color = pressed;
+        }
         else
+            myCol.color = normal;
+        if (_scrolling)
             myCol.color = normal;
     }
     private bool hit(Vector2 p)
