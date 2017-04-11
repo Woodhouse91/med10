@@ -19,6 +19,8 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public bool isScrolling = false;
     int tTextfieldplaceInt;
     LuxusSegmentHandler LSH;
+    private int baseFontSize =  100;
+    private int stringLengthCutoff = 15;
     
 	// Use this for initialization
 	void Start () {
@@ -155,12 +157,21 @@ public class BoxInterfaceScreen : MonoBehaviour {
         for (int i = 0; i < enabledTextFields; i++)
         {
             tTextField[i].gameObject.SetActive(true);
-            tTextField[i].GetComponentInChildren<Text>().text = BB.CategoryString[i];
+            stringSize(tTextField[i].GetComponentInChildren<Text>(), FormatHandler.FormatCategory(BB.CategoryString[i]));
             tTextField[i].GetComponent<Selectable>().enabled = interactable;
         }
         UpdateImages();
     }
-
+    private void stringSize(Text t, String s)
+    {
+        t.text = FormatHandler.FormatCategory(s);
+        if (s.Length > stringLengthCutoff)
+        {
+            t.fontSize = (int)(baseFontSize * ((float)stringLengthCutoff / s.Length));
+        }
+        else
+            t.fontSize = baseFontSize;
+    }
     public void ClickTextField(int childIndex)
     {
         for (int i = 0; i < tTextField.Length; i++)

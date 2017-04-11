@@ -34,8 +34,9 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private float coinS = 0.00285f;
     private int coinsPerCol = 4;
     private int billsPerColumn = 25;
-    private float hangHeight = .3f;
-    private float defaultLeft = 6f;
+    private float hangHeight = 0f;
+    private float secHangHeight = -.45f;
+    private float defaultLeft = 1.25f;
     private float hangTime = 2f;
     private bool stillMoving;
     private static int prevHighlight = -1;
@@ -188,8 +189,8 @@ public class LuxusSegmentHandler : MonoBehaviour {
             scaledOffset += (scaleFactor);
             activeSegments[x].localScale += Vector3.up*scaleFactor;
             activeSegments[x].localRotation = Quaternion.Euler(90, -180, 0);
-            activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = formatCat(s.CategoryString[x]);
-            activeSegments[x].GetChild(0).GetChild(1).GetComponent<TextMesh>().text = formatCurrency(DataHandler.expenseData[13, s.CategoryInt[x]]);
+            activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = FormatHandler.FormatCategory(s.CategoryString[x]);
+            activeSegments[x].GetChild(0).GetChild(1).GetComponent<TextMesh>().text = FormatHandler.FormatCurrency(DataHandler.expenseData[13, s.CategoryInt[x]]);
             Vector3 texScale = activeSegments[x].GetChild(0).GetChild(0).localScale;
             texScale.x /= (scaleFactor+1);
             activeSegments[x].GetChild(0).GetChild(0).localScale = texScale;
@@ -213,24 +214,6 @@ public class LuxusSegmentHandler : MonoBehaviour {
         res = res.Replace(",", ".");
         res += ",-";
         return res;
-    }
-    private string formatCat(string s)
-    {
-        if (s.Contains("aft."))
-        {
-            int id = 0;
-            s = s.Replace("aft.", "<");
-            for(int x = 0; x<s.Length; ++x)
-            {
-                if (s[x] == '<')
-                {
-                    id = x-3;
-                    break;
-                }
-            }
-            s = s.Substring(0, id);
-        }
-        return s;
     }
     private void ExposeTable()
     {
@@ -297,13 +280,17 @@ public class LuxusSegmentHandler : MonoBehaviour {
         {
             luxusOffset += obj.GetChild(x).GetComponent<MeshCollider>().bounds.size.x;
         }
-            //if (luxusOffset > 10f)
-            //{
-            //    luxusOffset = 0;
-            //    hangHeight = -.95f;
-            //    target = targetWall.position - targetWall.right * (4.5f - luxusOffset) + targetWall.forward * 0.02f + targetWall.up * hangHeight;
-            //}
-            Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);
+        if (luxusOffset > 2.9f)
+        {
+            luxusOffset = 0;
+            hangHeight = secHangHeight;
+            target = targetWall.position - targetWall.right * (defaultLeft - luxusOffset) + targetWall.forward * hangHeight + targetWall.up * 0.02f;
+            for (int x = 0; x < s; ++x)
+            {
+                luxusOffset += obj.GetChild(x).GetComponent<MeshCollider>().bounds.size.x;
+            }
+        }
+        Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);
         float t = 0;
         while (t < 1)
         {
