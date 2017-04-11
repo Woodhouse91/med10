@@ -56,16 +56,14 @@ public class PlaceAllCrates : MonoBehaviour {
     }
     public void FlagCategory(int category)
     {
-        print("plz");
         if (flagObj == null)
             flagObj = Resources.Load("flagObj",typeof(GameObject)) as GameObject;
         List<Transform> TempFlagList = new List<Transform>();
-        TempFlagList = new List<Transform>();
         for (int i = 1; i < 13; i++)
         {
             if (DataHandler.expenseData[i, category] > 0)
             {
-                TempFlagList.Add(GetCrate(category, i-1));
+                TempFlagList.Add(GetCrate(EventManager.CurrentCategory, i-1)); // eventmanager.currentcategory = category
             }
         }
 
@@ -75,16 +73,16 @@ public class PlaceAllCrates : MonoBehaviour {
             for (int i = 0; i < TempFlagList.Count; i++)
             {
                 GameObject flag = Instantiate(flagObj, TempFlagList[i]).gameObject;
-                flag.transform.localScale = Vector3.one;
-                flag.transform.position = TempFlagList[i].position;
-                flag.transform.rotation = TempFlagList[i].rotation;
+                flag.transform.localScale = new Vector3(0.2f/TempFlagList[i].localScale.x,0.2f / TempFlagList[i].localScale.y, 0.2f / TempFlagList[i].localScale.z); //gives the flag a size of vector3.one * 0.1 in world space
+                flag.transform.localPosition = new Vector3(0.5f-TempFlagList[i].childCount*0.1f,0.075f,0.37f);
+                flag.transform.rotation = TempFlagList[i].rotation * Quaternion.AngleAxis(-70.0f,Vector3.up);
             }
         }
         else
         {
             for (int i = 0; i < TempFlagList.Count; i++)
             {
-                Destroy(TempFlagList[i].GetChild(0));
+                Destroy(TempFlagList[i].GetChild(1).gameObject);
             }
         }
     }
@@ -135,10 +133,9 @@ public class PlaceAllCrates : MonoBehaviour {
         Vector3 end = transform.parent.position + transform.up;
         while (t < 1f)
         {
-            transform.parent.position = Vector3.Lerp(start, end, t);
-            
             t += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
+            transform.parent.position = Vector3.Lerp(start, end, t);
+            yield return null;
         }
         
         //yield return new WaitForSeconds(1f);

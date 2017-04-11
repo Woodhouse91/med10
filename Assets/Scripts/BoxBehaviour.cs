@@ -16,7 +16,7 @@ public class BoxBehaviour : MonoBehaviour {
     public List<string> CategoryString;
     public List<int> CategoryInt;
     public int[] moneyAtCrate;
-
+    Transform MovingUp;
     BoxInterfaceScreen bis;
 
     private float BagValue;
@@ -34,6 +34,7 @@ public class BoxBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        MovingUp = GameObject.Find("MovingUp").transform;
         defaultModelScale = Vector3.one * 3;
         pac = FindObjectOfType<PlaceAllCrates>();
         bis = FindObjectOfType<BoxInterfaceScreen>();
@@ -224,7 +225,7 @@ public class BoxBehaviour : MonoBehaviour {
             model.rotation = Quaternion.Lerp(startRot, endRot, t);
             yield return null;
         }
-
+        model.SetParent(MovingUp, true);
         Vector3 tarScale = defaultModelScale;
         float ttt = 0;
         while (ttt <= defaultScaleTime)
@@ -276,6 +277,7 @@ public class BoxBehaviour : MonoBehaviour {
             BoM.localScale = Vector3.zero;
             BoM.position = target.position + Vector3.up * (target.GetComponent<Collider>().bounds.size.y * 0.8f - bagSize / 2f) + Vector3.right * (target.GetComponent<Collider>().bounds.size.x * 0.8f * Random.Range(-0.4f, 0.4f));
             BoM.rotation = target.rotation;
+            BoM.gameObject.AddComponent<ChildTo>().Initiate(target);
             if (bags - i >= 1f)
                 StartCoroutine(ExpandBag(1f, i, BoM, target));
             else
@@ -286,7 +288,12 @@ public class BoxBehaviour : MonoBehaviour {
 
     private IEnumerator FallAndChildTo(Transform obj, Transform target)
     {
-        obj.GetComponent<Rigidbody>().isKinematic = false;
+        if (obj.GetComponent<ChildTo>())
+            Destroy(obj.GetComponent<ChildTo>());
+        if (obj.GetComponent<Rigidbody>() != null)
+            obj.GetComponent<Rigidbody>().isKinematic = false;
+        else
+            obj.gameObject.AddComponent<Rigidbody>();
         float t = 0;
         while (t < EventManager.scaleTime)
         {
