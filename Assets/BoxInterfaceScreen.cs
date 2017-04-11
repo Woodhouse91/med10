@@ -83,7 +83,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         {
             for (int j = 0; j < FlaggedItem.Count; j++)
             {
-                if (tTextField[i].GetChild(1).GetComponent<Text>().text == DataHandler.BudgetCategories[FlaggedItem[j]])
+                if (tTextField[i].GetChild(1).GetComponent<Text>().text == FormatHandler.FormatCategory(DataHandler.BudgetCategories[FlaggedItem[j]]))
                 {
                     tTextField[i].GetChild(0).GetComponent<Image>().sprite = Flagged;
                     break;
