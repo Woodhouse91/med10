@@ -175,36 +175,40 @@ public class TheNewestMarker : MonoBehaviour
     private void OnDisable()
     {
         print(hitTarget);
-        switch (hitTarget)
+        try
         {
-            case HitTarget.FullTextField:
-                hit.collider.enabled = true;
-                Bis.isScrolling = false;
-                if (clickTarget != null)
-                {
-                    LuxusSegmentHandler.HighlightCategory(Bis.FindTransform(hit.transform));
-                    Bis.ClickTextField(clickTarget.GetSiblingIndex());
-                    clickTarget = null;
-                }
-                break;
-            case HitTarget.SliderHorizontal:
-                hit.transform.parent.GetComponent<RipTapeSlider>().ReturnToStart();
-                break;
-            case HitTarget.SliderNextSlide:
-                hit.collider.enabled = true;
-                Bis.isScrolling = false;
-                break;
-            case HitTarget.ColorImage:
-                if(isClicking)
-                {
-                    Bis.FlagIt(hit.transform.parent);
-                }
-                hit.transform.GetComponent<Image>().color = Color.white;
-                hit.collider.enabled = true;
-                break;
-            default:
-                break;
+            switch (hitTarget)
+            {
+                case HitTarget.FullTextField:
+                    hit.collider.enabled = true;
+                    Bis.isScrolling = false;
+                    if (clickTarget != null)
+                    {
+                        LuxusSegmentHandler.HighlightCategory(Bis.FindTransform(hit.transform));
+                        Bis.ClickTextField(clickTarget.GetSiblingIndex());
+                        clickTarget = null;
+                    }
+                    break;
+                case HitTarget.SliderHorizontal:
+                    hit.transform.parent.GetComponent<RipTapeSlider>().ReturnToStart();
+                    break;
+                case HitTarget.SliderNextSlide:
+                    hit.collider.enabled = true;
+                    Bis.isScrolling = false;
+                    break;
+                case HitTarget.ColorImage:
+                    if (isClicking)
+                    {
+                        Bis.FlagIt(hit.transform.parent);
+                    }
+                    hit.transform.GetComponent<Image>().color = Color.white;
+                    hit.collider.enabled = true;
+                    break;
+                default:
+                    break;
+            }
         }
+        catch { }
         hitTarget = HitTarget.None;
     }
 }

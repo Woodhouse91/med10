@@ -67,11 +67,11 @@ public class BoxInterfaceScreen : MonoBehaviour {
     {
         int flagNum = FindTransform(target);
         LuxusSegmentHandler.FlagCategory(flagNum);
-        pac.FlagCategory(flagNum);
         if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
             FlaggedItem.Add(BB.CategoryInt[flagNum]);
         else
             FlaggedItem.Remove(BB.CategoryInt[flagNum]);
+        pac.FlagCategory(BB.CategoryInt[flagNum]);
         UpdateImages();
     }
     private void UpdateImages()
@@ -133,12 +133,20 @@ public class BoxInterfaceScreen : MonoBehaviour {
 
     private void boxEmptied()
     {
+        StartCoroutine(waitForScaleOfModels());
+    }
+
+    private IEnumerator waitForScaleOfModels()
+    {
+        yield return new WaitForSeconds(EventManager.scaleTime); 
         interactable = true;
         for (int i = 0; i < enabledTextFields; i++)
         {
             tTextField[i].GetComponent<Selectable>().enabled = interactable;
         }
         tNextSlidePlz.gameObject.SetActive(true);
+
+
     }
 
     private void boxAtTable(BoxBehaviour BB)

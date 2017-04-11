@@ -268,16 +268,17 @@ public class LuxusSegmentHandler : MonoBehaviour {
     public void ReleaseTable()
     {
         releases++;
-        for(int x =0; x<activeSegments.Count; ++x)
+        prevHighlight = -1;
+        for (int x =0; x<activeSegments.Count; ++x)
         {
             if (!flaggedList.Contains(x))
                 setMat(x, NormalMat);
             else
                 setMat(x, MarkedMat);
         }
-        flaggedList.Clear();
+        flaggedList = new List<int>();
         int segs = activeSegments.Count;
-        activeSegments.Clear();
+        activeSegments = new List<Transform>();
         nHolder.SetParent(holder.parent);
         nHolder.localPosition = Vector3.zero;
         nHolder.localRotation = Quaternion.identity;
