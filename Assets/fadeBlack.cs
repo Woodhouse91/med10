@@ -34,6 +34,7 @@ public class fadeBlack : MonoBehaviour {
             yield return null;
         }
         mat.enabled = false;
+        ActivateOnload.EnableMesh();
         global.GetComponent<OptimizedCameraTex>().changeCamera();
         yield return null;
     }

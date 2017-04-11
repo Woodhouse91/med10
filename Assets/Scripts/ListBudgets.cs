@@ -16,8 +16,7 @@ public class ListBudgets : MonoBehaviour{
     private int curTrackedID = -1;
     bool subbed = false;
     private bool scrolling = false;
-    [SerializeField]
-    private float scrollSpeed = 1;
+    private float scrollSpeed;
     float tarY;
     Transform sibling;
     SetBudgetName[] s;
@@ -27,6 +26,7 @@ public class ListBudgets : MonoBehaviour{
         overlay.SetActive(false);
         sibling = transform.parent.GetChild(0);
         sibling.gameObject.SetActive(false);
+        scrollSpeed = Screen.height;
         Sub();
         GenerateBudgetList();
     }
