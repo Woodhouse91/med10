@@ -21,7 +21,6 @@ public class introtouch : MonoBehaviour {
     }
     private void OnDisable()
     {
-        TouchManager.Instance.TouchesBegan -= go;
         try
         {
             TouchManager.Instance.TouchesBegan -= go;

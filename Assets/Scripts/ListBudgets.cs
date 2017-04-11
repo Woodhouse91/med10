@@ -15,12 +15,12 @@ public class ListBudgets : MonoBehaviour{
     private Vector2 prevPoint, v2Null = Vector3.one*-10000;
     private int curTrackedID = -1;
     bool subbed = false;
-    private bool scrolling;
+    private bool scrolling = false;
     [SerializeField]
     private float scrollSpeed = 1;
     float tarY;
     Transform sibling;
-
+    SetBudgetName[] s;
     private void Awake()
     {
         overlay = GameObject.Find("Overlay (Canvas)");
@@ -80,6 +80,11 @@ public class ListBudgets : MonoBehaviour{
                 if (Math.Abs(touchMove) >= moveTH)
                 {
                     GetComponent<RectTransform>().localPosition += Vector3.up * frameDist;
+                    
+                    for(int z = 0; z<s.Length; ++z)
+                    {
+                        s[z].Scrolling = true;
+                    }
                 }
             }
         }
@@ -137,6 +142,7 @@ public class ListBudgets : MonoBehaviour{
         tarY = Screen.height / 2f - ((transform.childCount) * 54);
         GetComponent<RectTransform>().localPosition = Vector3.up * tarY;
         GetComponent<RectTransform>().sizeDelta = new Vector2(1920, Screen.height * 2 + transform.childCount*108);
+        s = GetComponentsInChildren<SetBudgetName>();
     }
 
     private void Update()
