@@ -35,7 +35,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private int coinsPerCol = 4;
     private int billsPerColumn = 25;
     private float hangHeight = 0f;
-    private float secHangHeight = -.45f;
+    private float secHangHeight = -.6f;
     private float defaultLeft = 1.25f;
     private float hangTime = 2f;
     private bool stillMoving;
@@ -278,9 +278,9 @@ public class LuxusSegmentHandler : MonoBehaviour {
     {
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
-        Transform myRef = obj;
         Vector3 orgPos = obj.position;
         Quaternion orgRot = obj.rotation;
+        Transform myRef = obj;
         Vector3 target = targetWall.position - targetWall.right * (defaultLeft-luxusOffset) + targetWall.forward*hangHeight + targetWall.up*0.02f;
         for (int x = 0; x < s; ++x)
         {
@@ -300,9 +300,17 @@ public class LuxusSegmentHandler : MonoBehaviour {
         float t = 0;
         while (t < 1)
         {
-            t += Time.deltaTime / hangTime;
-            obj.position = Vector3.Lerp(orgPos, target, t);
+            t += Time.deltaTime / (hangTime / 2f);
+            obj.position = Vector3.Lerp(orgPos, targetWall.position + targetWall.right * 1.5f, t);
             obj.rotation = Quaternion.Lerp(orgRot, tarRot, t);
+            yield return null;
+        }
+        orgPos = obj.position;
+        t = 0;
+        while (t < 1)
+        {
+            t += Time.deltaTime / (hangTime / 2f);
+            obj.position = Vector3.Lerp(orgPos, target, t);
             yield return null;
         }
         scaledOffset = 0;

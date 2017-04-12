@@ -39,8 +39,8 @@ afgift
 ROWBREAK
 avis
 ROWBREAK
+streaming
 spotify
-ROWBREAK
 netflix
 ROWBREAK
 tv
