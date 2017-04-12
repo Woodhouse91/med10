@@ -34,6 +34,8 @@ public class CategoryDatabase : MonoBehaviour {
     
     public static string GetName(int i)
     {
+        if (i == -1)
+            return "UKENDT";
         return genericLookup[i][0].ToUpper();
     }   
 

@@ -107,8 +107,8 @@ public class LuxusSegmentHandler : MonoBehaviour {
             List<float> offset = new List<float>();
             tar = activeSegments[x].GetChild(1).GetChild(0);
             float down = -moneyH/5f;
-            int cols = (bills[x].Count / billsPerColumn)+1;
-
+            int cols =  (bills[x].Count / billsPerColumn)+1;
+            
             float coinRight = coinS*3f;
             float coinDown = -coinS*6f;
 
@@ -391,10 +391,9 @@ public class LuxusSegmentHandler : MonoBehaviour {
                 resCoins.Add(MoneyHolder.getCurrency(1));
             }
         }
-        if(resCoins.Count>0)
-            coins.Add(resCoins);
-        if(resBills.Count>0)
-            bills.Add(resBills);
+       
+       coins.Add(resCoins);
+       bills.Add(resBills);
         return resBills.Count;
     }
 
