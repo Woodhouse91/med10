@@ -5,7 +5,8 @@ public class placeME : MonoBehaviour
 
 	// Use this for initialization
 
-	public SteamVR_TrackedController _controllerL, _controllerR;
+	public SteamVR_TrackedController _controllerR;
+    public Transform target;
     public Vector2 ScreenSizeCm;
     public Vector3[] placement = new Vector3[4]; //upLeft, downLeft, upRight, downRight
     public int xPlace = 0;
@@ -23,15 +24,15 @@ public class placeME : MonoBehaviour
     private void OnEnable ()
 	{
 		//_controllerL = GetComponent<SteamVR_TrackedController> ();
-		_controllerL.TriggerClicked += LeftHandleTriggerClicked;
-		
+		//_controllerL.TriggerClicked += LeftHandleTriggerClicked;
 
-		//_controllerR = GetComponent<SteamVR_TrackedController> ();
-		_controllerR.TriggerClicked += RightHandleTriggerClicked;
 
-        _controllerL.Gripped += ResetPlacement;
+        //_controllerR = GetComponent<SteamVR_TrackedController> ();
+        _controllerR.TriggerClicked += RightHandleTriggerClicked;
+
+        //_controllerL.Gripped += ResetPlacement;
         _controllerR.Gripped += ResetPlacement;
-	}
+    }
     private void ResetPlacement(object controller, ClickedEventArgs e)
     {
         xPlace = 0;
@@ -43,36 +44,20 @@ public class placeME : MonoBehaviour
     }
 	private void OnDisable ()
 	{
-		_controllerL.TriggerClicked -= LeftHandleTriggerClicked;
+		//_controllerL.TriggerClicked -= LeftHandleTriggerClicked;
 	
 
 		_controllerR.TriggerClicked -= RightHandleTriggerClicked;
 		
 	}
-
-
-    private void LeftHandleTriggerClicked(object controller, ClickedEventArgs e)
-    {
-        if(xPlace < 4)
-        {
-            placement[xPlace] = _controllerL.transform.position + _controllerL.transform.forward * 0.05f + _controllerL.transform.up * -0.1f;
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sphere.tag = "s";
-            sphere.transform.position = _controllerL.transform.position + _controllerL.transform.forward * 0.05f + _controllerL.transform.up * -0.1f;
-            sphere.transform.localScale = Vector3.one * 0.1f;
-            xPlace++;
-            if (xPlace == 4)
-                Placed();
-        }
-    }
     private void RightHandleTriggerClicked(object controller, ClickedEventArgs e)
     {
         if(xPlace < 4)
         {
-            placement[xPlace] = _controllerR.transform.position + _controllerR.transform.forward * 0.05f + _controllerR.transform.up * -0.1f;
+            placement[xPlace] = target.position + target.transform.forward * 0.05f + target.transform.up * -0.1f;
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             sphere.tag = "s";
-            sphere.transform.position = _controllerR.transform.position + _controllerR.transform.forward * 0.05f + _controllerR.transform.up * -0.1f;
+            sphere.transform.position =target.transform.position + target.transform.forward * 0.05f + target.transform.up * -0.1f;
             sphere.transform.localScale = Vector3.one * 0.1f;
             xPlace++;
             if (xPlace == 4)
