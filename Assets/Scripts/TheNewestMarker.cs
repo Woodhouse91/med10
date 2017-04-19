@@ -55,6 +55,13 @@ public class TheNewestMarker : MonoBehaviour
             ray.direction = transform.forward;
             if (Physics.Raycast(ray, out hit, 1, textLayer))
             {
+                if (hit.transform.parent.name == "SliderNextSlide")
+                {
+                    hit.collider.enabled = false;
+                    hitTarget = HitTarget.SliderNextSlide;
+                    StartCoroutine(HitNextSlidePlz(hit));
+                    return;
+                }
                 if (hit.transform.parent.name == "FullTextField")
                 {
                     hit.collider.enabled = false;
@@ -67,13 +74,6 @@ public class TheNewestMarker : MonoBehaviour
                     hit.collider.enabled = false;
                     hitTarget = HitTarget.SliderHorizontal;
                     StartCoroutine(HitBoxSlider(hit));
-                    return;
-                }
-                if (hit.transform.parent.name == "SliderNextSlide")
-                {
-                    hit.collider.enabled = false;
-                    hitTarget = HitTarget.SliderNextSlide;
-                    StartCoroutine(HitNextSlidePlz(hit));
                     return;
                 }
                 if(hit.transform.name == "ColorImage")
