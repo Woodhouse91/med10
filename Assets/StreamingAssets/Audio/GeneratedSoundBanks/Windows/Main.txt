@@ -1,0 +1,39 @@
+Event	ID	Name			Wwise Object Path	Notes
+	286100424	Swap			\Default Work Unit\Swap	
+	546651192	Dor			\Default Work Unit\Dor	
+	898583876	Fro			\Default Work Unit\Fro	
+	947300733	Koleskab			\Default Work Unit\Koleskab	
+	1080872023	Tom			\Default Work Unit\Tom	
+	1093876158	BGM_Play			\Default Work Unit\BGM_Play	
+	1162899944	Vakkeur			\Default Work Unit\Vakkeur	
+	1250178355	Kat			\Default Work Unit\Kat	
+	1456535184	Ugle			\Default Work Unit\Ugle	
+	2090192256	BGM_Stop			\Default Work Unit\BGM_Stop	
+	2817797090	Glimt			\Default Work Unit\Glimt	
+	2861994579	Mobiltelefon			\Default Work Unit\Mobiltelefon	
+	3126836846	Hund			\Default Work Unit\Hund	
+	3600847130	Horn			\Default Work Unit\Horn	
+	3610450331	Blender			\Default Work Unit\Blender	
+	3917792242	Motorsav			\Default Work Unit\Motorsav	
+	4018763798	Banken			\Default Work Unit\Banken	
+
+Source plug-ins	ID	Name	Type		Wwise Object Path	Notes
+	572614156	Wwise Silence	Wwise Silence		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Tom\Wwise Silence	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	12364627	Vækkeur	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Vækkeur_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Vækkeur		75257
+	49405778	Køleskab	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Køleskab_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Køleskab		30699
+	74593294	BGM	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\BGM_4D7BABE6.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI\BGM		2679182
+	195343118	Blender	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Blender_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Blender		65178
+	230968681	Ugle	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Ugle_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Ugle		27619
+	332188677	Glimt	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Glimt_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Glimt		66396
+	348643319	Mobiltelefon	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Mobiltelefon_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Mobiltelefon		22232
+	412899284	Swap	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Swap_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI\Swap		78257
+	422967373	Horn	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Horn_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\UI\Horn		18012
+	428578082	Kat	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Kat_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Kat		18015
+	506034058	Motorsav	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Motorsav_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Motorsav		52312
+	697225523	Hund	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Hund_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Hund		10687
+	854878292	Frø	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Frø_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Frø		14930
+	876619740	Banken	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Banken_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Banken		36881
+	1007733609	Dør	C:\Users\Krist\OneDrive\Dokumenter\SoundNotThere\SoundNotThereWwise\.cache\Windows\SFX\Dør_3ADACB5C.wem		\Actor-Mixer Hierarchy\Default Work Unit\Papfigurer\Dør		53817
+
