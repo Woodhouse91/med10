@@ -122,6 +122,7 @@ public class DataHandler : MonoBehaviour {
             for(int c = 1; c<expenseData.GetLength(0)-1; ++c)
             {
                 int val = expenseData[c, r];
+                monthlyDifference[c - 1] += val;
                 tExpense += val;
                 res[c - 1]._1000 = val / 1000;
                 val = val%1000;
@@ -152,8 +153,13 @@ public class DataHandler : MonoBehaviour {
                 tBills._5 += res[c - 1]._5;
                 tBills._2 += res[c - 1]._2;
                 tBills._1 += res[c - 1]._1;
+
             }
             BillsAtCategory_Month.Add(res);
+        }
+        for(int x = 0; x<monthlyDifference.Length; ++x)
+        {
+            monthlyDifference[x] = incomeData[x] - monthlyDifference[x];
         }
         int dIncome = tIncome - tExpense;
         tBills._1000 += dIncome / 1000;
