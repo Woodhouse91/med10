@@ -86,7 +86,7 @@ public class DataHandler : MonoBehaviour {
     }
     private static List<string> _budgetCategories;
     public static int tExpense, tIncome;
-  
+    public static int[] monthlyDifference = new int[12];
     private static void ExposeData()
     {
         print("Expense data:");
