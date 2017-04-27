@@ -9,7 +9,7 @@ public class placeME : MonoBehaviour
     public Transform target;
     public Vector2 ScreenSizeCm;
     public Vector3[] placement = new Vector3[4]; //upLeft, downLeft, upRight, downRight
-    public int xPlace = 0;
+    int xPlace = 0;
     Virtualscreen vc;
     public void Start()
     {

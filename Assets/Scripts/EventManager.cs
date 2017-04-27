@@ -97,6 +97,7 @@ public class EventManager : MonoBehaviour {
         print("Curcat: " + _currentCategory);
         if(_currentCategory >= DataHandler.BudgetCategories.Count-1)
         {
+            print("you are finnished!");
             if (OnCategoryFinished != null)
                 OnCategoryFinished();
         }

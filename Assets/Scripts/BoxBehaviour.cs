@@ -115,8 +115,8 @@ public class BoxBehaviour : MonoBehaviour {
            
         while (t < 1)
         {
-            transform.position = Vector3.Lerp(startPos, endPos, t);
             t += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, endPos, t);
             yield return null;
         }
         //then we flip it.
@@ -125,8 +125,8 @@ public class BoxBehaviour : MonoBehaviour {
         Quaternion endRot = transform.rotation * Quaternion.AngleAxis(90f, Vector3.up) * Quaternion.AngleAxis(170f, Vector3.forward);  // ROTATE 180
         while (t < 1)
         {
-            transform.rotation = Quaternion.Slerp(startRot, endRot, t);
             t += Time.deltaTime;
+            transform.rotation = Quaternion.Slerp(startRot, endRot, t);
             yield return null;
         }
         //then we open the lids
@@ -137,9 +137,9 @@ public class BoxBehaviour : MonoBehaviour {
         t = 0;
         while (t < 1)
         {
+            t += Time.deltaTime;
             leftLid.localRotation = Quaternion.Slerp(startRotL, endRotL, AC.Evaluate(t));
             rightLid.localRotation = Quaternion.Slerp(startRotR, endRotR, AC.Evaluate(t));
-            t += Time.deltaTime;
             yield return null;
         }
         GetComponent<AddMoneyToTable>().ShowMeTheMoney(); // SPAWN ALL THE MONIES PLZ
