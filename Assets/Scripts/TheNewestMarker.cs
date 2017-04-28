@@ -19,7 +19,7 @@ public class TheNewestMarker : MonoBehaviour
     Transform clickTarget;
     MoneyIntoButton mb;
     BoxInterfaceScreen Bis;
-
+    Vector3 FollowVelocity;
 
     private void Awake()
     {
@@ -116,6 +116,7 @@ public class TheNewestMarker : MonoBehaviour
         {
             if (Vector3.Distance(transform.position, startPos) < 0.01f)
             {
+                FollowVelocity = GetComponent<Rigidbody>().velocity;
                 //waiting for OnDisable()
             }
             else
@@ -152,15 +153,17 @@ public class TheNewestMarker : MonoBehaviour
         Vector3 clickTargetStartPos = hit.transform.localPosition;
         clickTarget = hit.transform;
         isClicking = true;
+       // Bis.InheritVelocity(Vector3.zero);
         while (gameObject.activeSelf)
         {
             if (Vector3.Distance(transform.localPosition, startPos) < 0.01f && isClicking == true)
             {
+               
                 //waiting for OnDisable()
             }
             else
             {
-                //clickTarget = null;
+                clickTarget = null;
                 isClicking = false;
                 hit.transform.parent.localPosition = scrollStartPos + Vector3.up * (transform.localPosition.y - startPos.y);
                 Bis.isScrolling = true;
@@ -188,6 +191,10 @@ public class TheNewestMarker : MonoBehaviour
                         Bis.ClickTextField(clickTarget.GetSiblingIndex());
                         clickTarget = null;
                     }
+                    else
+                    {
+                      //  Bis.InheritVelocity(FollowVelocity);    
+                    }
                     break;
                 case HitTarget.SliderHorizontal:
                     hit.transform.parent.GetComponent<RipTapeSlider>().ReturnToStart();
@@ -210,5 +217,6 @@ public class TheNewestMarker : MonoBehaviour
         }
         catch { }
         hitTarget = HitTarget.None;
+       
     }
 }
