@@ -95,7 +95,7 @@ public class EventManager : MonoBehaviour {
     {
         _currentCategory++;
         print("Curcat: " + _currentCategory);
-        if(_currentCategory >= DataHandler.BudgetCategories.Count-1)
+        if(_currentCategory >= DataHandler.tCombinedCategories)
         {
             print("you are finnished!");
             if (OnCategoryFinished != null)

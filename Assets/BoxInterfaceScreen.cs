@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class BoxInterfaceScreen : MonoBehaviour {
 
-
     Transform tTitle, tFullTextField, tMask, tNextSlidePlz, tSlider;
     Transform[] tTextField;
     public List<int> FlaggedItem;
@@ -14,6 +13,9 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public Sprite Flagged, Unflagged;
     BoxBehaviour BB;
     PlaceAllCrates pac;
+    float[] prevY = new float[2]; 
+    float scrollSpeed;
+    bool velocityScrolling = false;
     bool categoryDoneBool = false;
     int enabledTextFields = 0;
     bool interactable = false;
@@ -31,9 +33,12 @@ public class BoxInterfaceScreen : MonoBehaviour {
         ReturnToPos = Vector3.zero; // START POSITION
         EventManager.OnBoxAtTable += boxAtTable;
         EventManager.OnBoxEmptied += boxEmptied;
-        EventManager.OnMoneyInstantiated += MoneyInstantiated;
         EventManager.OnCategoryDone += categoryDone;
+        EventManager.OnMoneyInstantiated += MoneyInstantiated;
+        EventManager.OnCategoryFinished += CategoryFinished;
 	}
+
+  
 
     private void Unsub()
     {
@@ -41,6 +46,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         EventManager.OnBoxEmptied -= boxEmptied;
         EventManager.OnCategoryDone -= categoryDone;
         EventManager.OnMoneyInstantiated -= MoneyInstantiated;
+        EventManager.OnCategoryFinished -= CategoryFinished;
     }
     private void OnApplicationQuit()
     {
@@ -251,11 +257,55 @@ public class BoxInterfaceScreen : MonoBehaviour {
         }
     }
 
+    private void CategoryFinished() // HER SKAL DEN VISE ALLE FLAGGED CATEGORIES
+    {
+        tTitle.gameObject.SetActive(true);
+        tSlider.gameObject.SetActive(true);
+        tTitle.GetComponent<Text>().text = "MARKEREDE UDGIFTER";
+        tMask.gameObject.SetActive(true);
+        tFullTextField.gameObject.SetActive(true);
+        enabledTextFields = FlaggedItem.Count;
+        tTextfieldplaceInt = enabledTextFields;
+        if (tTextfieldplaceInt < 3)
+            tTextfieldplaceInt = 3;
+        for (int i = 0; i < enabledTextFields; i++)
+        {
+            tTextField[i].gameObject.SetActive(true);
+            stringSize(tTextField[i].GetComponentInChildren<Text>(), FormatHandler.FormatCategory(DataHandler.BudgetCategories[FlaggedItem[i]]));
+            tTextField[i].GetComponent<Selectable>().enabled = interactable;
+        }
+        UpdateImages();
+    }
+    /*
+    public void InheritVelocity(Vector3 velocity) // TODO VIRKER SLET IKKE MEN GIVER HELLER IKKE FEJL LOL (HERFRA)
+    {
+        print(velocity);
+        if (velocity == Vector3.zero)
+            velocityScrolling = false;
+        else
+        {
+            velocityScrolling = true;
+            //StartCoroutine(VelocityScrolling(velocity));
+        }
+    }
+    IEnumerator VelocityScrolling(Vector3 velocity)
+    {
+        while(velocityScrolling || velocity.magnitude < 0.1f)
+        {
+            tFullTextField.transform.localPosition += new Vector3(0, velocity.y, 0) * Time.deltaTime;
+            velocity -= velocity * Time.deltaTime;
+            yield return null;
+        }
+        velocity = Vector3.zero; // lige meget
+        yield return null;
+    }                                                                                                   // (HERTIL) */
     // Update is called once per frame
     void Update () {
-        
-        if (!isScrolling)
+        if (!isScrolling && tFullTextField.gameObject.activeSelf)
         {
+            scrollSpeed = tFullTextField.localPosition.y - prevY[1];
+            if(scrollSpeed < 10)
+                tFullTextField.localPosition += Vector3.up * scrollSpeed * 30 * Time.deltaTime;
             for (int i = 0; i < enabledTextFields; i++)
             {
                 tTextField[i].transform.localPosition -= Vector3.right * tTextField[i].transform.localPosition.x * 5f * Time.deltaTime;
@@ -277,7 +327,8 @@ public class BoxInterfaceScreen : MonoBehaviour {
             {
                 transform.localPosition = Vector3.MoveTowards(transform.localPosition, ReturnToPos, Time.deltaTime);
             }
-
         }
+        prevY[1] = prevY[0];
+        prevY[0] = tFullTextField.localPosition.y;
 	}
 }

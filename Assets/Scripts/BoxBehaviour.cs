@@ -35,7 +35,7 @@ public class BoxBehaviour : MonoBehaviour {
     // Use this for initialization
     void Start () {
         MovingUp = GameObject.Find("MovingUp").transform;
-        defaultModelScale = Vector3.one * 3;
+        defaultModelScale = Vector3.one * 4; // var først 4 så 3 men nu 4 igen !
         pac = FindObjectOfType<PlaceAllCrates>();
         bis = FindObjectOfType<BoxInterfaceScreen>();
         rig = GetComponent<Rigidbody>();
@@ -251,7 +251,7 @@ public class BoxBehaviour : MonoBehaviour {
         }
        StartCoroutine(FallAndChildTo(model, target));
         model.tag = "ModelOnShelf";
-       CreateBagsOfMoney(CrateMonth, target);
+       //CreateBagsOfMoney(CrateMonth, target);
         yield return null;
     }
 
@@ -262,7 +262,7 @@ public class BoxBehaviour : MonoBehaviour {
         rig.AddForce(forceDir);
         rig.AddTorque(forceDir);
     }
-    void CreateBagsOfMoney(int _month, Transform target)
+    /*void CreateBagsOfMoney(int _month, Transform target)
     {
         float bags = moneyAtCrate[_month] / BagValue;
 
@@ -284,7 +284,7 @@ public class BoxBehaviour : MonoBehaviour {
                 StartCoroutine(ExpandBag(bags % 1, i, BoM, target));
         }
 
-    }
+    }*/
 
     private IEnumerator FallAndChildTo(Transform obj, Transform target)
     {
@@ -304,7 +304,7 @@ public class BoxBehaviour : MonoBehaviour {
         obj.GetComponent<ChildTo>().Initiate(target);
         yield return null;
     }
-
+/*
     private IEnumerator ExpandBag(float expand, int delay, Transform BoM, Transform target)
     {
         float cDelay = 0;
@@ -325,4 +325,5 @@ public class BoxBehaviour : MonoBehaviour {
         StartCoroutine(FallAndChildTo(BoM, target));
         yield return null;
     }
+    */
 }

@@ -70,6 +70,7 @@ public class cardBoardManager : MonoBehaviour {
         //int budgetCatCount = 1; //test
         int i = 0;
         budgetCatCount = differentCats.Count;
+        DataHandler.tCombinedCategories = budgetCatCount;
         StartCoroutine(FindObjectOfType<PlaceAllCrates>().PlaceAllRows(budgetCatCount));
         while (budgetCatCount > i)
         {

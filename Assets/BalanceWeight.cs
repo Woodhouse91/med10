@@ -72,7 +72,7 @@ public class BalanceWeight : MonoBehaviour {
             red.SetColor("_EmissionColor", Color.red * 0.0f);
             GameObject.Find("venstreGruppeSkål").AddComponent<ChildTo>().Initiate(GameObject.Find("venstreVip").transform);
             GameObject.Find("højreGruppeSkål").AddComponent<ChildTo>().Initiate(GameObject.Find("højreVip").transform);
-            totalCategories = FindObjectOfType<cardBoardManager>().CardBoxList.Count;
+            totalCategories = DataHandler.tCombinedCategories;
             CreateBagOfMoney(-1337);
             
         }
