@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,20 +8,22 @@ public class hint_ActivateWorldHint : MonoBehaviour {
     private Transform myHint, myHintPosActive, myHintPosDeactive;
 
     private bool activating = false;
+    private bool firstActivate = true;
+    private float hintTimerStay = 1.5f;
+    private float hintTimerReset = 10f;
     private float activateTimer = 1f;
 	// Use this for initialization
 	void Start () {
-        StartCoroutine(deactivate());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        myHint.gameObject.SetActive(true);
+        EventManager.OnExcelDataLoaded += loadedDeactivate;
 	}
 
+    private void loadedDeactivate()
+    {
+        StartCoroutine(deactivate());
+    }
     public void Activate(bool b)
     {
-        print("activating");
         if (b && !activating)
             StartCoroutine(activate());
         if (!b && activating)
@@ -36,6 +39,14 @@ public class hint_ActivateWorldHint : MonoBehaviour {
         Vector3 orgScale = myHint.localScale;
         Vector3 tarScale = Vector3.zero;
         float t = 0;
+        while(t<hintTimerStay && !activating)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+        if (activating)
+            yield break;
+        t = 0;
         while (!activating && t < 1)
         {
             t += Time.deltaTime / activateTimer;
@@ -49,13 +60,25 @@ public class hint_ActivateWorldHint : MonoBehaviour {
     private IEnumerator activate()
     {
         activating = true;
+        float t = 0;
+        if (!firstActivate)
+        {
+            while(activating && t < hintTimerReset)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+        }
+        if (!activating)
+            yield break;
+        firstActivate = false;
         Vector3 orgPos = myHint.position;
         Quaternion orgRot = myHint.rotation;
         Vector3 tarPos = myHintPosActive.position;
         Quaternion tarRot = myHintPosActive.rotation;
         Vector3 orgScale = myHint.localScale;
         Vector3 tarScale = Vector3.one;
-        float t = 0;
+        t = 0;
         while(activating && t < 1)
         {
             t += Time.deltaTime / activateTimer;
