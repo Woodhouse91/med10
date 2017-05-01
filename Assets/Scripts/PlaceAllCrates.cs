@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlaceAllCrates : MonoBehaviour {
 
     public GameObject[,] ListOfCrates;
-    public Vector3 SizeOfCrate; //should be (1.5f,1.0f,1.0f)
+    public Vector3 SizeOfCrate; //should be (1.3f,1.0f,1.0f)
     public int SizeOfBudget;
     public int TestCat;
     public int TestMonth;
@@ -128,6 +128,7 @@ public class PlaceAllCrates : MonoBehaviour {
 
     private IEnumerator MoveEverythingUp()
     {
+        /*
         float t = 0;
         Vector3 start = transform.parent.position;
         Vector3 end = transform.parent.position + transform.up;
@@ -137,13 +138,15 @@ public class PlaceAllCrates : MonoBehaviour {
             transform.parent.position = Vector3.Lerp(start, end, t);
             yield return null;
         }
-        
+        */
         //yield return new WaitForSeconds(1f);
         EventManager.StartNextCategory();
+        yield return null;
     }
 
     public IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
     {
+        percent = percent / 4f; // EFTER AT HYLDERNE ER BLEVET SMÅ
         int month = Month + 1; 
         Vector3 start = originCrateSize;
         Vector3 end = originCrateSize + Vector3.up * percent;

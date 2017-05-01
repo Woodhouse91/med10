@@ -35,7 +35,7 @@ public class BoxBehaviour : MonoBehaviour {
     // Use this for initialization
     void Start () {
         MovingUp = GameObject.Find("MovingUp").transform;
-        defaultModelScale = Vector3.one * 4; // var først 4 så 3 men nu 4 igen !
+        defaultModelScale = Vector3.one * 1; // var først 4 så 3 men nu 4 igen ! MEN NU ER HYLDERNE SMÅ SÅ NU FÅR DE 1
         pac = FindObjectOfType<PlaceAllCrates>();
         bis = FindObjectOfType<BoxInterfaceScreen>();
         rig = GetComponent<Rigidbody>();
@@ -213,7 +213,7 @@ public class BoxBehaviour : MonoBehaviour {
         }
         model.GetComponent<Rigidbody>().isKinematic = true;
         Transform target = pac.GetCrate(EventManager.CurrentCategory, CrateMonth);
-        Vector3 endPos = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).position + Vector3.up * .5f;
+        Vector3 endPos = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).position + Vector3.up * 0.125f; // EFTER HYLDERNE ER BLEVET SMÅ
         Vector3 startPos = model.position;
         Quaternion startRot = model.rotation;
         Quaternion endRot = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).rotation;
