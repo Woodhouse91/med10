@@ -46,8 +46,6 @@ public class BoxBehaviour : MonoBehaviour {
         Ax = spawnArea.lossyScale.x / 2.5f;
         Ay = spawnArea.lossyScale.y / 2.5f;
         Az = spawnArea.lossyScale.z / 2.5f;
-        if(GetComponent<AddMoneyToTable>()==null) //KUN FOR MONEYKASSEN
-            BagValue = DataHandler.incomeData[12] / 100f;
     }
 
     public void modelsForShelves(int category)

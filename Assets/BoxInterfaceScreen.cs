@@ -24,9 +24,26 @@ public class BoxInterfaceScreen : MonoBehaviour {
     LuxusSegmentHandler LSH;
     private int baseFontSize =  100;
     private int stringLengthCutoff = 15;
-    
-	// Use this for initialization
-	void Start () {
+    [Header("Hints")]
+    [SerializeField] private Transform flagHint;
+    [SerializeField] private Transform markHint;
+    [SerializeField] private Transform sliderHint;
+    [SerializeField] private Transform nextSlideHint;
+    [SerializeField] private Transform activePos;
+    [SerializeField] private Transform deactivePos;
+    private Transform currentHint = null;
+    private bool activating = false;
+    private float hintTimerStay = 0f;
+    private float activateTimer = 1f;
+    private float autoDisableTime = 8f;
+    private bool firstActivate = true;
+    private bool interactionDone = true;
+    private float interactionWaitTime  = 15f;
+    private bool showingHint = false;
+    private bool firstBox = true;
+
+    // Use this for initialization
+    void Start () {
         pac = FindObjectOfType<PlaceAllCrates>();
         FlaggedItem = new List<int>();
         DisableHeleLortet();
@@ -36,7 +53,9 @@ public class BoxInterfaceScreen : MonoBehaviour {
         EventManager.OnCategoryDone += categoryDone;
         EventManager.OnMoneyInstantiated += MoneyInstantiated;
         EventManager.OnCategoryFinished += CategoryFinished;
-	}
+        EventManager.OnExcelDataLoaded += ShowSliderHint;
+        
+    }
 
   
 
@@ -47,7 +66,17 @@ public class BoxInterfaceScreen : MonoBehaviour {
         EventManager.OnCategoryDone -= categoryDone;
         EventManager.OnMoneyInstantiated -= MoneyInstantiated;
         EventManager.OnCategoryFinished -= CategoryFinished;
+        EventManager.OnExcelDataLoaded -= ShowSliderHint;
     }
+
+    private void ShowSliderHint()
+    {
+        StartCoroutine(firstDeactivateHint(flagHint));
+        StartCoroutine(firstDeactivateHint(markHint));
+        StartCoroutine(firstDeactivateHint(nextSlideHint));
+        StartCoroutine(activateHint(sliderHint));
+    }
+
     private void OnApplicationQuit()
     {
         Unsub();
@@ -68,11 +97,16 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     private void categoryDone()
     {
+        interactionDone = true;
+        firstActivate = false;
+        StartCoroutine(deactivateHint(nextSlideHint));
         StartCoroutine(FadeOutScreen());
         
     }
     public void FlagIt(Transform target)
     {
+        interactionDone = true;
+        StartCoroutine(deactivateHint(flagHint));
         int flagNum = FindTransform(target);
         LuxusSegmentHandler.FlagCategory(flagNum);
         if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
@@ -156,9 +190,116 @@ public class BoxInterfaceScreen : MonoBehaviour {
 
 
     }
-
+    private IEnumerator firstDeactivateHint(Transform myHint)
+    {
+        yield return new WaitForSeconds(1.5f);
+        activating = false;
+        Vector3 orgPos = myHint.position;
+        Quaternion orgRot = myHint.rotation;
+        Vector3 tarPos = deactivePos.position;
+        Quaternion tarRot = deactivePos.rotation;
+        Vector3 orgScale = myHint.localScale;
+        Vector3 tarScale = Vector3.zero;
+        for(int x = 1; x<myHint.childCount; ++x)
+        {
+            myHint.GetChild(x).GetComponent<LineRenderer>().enabled = false;
+        }
+        float t = 0;
+        while (!activating && t < 1)
+        {
+            t += Time.deltaTime / activateTimer;
+            myHint.position = Vector3.Lerp(orgPos, tarPos, t);
+            myHint.rotation = Quaternion.Lerp(orgRot, tarRot, t);
+            myHint.localScale = Vector3.Lerp(orgScale, tarScale, t);
+            yield return null;
+        }
+        yield break;
+    }
+    private IEnumerator deactivateHint(Transform myHint)
+    {
+        activating = false;
+        currentHint = null;
+        Vector3 orgPos = myHint.position;
+        Quaternion orgRot = myHint.rotation;
+        Vector3 tarPos = deactivePos.position;
+        Quaternion tarRot = deactivePos.rotation;
+        Vector3 orgScale = myHint.localScale;
+        Vector3 tarScale = Vector3.zero;
+        float t = 0;
+        while (t < hintTimerStay && !activating)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+        if (activating)
+            yield break;
+        t = 0;
+        while (!activating && t < 1)
+        {
+            t += Time.deltaTime / activateTimer;
+            myHint.position = Vector3.Lerp(orgPos, tarPos, t);
+            myHint.rotation = Quaternion.Lerp(orgRot, tarRot, t);
+            myHint.localScale = Vector3.Lerp(orgScale, tarScale, t);
+            yield return null;
+        }
+        for (int x = 1; x < myHint.childCount; ++x)
+        {
+            myHint.GetChild(x).GetComponent<LineRenderer>().enabled = false;
+        }
+        yield break;
+    }
+    private IEnumerator activateHint(Transform myHint)
+    {
+        if (currentHint != null)
+        {
+            StartCoroutine(deactivateHint(currentHint));
+            yield return new WaitForSeconds(activateTimer);
+        }
+        currentHint = myHint;
+        activating = true;
+        float t = 0;
+        Vector3 orgPos = myHint.position;
+        Quaternion orgRot = myHint.rotation;
+        Vector3 tarPos = activePos.position;
+        Quaternion tarRot = activePos.rotation;
+        Vector3 orgScale = myHint.localScale;
+        Vector3 tarScale = Vector3.one;
+        for (int x = 1; x < myHint.childCount; ++x)
+        {
+            myHint.GetChild(x).GetComponent<LineRenderer>().enabled = true;
+        }
+        while (activating && t < 1)
+        {
+            t += Time.deltaTime / activateTimer;
+            myHint.position = Vector3.Lerp(orgPos, tarPos, t);
+            myHint.rotation = Quaternion.Lerp(orgRot, tarRot, t);
+            myHint.localScale = Vector3.Lerp(orgScale, tarScale, t);
+            yield return null;
+        }
+        yield break;
+    }
+    private IEnumerator automaticDeactivate(Transform hint)
+    {
+        yield return new WaitForSeconds(autoDisableTime);
+        StartCoroutine(deactivateHint(hint));
+        if (firstBox)
+        {
+            yield return new WaitForSeconds(activateTimer);
+            StartCoroutine(activateHint(markHint));
+            StartCoroutine(automaticDeactivate(markHint));
+            firstBox = false;
+        }
+        yield break;
+    }
     private void boxAtTable(BoxBehaviour BB)
     {
+        if (firstBox)
+        {
+            StartCoroutine(activateHint(flagHint));
+            StartCoroutine(automaticDeactivate(flagHint));
+        }
+        interactionDone = false;
+        sliderHint.GetChild(3).GetComponent<hintDrawLineTo>().target = BB.transform;
         this.BB = BB;
         interactable = false;
         tTitle.gameObject.SetActive(true);
@@ -177,7 +318,20 @@ public class BoxInterfaceScreen : MonoBehaviour {
             tTextField[i].GetComponent<Selectable>().enabled = interactable;
         }
         UpdateImages();
+        StartCoroutine(waitforExpectedinteraction(sliderHint));
     }
+
+    private IEnumerator waitforExpectedinteraction(Transform hint)
+    {
+        float t = 0;
+        while (t < interactionWaitTime)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+        StartCoroutine(activateHint(hint));
+    }
+
     private void stringSize(Text t, String s)
     {
         t.text = FormatHandler.FormatCategory(s);
@@ -190,6 +344,8 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     public void ClickTextField(int childIndex)
     {
+        interactionDone = true;
+        StartCoroutine(deactivateHint(markHint));
         for (int i = 0; i < tTextField.Length; i++)
         {
             if(childIndex == i)
@@ -251,9 +407,15 @@ public class BoxInterfaceScreen : MonoBehaviour {
         BB.setTapeRip(f);
         if (f > 0.95f)
         {
+            interactionDone = true;
             EventManager.DisableAllMarkers();
             BB.setTapeRip(1.0f);
-
+            StartCoroutine(deactivateHint(sliderHint));
+            if(!firstBox)
+            {
+                print("nextslidewait");
+                StartCoroutine(waitforExpectedinteraction(nextSlideHint));
+            }
         }
     }
 
