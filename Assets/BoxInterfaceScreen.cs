@@ -22,6 +22,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public bool isScrolling = false;
     int tTextfieldplaceInt;
     LuxusSegmentHandler LSH;
+    float SPRINGBOUYS = 50;
     private int baseFontSize =  100;
     private int stringLengthCutoff = 15;
     
@@ -304,8 +305,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         if (!isScrolling && tFullTextField.gameObject.activeSelf)
         {
             scrollSpeed = tFullTextField.localPosition.y - prevY[1];
-            if(scrollSpeed < 10)
-                tFullTextField.localPosition += Vector3.up * scrollSpeed * 30 * Time.deltaTime;
+            tFullTextField.localPosition += ((Vector3.up / SPRINGBOUYS)  * scrollSpeed) / Time.deltaTime;
             for (int i = 0; i < enabledTextFields; i++)
             {
                 tTextField[i].transform.localPosition -= Vector3.right * tTextField[i].transform.localPosition.x * 5f * Time.deltaTime;
