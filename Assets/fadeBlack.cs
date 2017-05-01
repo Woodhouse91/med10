@@ -9,6 +9,7 @@ public class fadeBlack : MonoBehaviour {
     public float fadeTime;
     GameObject global;
 
+
 	// Use this for initialization
 	void Start () {
         mat = GetComponent <MeshRenderer>();
