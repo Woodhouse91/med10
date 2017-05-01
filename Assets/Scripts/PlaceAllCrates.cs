@@ -146,6 +146,7 @@ public class PlaceAllCrates : MonoBehaviour {
 
     public IEnumerator ExpandCrateAt_Cat_Month(int rowNumber, int Month, float percent)
     {
+        /*
         percent = percent / 4f; // EFTER AT HYLDERNE ER BLEVET SMÅ
         int month = Month + 1; 
         Vector3 start = originCrateSize;
@@ -168,6 +169,7 @@ public class PlaceAllCrates : MonoBehaviour {
             ListOfCrates[month, rowNumber].transform.localScale = Vector3.Lerp(start, end, t);
             yield return null;
         }
+        */
         yield return null;
     }
 
@@ -259,7 +261,7 @@ public class PlaceAllCrates : MonoBehaviour {
         for (int i = 0; i < 12; i++)
         {
             GameObject month = Instantiate(MonthCrate);
-            month.transform.position = ListOfCrates[i + 1,0].transform.position + ListOfCrates[i + 1, 0].transform.forward  / 2f;
+            month.transform.position = ListOfCrates[i + 1,0].transform.position + ListOfCrates[i + 1, 0].transform.forward  / 8f; //8 i stedet for 2 fordi cratesne er 4 gange mindre
             month.transform.rotation = ListOfCrates[i + 1, 0].transform.rotation * Quaternion.AngleAxis(90f,Vector3.up);
             month.GetComponentInChildren<TextMesh>().text = monthToString((startMonth + i) % 12);
         }
@@ -301,7 +303,7 @@ public class PlaceAllCrates : MonoBehaviour {
     {
         while (!firstCratesPlaced) //wait for the crates to be placed
             yield return new WaitForEndOfFrame();
-
+        float MoveDownFloor = 0;
 
         for (int i = 1; i < 13 ; i++) //runs through all the crates
         {
@@ -310,8 +312,18 @@ public class PlaceAllCrates : MonoBehaviour {
                 ListOfCrates[i,k] = Instantiate(Crate, transform);
                 ListOfCrates[i,k].transform.position = ListOfCrates[i, 0].transform.position + Vector3.down * SizeOfCrate.y * k;
                 ListOfCrates[i, k].transform.rotation = ListOfCrates[i, 0].transform.rotation;
+                if(i==1)
+                {
+                    transform.localPosition += Vector3.up * SizeOfCrate.y;
+                    if (k > 8)
+                        MoveDownFloor += SizeOfCrate.y;
+                }
             }
         }
+        if (MoveDownFloor > 1)
+            MoveDownFloor = 1;
+        transform.parent.position -= Vector3.up * MoveDownFloor;
+
     }
     int findRowNumber ()
     {
