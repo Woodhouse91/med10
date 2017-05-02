@@ -102,7 +102,7 @@ public class BalanceWeight : MonoBehaviour {
     {
         Quaternion rot = måler.transform.localRotation;
         Quaternion pilRot = pil.transform.localRotation;
-        Quaternion newPilRot = Quaternion.AngleAxis(-90, Vector3.right) * Quaternion.AngleAxis(-curAngle * 3f, Vector3.forward); // 3 gange mere rotation for pilen
+        Quaternion newPilRot = Quaternion.AngleAxis(-90, Vector3.right) * Quaternion.AngleAxis(-curAngle * 1.57142857143f, Vector3.forward); // 2.57142857143 gange 35 = 90 mere rotation for pilen
         Quaternion newRot = Quaternion.AngleAxis(-curAngle, Vector3.up);
         float t = 0;
         while(t < 1) //BGA AC skal alting ganges med 2

@@ -124,17 +124,17 @@ public class BoxInterfaceScreen : MonoBehaviour {
         {
             for (int j = 0; j < FlaggedItem.Count; j++)
             {
-                if (tTextField[i].GetChild(1).GetComponent<Text>().text == FormatHandler.FormatCategory(DataHandler.BudgetCategories[FlaggedItem[j]]))
+                if (tTextField[i].GetChild(2).GetComponent<Text>().text == FormatHandler.FormatCategory(DataHandler.BudgetCategories[FlaggedItem[j]]))
                 {
-                    tTextField[i].GetChild(0).GetComponent<Image>().sprite = Flagged;
+                    tTextField[i].GetChild(1).GetComponent<Image>().sprite = Flagged;
                     break;
                 }
                 else
-                    tTextField[i].GetChild(0).GetComponent<Image>().sprite = Unflagged;
+                    tTextField[i].GetChild(1).GetComponent<Image>().sprite = Unflagged;
             }
             if(FlaggedItem.Count == 0)
             {
-                tTextField[i].GetChild(0).GetComponent<Image>().sprite = Unflagged;
+                tTextField[i].GetChild(1).GetComponent<Image>().sprite = Unflagged;
             }
         }
     }
