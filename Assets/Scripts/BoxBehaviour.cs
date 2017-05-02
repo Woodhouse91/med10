@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -65,7 +64,6 @@ public class BoxBehaviour : MonoBehaviour {
         if (GetComponent<AddMoneyToTable>() != null)
             return;
         BoxBehaviour[] bb = FindObjectsOfType<BoxBehaviour>();
-        print(bb.Length);
         List<BoxBehaviour> b = new List<BoxBehaviour>();
         for (int i = 0; i < bb.Length; i++)
         {
@@ -73,12 +71,11 @@ public class BoxBehaviour : MonoBehaviour {
                 continue;
             b.Add(bb[i]);
         }
-        print(b.Count);
-        for(int x = 0; x<b.Count-1; ++x)
+        for(int x = 0; x<b.Count; ++x)
         {
-            for(int y = 1; y < b.Count; ++y)
+            for(int y = 0; y < b.Count; ++y)
             {
-                if (b[x].tMoneyAtCrate > b[y].tMoneyAtCrate)
+                if (b[x].tMoneyAtCrate < b[y].tMoneyAtCrate)
                 {
                     BoxBehaviour temp = b[x];
                     b[x] = b[y];
@@ -91,7 +88,6 @@ public class BoxBehaviour : MonoBehaviour {
             if (b[x] == this)
             {
                 bigmodelTarget = bigmodelPos[x];
-                print(this);
                 break;
             }
         }
@@ -271,8 +267,8 @@ public class BoxBehaviour : MonoBehaviour {
             yield return null;
         }
         Transform target = bigmodelTarget;
-        Vector3 endPos = target.position;
-        Vector3 tarScale = Vector3.one * CubicRoot((2 + ((float)DataHandler.tExpense / tMoneyAtCrate)));
+        Vector3 tarScale = Vector3.one *  CubicRoot(40000f * tMoneyAtCrate / ((float)DataHandler.tExpense));
+        Vector3 endPos = target.position + Vector3.up * 3f;
         Quaternion endRot = target.rotation;
         model.GetComponent<Rigidbody>().isKinematic = true;
         Vector3 startPos = model.position;
@@ -333,33 +329,47 @@ public class BoxBehaviour : MonoBehaviour {
     public void Throw()
     {
         rig.isKinematic = false;
-        Vector3 forceDir = EventManager.Table.right * FORCEIT.x + EventManager.Table.forward * FORCEIT.z + EventManager.Table.up * FORCEIT.y;
+        BoxCollider[] BC = GetComponentsInChildren<BoxCollider>();
+        for (int i = 0; i < BC.Length; i++)
+        {
+            BC[i].enabled = false;
+        }
+        Vector3 forceDir = EventManager.Table.right * Random.Range(-1500,1500) + EventManager.Table.forward * 2000 + EventManager.Table.up * 1000;
         rig.AddForce(forceDir);
         rig.AddTorque(forceDir);
+        StartCoroutine(DestroyMeNextSummer());
     }
-    /*void CreateBagsOfMoney(int _month, Transform target)
+
+    private IEnumerator DestroyMeNextSummer()
     {
-        float bags = moneyAtCrate[_month] / BagValue;
+        yield return new WaitForSeconds(10f);
+        gameObject.SetActive(false);
+        yield return null;
+    }
 
-        for (int i = 0; i < bags; i++)
-        {
-            Transform BoM = Instantiate(BagOfMoney);
-            if (bagSize == 0)
-            {
-                bagSize = BoM.GetComponent<Collider>().bounds.size.y;
-                print("bagsize er : " + bagSize);
-            }
-            BoM.localScale = Vector3.zero;
-            BoM.position = target.position + Vector3.up * (target.GetComponent<Collider>().bounds.size.y * 0.8f - bagSize / 2f) + Vector3.right * (target.GetComponent<Collider>().bounds.size.x * 0.8f * UnityEngine.Random.Range(-0.4f, 0.4f));
-            BoM.rotation = target.rotation;
-            BoM.gameObject.AddComponent<ChildTo>().Initiate(target);
-            if (bags - i >= 1f)
-                StartCoroutine(ExpandBag(1f, i, BoM, target));
-            else
-                StartCoroutine(ExpandBag(bags % 1, i, BoM, target));
-        }
+    /*void CreateBagsOfMoney(int _month, Transform target)
+{
+   float bags = moneyAtCrate[_month] / BagValue;
 
-    }*/
+   for (int i = 0; i < bags; i++)
+   {
+       Transform BoM = Instantiate(BagOfMoney);
+       if (bagSize == 0)
+       {
+           bagSize = BoM.GetComponent<Collider>().bounds.size.y;
+           print("bagsize er : " + bagSize);
+       }
+       BoM.localScale = Vector3.zero;
+       BoM.position = target.position + Vector3.up * (target.GetComponent<Collider>().bounds.size.y * 0.8f - bagSize / 2f) + Vector3.right * (target.GetComponent<Collider>().bounds.size.x * 0.8f * UnityEngine.Random.Range(-0.4f, 0.4f));
+       BoM.rotation = target.rotation;
+       BoM.gameObject.AddComponent<ChildTo>().Initiate(target);
+       if (bags - i >= 1f)
+           StartCoroutine(ExpandBag(1f, i, BoM, target));
+       else
+           StartCoroutine(ExpandBag(bags % 1, i, BoM, target));
+   }
+
+}*/
 
     private IEnumerator FallAndChildTo(Transform obj, Transform target)
     {
@@ -377,6 +387,7 @@ public class BoxBehaviour : MonoBehaviour {
         }
         obj.gameObject.AddComponent<ChildTo>();
         obj.GetComponent<ChildTo>().Initiate(target);
+        obj.GetComponent<Collider>().enabled = false;
         yield return null;
     }
 /*

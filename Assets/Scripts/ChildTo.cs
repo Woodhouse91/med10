@@ -11,12 +11,12 @@ public class ChildTo : MonoBehaviour {
         Parent = parent;
         if(GetComponent<Rigidbody>()!=null)
             Destroy(GetComponent<Rigidbody>());
-       // if (GetComponent<Collider>() != null)
-       //     Destroy(GetComponent<Collider>());
+       //if (GetComponent<Collider>() != null)
+       //    Destroy(GetComponent<Collider>());
         if (GetComponentInChildren<Rigidbody>() != null)
             Destroy(GetComponentInChildren<Rigidbody>());
-       // if (GetComponentInChildren<Collider>() != null)
-       //     Destroy(GetComponentInChildren<Collider>());
+       //if (GetComponentInChildren<Collider>() != null)
+       //    Destroy(GetComponentInChildren<Collider>());
         posOffset = transform.position - parent.position;
     }
     void Update () {
