@@ -49,7 +49,7 @@ public class BoxBehaviour : MonoBehaviour {
         Ax = spawnArea.lossyScale.x / 2.5f;
         Ay = spawnArea.lossyScale.y / 2.5f;
         Az = spawnArea.lossyScale.z / 2.5f;
-        bigmodelTarget = GameObject.Find("KappaRappa123").transform;
+       
     }
 
     public void modelsForShelves(int category)
