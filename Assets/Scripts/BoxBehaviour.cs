@@ -18,12 +18,15 @@ public class BoxBehaviour : MonoBehaviour {
     public int[] moneyAtCrate;
     Transform MovingUp;
     BoxInterfaceScreen bis;
+    [SerializeField]
+    Transform bigmodelTarget;
 
     private float BagValue;
     private int maxValueOfAMonth;
     float bagSize;
     public float spawnBagDelay = 1f;
     public Transform BagOfMoney;
+    private int tMoneyAtCrate = 0;
 
     //fra money intro handler
     Vector3 defaultModelScale;
@@ -31,6 +34,7 @@ public class BoxBehaviour : MonoBehaviour {
     PlaceAllCrates pac;
 
     private float defaultScaleTime = 1.5f;
+    private float bigModelOffset = 1f;
 
     // Use this for initialization
     void Start () {
@@ -50,6 +54,7 @@ public class BoxBehaviour : MonoBehaviour {
 
     public void modelsForShelves(int category)
     {
+        tMoneyAtCrate = 0;
         //string modelInt = GetComponentInChildren<Sprite>().name;
         categoryModel = category;
         CategoryInt = new List<int>();
@@ -67,6 +72,7 @@ public class BoxBehaviour : MonoBehaviour {
         {
             for (int j = 0; j < CategoryInt.Count; j++)
             {
+                tMoneyAtCrate+= DataHandler.expenseData[i, CategoryInt[j]];
                 moneyAtCrate[i - 1] += DataHandler.expenseData[i, CategoryInt[j]];
             }
         }
@@ -195,12 +201,18 @@ public class BoxBehaviour : MonoBehaviour {
                 pac.FlipCrate(EventManager.CurrentCategory, i);
             }
         }
+        GameObject go = Instantiate(CategoryModelHandler.GetAt(categoryModel).gameObject);
+        StartCoroutine(FlyModelsToShelves(go.transform, -1));
         yield return new WaitForSeconds(0.5f);
         EventManager.BoxEmptied();
         Throw();
         yield return null;
     }
-
+    float CubicRoot(float n)
+    {
+        float root = Mathf.Pow(n, (1.0f / 3.0f));
+        return root;
+    }
     private IEnumerator FlyModelsToShelves(Transform model,int CrateMonth)
     {
         float t = 0;
@@ -212,9 +224,18 @@ public class BoxBehaviour : MonoBehaviour {
         model.GetComponent<Rigidbody>().isKinematic = true;
         Transform target = pac.GetCrate(EventManager.CurrentCategory, CrateMonth);
         Vector3 endPos = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).position + Vector3.up * 0.125f; // EFTER HYLDERNE ER BLEVET SMÅ
+        Vector3 tarScale = defaultModelScale;
         Vector3 startPos = model.position;
         Quaternion startRot = model.rotation;
         Quaternion endRot = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).rotation;
+        if (CrateMonth == -1)
+        {
+            target = bigmodelTarget;
+            endPos = target.right * ((-DataHandler.tCombinedCategories / 2 + EventManager.CurrentCategory) * bigModelOffset);
+            tarScale = Vector3.one * CubicRoot((2 + ((float)DataHandler.tExpense / tMoneyAtCrate)*2));
+            endRot = target.rotation;
+        }
+    
         t = 0;
         while (t<1f)
         {
@@ -223,8 +244,8 @@ public class BoxBehaviour : MonoBehaviour {
             model.rotation = Quaternion.Lerp(startRot, endRot, t);
             yield return null;
         }
-        model.SetParent(MovingUp, true);
-        Vector3 tarScale = defaultModelScale;
+        if(CrateMonth!=-1)
+            model.SetParent(MovingUp, true);
         float ttt = 0;
         while (ttt <= defaultScaleTime)
         {
@@ -233,6 +254,8 @@ public class BoxBehaviour : MonoBehaviour {
             yield return null;
         }
         ttt = 0;
+        if (CrateMonth == -1)
+            yield break;
         tarScale = defaultModelScale * (1f + moneyAtCrate[CrateMonth]*12f / DataHandler.tExpense); // times 12 because of single crate expanding
         StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, CrateMonth, moneyAtCrate[CrateMonth] * 12f / DataHandler.tExpense));
         while (ttt <= EventManager.scaleTime)
@@ -249,8 +272,8 @@ public class BoxBehaviour : MonoBehaviour {
         }
        StartCoroutine(FallAndChildTo(model, target));
         model.tag = "ModelOnShelf";
-       //CreateBagsOfMoney(CrateMonth, target);
-        yield return null;
+        //CreateBagsOfMoney(CrateMonth, target);
+        yield break;
     }
 
     public void Throw()
