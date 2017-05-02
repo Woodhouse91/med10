@@ -14,7 +14,7 @@ public class PlaceAllCrates : MonoBehaviour {
     Vector3 originCrateSize;
     GameObject flagObj;
     bool firstCratesPlaced = false;
-    
+    float MoveDownFloor = 0;
 
     // Use this for initialization
     void Start () {
@@ -33,7 +33,7 @@ public class PlaceAllCrates : MonoBehaviour {
         SizeOfBudget = DataHandler.BudgetCategories.Count;
         ListOfCrates = new GameObject[14, SizeOfBudget];
         PlaceThemAll(SizeOfBudget);
-        PlaceTheMonths();
+        
         //PlaceAllRows(); CardboardManager kalder det
     }
 
@@ -261,15 +261,15 @@ public class PlaceAllCrates : MonoBehaviour {
     }
 
 
-    public void PlaceTheMonths()
+    public void PlaceTheMonths(int _sizeOfBudget)
     {
         int startMonth = DataHandler.startMonth;
         
         for (int i = 0; i < 12; i++)
         {
             GameObject month = Instantiate(MonthCrate);
-            month.transform.position = ListOfCrates[i + 1,0].transform.position + ListOfCrates[i + 1, 0].transform.forward  / 8f; //8 i stedet for 2 fordi cratesne er 4 gange mindre
-            month.transform.rotation = ListOfCrates[i + 1, 0].transform.rotation * Quaternion.AngleAxis(90f,Vector3.up);
+            month.transform.position = ListOfCrates[i + 1,_sizeOfBudget-1].transform.position + ListOfCrates[i + 1, _sizeOfBudget-1].transform.forward  / 8f; //8 i stedet for 2 fordi cratesne er 4 gange mindre
+            month.transform.rotation = ListOfCrates[i + 1, _sizeOfBudget-1].transform.rotation * Quaternion.AngleAxis(90f,Vector3.up);
             month.GetComponentInChildren<TextMesh>().text = monthToString((startMonth + i) % 12);
         }
     }
@@ -279,29 +279,29 @@ public class PlaceAllCrates : MonoBehaviour {
         switch (x)
         {
             case 0:
-                return "Januar";
+                return "Jan";
             case 1:
-                return "Februar";
+                return "Feb";
             case 2:
-                return "Marts";
+                return "Mar";
             case 3:
-                return "April";
+                return "Apr";
             case 4:
                 return "Maj";
             case 5:
-                return "Juni";
+                return "Jun";
             case 6:
-                return "Juli";
+                return "Jul";
             case 7:
-                return "August";
+                return "Aug";
             case 8:
-                return "September";
+                return "Sep";
             case 9:
-                return "Oktober";
+                return "Okt";
             case 10:
-                return "November";
+                return "Nov";
             case 11:
-                return "December";
+                return "Dec";
             default:
                 return "Null";
         }
@@ -310,7 +310,7 @@ public class PlaceAllCrates : MonoBehaviour {
     {
         while (!firstCratesPlaced) //wait for the crates to be placed
             yield return new WaitForEndOfFrame();
-        float MoveDownFloor = 0;
+       MoveDownFloor = 0;
 
         for (int i = 1; i < 13 ; i++) //runs through all the crates
         {
@@ -330,7 +330,7 @@ public class PlaceAllCrates : MonoBehaviour {
         if (MoveDownFloor > 1)
             MoveDownFloor = 1;
         transform.parent.position -= Vector3.up * MoveDownFloor;
-
+        PlaceTheMonths(_sizeOfBudget);
     }
     int findRowNumber ()
     {
