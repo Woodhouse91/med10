@@ -39,7 +39,14 @@ public class PlaceAllCrates : MonoBehaviour {
 
     public Transform GetCrate(int category, int month)
     {
-        return ListOfCrates[month+1, category].transform;
+        try
+        {
+            return ListOfCrates[month + 1, category].transform;
+        }
+        catch
+        {
+            return null;
+        }
     }
     
     public int GetExpenseDataFromCrate(Transform crate) //Expensive method for getting the expenseData for the specific crate

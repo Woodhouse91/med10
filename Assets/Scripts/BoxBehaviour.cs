@@ -18,7 +18,6 @@ public class BoxBehaviour : MonoBehaviour {
     public int[] moneyAtCrate;
     Transform MovingUp;
     BoxInterfaceScreen bis;
-    [SerializeField]
     Transform bigmodelTarget;
 
     private float BagValue;
@@ -34,7 +33,7 @@ public class BoxBehaviour : MonoBehaviour {
     PlaceAllCrates pac;
 
     private float defaultScaleTime = 1.5f;
-    private float bigModelOffset = 1f;
+    private float bigModelOffset = .5f;
 
     // Use this for initialization
     void Start () {
@@ -50,6 +49,7 @@ public class BoxBehaviour : MonoBehaviour {
         Ax = spawnArea.lossyScale.x / 2.5f;
         Ay = spawnArea.lossyScale.y / 2.5f;
         Az = spawnArea.lossyScale.z / 2.5f;
+        bigmodelTarget = GameObject.Find("KappaRappa123").transform;
     }
 
     public void modelsForShelves(int category)
@@ -201,7 +201,10 @@ public class BoxBehaviour : MonoBehaviour {
                 pac.FlipCrate(EventManager.CurrentCategory, i);
             }
         }
-        GameObject go = Instantiate(CategoryModelHandler.GetAt(categoryModel).gameObject);
+        GameObject go = Instantiate(CategoryModelHandler.GetAt(categoryModel).gameObject,
+            transform.position + new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay),
+            Random.Range(-Az, Az)), Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360),
+            Vector3.forward));
         StartCoroutine(FlyModelsToShelves(go.transform, -1));
         yield return new WaitForSeconds(0.5f);
         EventManager.BoxEmptied();
@@ -221,19 +224,21 @@ public class BoxBehaviour : MonoBehaviour {
             t += Time.deltaTime;
             yield return null;
         }
+        Transform target = bigmodelTarget;
+        Vector3 endPos = target.position - target.right * ((-DataHandler.tCombinedCategories / 2 + EventManager.CurrentCategory) * bigModelOffset);
+        Vector3 tarScale = Vector3.one * CubicRoot((2 + ((float)DataHandler.tExpense / tMoneyAtCrate)));
+        Quaternion endRot = target.rotation;
         model.GetComponent<Rigidbody>().isKinematic = true;
-        Transform target = pac.GetCrate(EventManager.CurrentCategory, CrateMonth);
-        Vector3 endPos = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).position + Vector3.up * 0.125f; // EFTER HYLDERNE ER BLEVET SMÅ
-        Vector3 tarScale = defaultModelScale;
         Vector3 startPos = model.position;
         Quaternion startRot = model.rotation;
-        Quaternion endRot = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).rotation;
-        if (CrateMonth == -1)
+       
+        if (CrateMonth != -1)
         {
-            target = bigmodelTarget;
-            endPos = target.right * ((-DataHandler.tCombinedCategories / 2 + EventManager.CurrentCategory) * bigModelOffset);
-            tarScale = Vector3.one * CubicRoot((2 + ((float)DataHandler.tExpense / tMoneyAtCrate)*2));
-            endRot = target.rotation;
+            target = pac.GetCrate(EventManager.CurrentCategory, CrateMonth);
+            endPos = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).position + Vector3.up * 0.125f; // EFTER HYLDERNE ER BLEVET SMÅ
+            tarScale = defaultModelScale;
+            startRot = model.rotation;
+            endRot = pac.GetCrate(EventManager.CurrentCategory, CrateMonth).rotation;
         }
     
         t = 0;
