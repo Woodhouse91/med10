@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,6 +27,7 @@ public class BoxBehaviour : MonoBehaviour {
     public float spawnBagDelay = 1f;
     public Transform BagOfMoney;
     private int tMoneyAtCrate = 0;
+    private List<Transform> bigmodelPos;
 
     //fra money intro handler
     Vector3 defaultModelScale;
@@ -37,6 +39,13 @@ public class BoxBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        bigmodelPos = new List<Transform>();
+        Transform t = GameObject.FindWithTag("FloorModelPos").transform;
+        for(int x = 0; x<t.childCount; ++x)
+        {
+            bigmodelPos.Add(t.GetChild(x));
+        }
+        EventManager.OnBoxEmptied += sortPosList;
         MovingUp = GameObject.Find("MovingUp").transform;
         defaultModelScale = Vector3.one * 1; // var først 4 så 3 men nu 4 igen ! MEN NU ER HYLDERNE SMÅ SÅ NU FÅR DE 1
         pac = FindObjectOfType<PlaceAllCrates>();
@@ -49,7 +58,30 @@ public class BoxBehaviour : MonoBehaviour {
         Ax = spawnArea.lossyScale.x / 2.5f;
         Ay = spawnArea.lossyScale.y / 2.5f;
         Az = spawnArea.lossyScale.z / 2.5f;
-        bigmodelTarget = GameObject.Find("KappaRappa123").transform;
+    }
+
+    private void sortPosList()
+    {
+        BoxBehaviour[] b = FindObjectsOfType<BoxBehaviour>();
+
+        for(int x = 0; x<b.Length-1; ++x)
+        {
+            for(int y = 1; y < b.Length; ++y)
+            {
+                if (b[x].tMoneyAtCrate > b[y].tMoneyAtCrate)
+                {
+                    BoxBehaviour temp = b[x];
+                    b[x] = b[y];
+                    b[y] = temp;
+                }
+            }
+        }
+        for(int x = 0; x < b.Length; ++x)
+        {
+            if (b[x] == this)
+                bigmodelTarget = bigmodelPos[x];
+        }
+        EventManager.OnBoxEmptied -= sortPosList;
     }
 
     public void modelsForShelves(int category)
@@ -161,7 +193,7 @@ public class BoxBehaviour : MonoBehaviour {
         while (t < 1)
         {
             t += Time.deltaTime * 2f;
-            shakeVec = new Vector3(Random.Range(-AC.Evaluate(t), AC.Evaluate(t)), Random.Range(-AC.Evaluate(t), AC.Evaluate(t)), Random.Range(-AC.Evaluate(t), AC.Evaluate(t)));
+            shakeVec = new Vector3(UnityEngine.Random.Range(-AC.Evaluate(t), AC.Evaluate(t)), UnityEngine.Random.Range(-AC.Evaluate(t), AC.Evaluate(t)), UnityEngine.Random.Range(-AC.Evaluate(t), AC.Evaluate(t)));
             transform.position = startpos + shakeVec / 100f;
             yield return null;
         }
@@ -187,10 +219,10 @@ public class BoxBehaviour : MonoBehaviour {
             if(moneyAtCrate[i] > 0)
             {
                 GameObject model = CategoryModelHandler.GetAt(categoryModel).gameObject; // MODELS HERE THO
-                Vector3 pos = transform.position + new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay), Random.Range(-Az, Az));
+                Vector3 pos = transform.position + new Vector3(UnityEngine.Random.Range(-Ax, Ax), UnityEngine.Random.Range(-Ay, Ay), UnityEngine.Random.Range(-Az, Az));
                 Vector3 forceUp = new Vector3(0.1f, 5.5f, 0.1f);
                 //pos = transform.TransformPoint(pos);
-                model = Instantiate(model, pos, Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.forward));
+                model = Instantiate(model, pos, Quaternion.AngleAxis(UnityEngine.Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(UnityEngine.Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(UnityEngine.Random.Range(1, 360), Vector3.forward));
                 model.GetComponent<Rigidbody>().isKinematic = false;
                 model.GetComponent<Rigidbody>().AddForce(forceUp, ForceMode.VelocityChange);
                 StartCoroutine(FlyModelsToShelves(model.transform,i));
@@ -202,8 +234,8 @@ public class BoxBehaviour : MonoBehaviour {
             }
         }
         GameObject go = Instantiate(CategoryModelHandler.GetAt(categoryModel).gameObject,
-            transform.position + new Vector3(Random.Range(-Ax, Ax), Random.Range(-Ay, Ay),
-            Random.Range(-Az, Az)), Quaternion.AngleAxis(Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(Random.Range(1, 360),
+            transform.position + new Vector3(UnityEngine.Random.Range(-Ax, Ax), UnityEngine.Random.Range(-Ay, Ay),
+            UnityEngine.Random.Range(-Az, Az)), Quaternion.AngleAxis(UnityEngine.Random.Range(1, 360), Vector3.right) * Quaternion.AngleAxis(UnityEngine.Random.Range(1, 360), Vector3.up) * Quaternion.AngleAxis(UnityEngine.Random.Range(1, 360),
             Vector3.forward));
         StartCoroutine(FlyModelsToShelves(go.transform, -1));
         yield return new WaitForSeconds(0.5f);
@@ -260,7 +292,10 @@ public class BoxBehaviour : MonoBehaviour {
         }
         ttt = 0;
         if (CrateMonth == -1)
+        {
+            StartCoroutine(FallAndChildTo(model, target));
             yield break;
+        }
         tarScale = defaultModelScale * (1f + moneyAtCrate[CrateMonth]*12f / DataHandler.tExpense); // times 12 because of single crate expanding
         StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, CrateMonth, moneyAtCrate[CrateMonth] * 12f / DataHandler.tExpense));
         while (ttt <= EventManager.scaleTime)
@@ -301,7 +336,7 @@ public class BoxBehaviour : MonoBehaviour {
                 print("bagsize er : " + bagSize);
             }
             BoM.localScale = Vector3.zero;
-            BoM.position = target.position + Vector3.up * (target.GetComponent<Collider>().bounds.size.y * 0.8f - bagSize / 2f) + Vector3.right * (target.GetComponent<Collider>().bounds.size.x * 0.8f * Random.Range(-0.4f, 0.4f));
+            BoM.position = target.position + Vector3.up * (target.GetComponent<Collider>().bounds.size.y * 0.8f - bagSize / 2f) + Vector3.right * (target.GetComponent<Collider>().bounds.size.x * 0.8f * UnityEngine.Random.Range(-0.4f, 0.4f));
             BoM.rotation = target.rotation;
             BoM.gameObject.AddComponent<ChildTo>().Initiate(target);
             if (bags - i >= 1f)
