@@ -26,8 +26,8 @@ public class BoxBehaviour : MonoBehaviour {
     float bagSize;
     public float spawnBagDelay = 1f;
     public Transform BagOfMoney;
-    private int tMoneyAtCrate = 0;
-    private List<Transform> bigmodelPos;
+    public int tMoneyAtCrate = 0;
+    List<Transform> bigmodelPos;
 
     //fra money intro handler
     Vector3 defaultModelScale;
@@ -45,7 +45,7 @@ public class BoxBehaviour : MonoBehaviour {
         {
             bigmodelPos.Add(t.GetChild(x));
         }
-        EventManager.OnBoxEmptied += sortPosList;
+        EventManager.OnRipTapeSliderDone += sortPosList;
         MovingUp = GameObject.Find("MovingUp").transform;
         defaultModelScale = Vector3.one * 1; // var først 4 så 3 men nu 4 igen ! MEN NU ER HYLDERNE SMÅ SÅ NU FÅR DE 1
         pac = FindObjectOfType<PlaceAllCrates>();
@@ -62,11 +62,21 @@ public class BoxBehaviour : MonoBehaviour {
 
     private void sortPosList()
     {
-        BoxBehaviour[] b = FindObjectsOfType<BoxBehaviour>();
-
-        for(int x = 0; x<b.Length-1; ++x)
+        if (GetComponent<AddMoneyToTable>() != null)
+            return;
+        BoxBehaviour[] bb = FindObjectsOfType<BoxBehaviour>();
+        print(bb.Length);
+        List<BoxBehaviour> b = new List<BoxBehaviour>();
+        for (int i = 0; i < bb.Length; i++)
         {
-            for(int y = 1; y < b.Length; ++y)
+            if (bb[i].GetComponent<AddMoneyToTable>() != null)
+                continue;
+            b.Add(bb[i]);
+        }
+        print(b.Count);
+        for(int x = 0; x<b.Count-1; ++x)
+        {
+            for(int y = 1; y < b.Count; ++y)
             {
                 if (b[x].tMoneyAtCrate > b[y].tMoneyAtCrate)
                 {
@@ -76,12 +86,16 @@ public class BoxBehaviour : MonoBehaviour {
                 }
             }
         }
-        for(int x = 0; x < b.Length; ++x)
+        for(int x = 0; x < b.Count; ++x)
         {
             if (b[x] == this)
+            {
                 bigmodelTarget = bigmodelPos[x];
+                print(this);
+                break;
+            }
         }
-        EventManager.OnBoxEmptied -= sortPosList;
+        EventManager.OnRipTapeSliderDone -= sortPosList;
     }
 
     public void modelsForShelves(int category)
@@ -104,7 +118,7 @@ public class BoxBehaviour : MonoBehaviour {
         {
             for (int j = 0; j < CategoryInt.Count; j++)
             {
-                tMoneyAtCrate+= DataHandler.expenseData[i, CategoryInt[j]];
+                tMoneyAtCrate += DataHandler.expenseData[i, CategoryInt[j]];
                 moneyAtCrate[i - 1] += DataHandler.expenseData[i, CategoryInt[j]];
             }
         }
@@ -257,7 +271,7 @@ public class BoxBehaviour : MonoBehaviour {
             yield return null;
         }
         Transform target = bigmodelTarget;
-        Vector3 endPos = target.position - target.right * ((-DataHandler.tCombinedCategories / 2 + EventManager.CurrentCategory) * bigModelOffset);
+        Vector3 endPos = target.position;
         Vector3 tarScale = Vector3.one * CubicRoot((2 + ((float)DataHandler.tExpense / tMoneyAtCrate)));
         Quaternion endRot = target.rotation;
         model.GetComponent<Rigidbody>().isKinematic = true;
