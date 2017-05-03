@@ -18,7 +18,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
     bool velocityScrolling = false;
     bool categoryDoneBool = false;
     int enabledTextFields = 0;
-    bool interactable = false;
     public bool isScrolling = false;
     int tTextfieldplaceInt;
     LuxusSegmentHandler LSH;
@@ -182,10 +181,9 @@ public class BoxInterfaceScreen : MonoBehaviour {
     private IEnumerator waitForScaleOfModels()
     {
         yield return new WaitForSeconds(EventManager.scaleTime); 
-        interactable = true;
         for (int i = 0; i < enabledTextFields; i++)
         {
-            tTextField[i].GetComponent<Selectable>().enabled = interactable;
+            tTextField[i].GetComponent<Selectable>().enabled = false;
         }
         tNextSlidePlz.gameObject.SetActive(true);
 
@@ -302,7 +300,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
         interactionDone = false;
         sliderHint.GetChild(3).GetComponent<hintDrawLineTo>().target = BB.transform;
         this.BB = BB;
-        interactable = false;
         tTitle.gameObject.SetActive(true);
         tSlider.gameObject.SetActive(true);
         tTitle.GetComponent<Text>().text = BB.GetComponentInChildren<TextMesh>().text;
@@ -316,7 +313,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         {
             tTextField[i].gameObject.SetActive(true);
             stringSize(tTextField[i].GetComponentInChildren<Text>(), FormatHandler.FormatCategory(BB.CategoryString[i]));
-            tTextField[i].GetComponent<Selectable>().enabled = interactable;
+            tTextField[i].GetComponent<Selectable>().enabled = false;
         }
         UpdateImages();
         StartCoroutine(waitforExpectedinteraction(sliderHint));
@@ -349,7 +346,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         StartCoroutine(deactivateHint(markHint));
         for (int i = 0; i < tTextField.Length; i++)
         {
-            if(childIndex == i)
+            if(childIndex == i && tTextField[i].GetComponentInChildren<Selectable>().enabled == false)
                 tTextField[i].GetComponentInChildren<Selectable>().enabled = true;
             else
                 tTextField[i].GetComponentInChildren<Selectable>().enabled = false;
@@ -435,7 +432,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         {
             tTextField[i].gameObject.SetActive(true);
             stringSize(tTextField[i].GetComponentInChildren<Text>(), FormatHandler.FormatCategory(DataHandler.BudgetCategories[FlaggedItem[i]]));
-            tTextField[i].GetComponent<Selectable>().enabled = interactable;
+            tTextField[i].GetComponent<Selectable>().enabled = false;
         }
         UpdateImages();
     }
