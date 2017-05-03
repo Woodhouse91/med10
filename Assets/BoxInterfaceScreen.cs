@@ -47,7 +47,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         pac = FindObjectOfType<PlaceAllCrates>();
         FlaggedItem = new List<int>();
         DisableHeleLortet();
-        ReturnToPos = Vector3.zero; // START POSITION
+        ReturnToPos = new Vector3(0,0,0.001f); // START POSITION
         EventManager.OnBoxAtTable += boxAtTable;
         EventManager.OnBoxEmptied += boxEmptied;
         EventManager.OnCategoryDone += categoryDone;
