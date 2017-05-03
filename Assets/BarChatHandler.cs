@@ -8,8 +8,10 @@ public class BarChatHandler : MonoBehaviour {
     private int maxAmount;
     private int[][] differences;
     private float[] prevScales = new float[12];
+    private float[] barScales = new float[12];
     private float scaleTime = 1.5f;
     private Material negMat;
+    bool brokeZero = false;
 	// Use this for initialization
 	void Start () {
         bar = GameObject.Find("Barchartholder").transform;
@@ -24,7 +26,10 @@ public class BarChatHandler : MonoBehaviour {
     {
         for (int x = 0; x < 12; ++x)
         {
-            StartCoroutine(scale(bar.GetChild(1).GetChild(x + 12), prevScales[x], true));
+            if (barScales[x] < 0)
+                StartCoroutine(scalePrevious(bar.GetChild(1).GetChild(x), x));
+            else
+                StartCoroutine(scale(bar.GetChild(1).GetChild(x + 12), x));
         }
     }
 
@@ -32,11 +37,18 @@ public class BarChatHandler : MonoBehaviour {
     {
         for(int x = 0; x<s.moneyAtCrate.Length; ++x)
         {
-            prevScales[x] = getScale(s.moneyAtCrate[x]);
-            StartCoroutine(scale(bar.GetChild(1).GetChild(x), prevScales[x], false));
+            prevScales[x] = barScales[x];
+            barScales[x] -= getScale(s.moneyAtCrate[x]);
+            if (barScales[x] < 0)
+                StartCoroutine(scale(bar.GetChild(1).GetChild(x + 12), x));
+            else
+                StartCoroutine(scale(bar.GetChild(1).GetChild(x), x));
         }
     }
-
+    private Vector3 yVec(float yScale)
+    {
+        return new Vector3(1, yScale, 1);
+    }
     private void generateData()
     {
         maxAmount = 0;
@@ -49,7 +61,7 @@ public class BarChatHandler : MonoBehaviour {
             if (maxAmount < Mathf.Abs(DataHandler.monthlyDifference[x]))
                 maxAmount = Mathf.Abs(DataHandler.monthlyDifference[x]);
         }
-        for(int x = 0; x<11; ++x)
+        for(int x = 0; x<12; ++x)
         {
             if (maxAmount < DataHandler.incomeData[x])
                 maxAmount = DataHandler.incomeData[x];
@@ -62,27 +74,39 @@ public class BarChatHandler : MonoBehaviour {
         bar.GetChild(5).GetComponent<TextMesh>().text = FormatHandler.FormatCurrency(-(maxAmount / 2));
         for(int x = 0; x<12; ++x)
         {
-            bar.GetChild(1).GetChild(x).localScale = new Vector3(1, getScale(DataHandler.incomeData[x]), 1);
-            bar.GetChild(1).GetChild(x+12).localScale = new Vector3(1, getScale(DataHandler.incomeData[x]), 1);
+            barScales[x] = getScale(DataHandler.incomeData[x]);
+            prevScales[x] = barScales[x];
+            bar.GetChild(1).GetChild(x).localScale = yVec(barScales[x]);
+            bar.GetChild(1).GetChild(x + 12).localScale = yVec(barScales[x]);
         }
     }
     private float getScale(float val)
     {
         return val / maxAmount;
     }
-    private IEnumerator scale(Transform obj, float s, bool prev)
+    private IEnumerator scale(Transform obj, int id)
     {
-        if (s == 0)
-            yield break;
         float t = 0f;
-        float org = obj.localScale.y;
+        Vector3 org = obj.localScale;
+        Vector3 tar = yVec(barScales[id]);
         while (t < 1)
         {
             t += Time.deltaTime / scaleTime;
-            if (t > 1)
-                t = 1;
-            obj.localScale = new Vector3(1, org -s * t, 1);
-            if (obj.localScale.y < 0 && !prev)
+            obj.localScale = Vector3.Lerp(org, tar, t);
+            yield return null;
+        }
+        yield break;
+    }
+    private IEnumerator scalePrevious(Transform obj, int id)
+    {
+        float t = 0f;
+        Vector3 org = obj.localScale;
+        Vector3 tar = yVec(barScales[id]);
+        while (t < 1)
+        {
+            t += Time.deltaTime / scaleTime;
+            obj.localScale = Vector3.Lerp(org, tar, t);
+            if (obj.localScale.y < 0)
                 obj.GetChild(0).GetComponent<MeshRenderer>().material = negMat;
             yield return null;
         }
