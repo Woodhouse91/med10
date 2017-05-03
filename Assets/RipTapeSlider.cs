@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RipTapeSlider : MonoBehaviour {
 
@@ -39,6 +40,7 @@ public class RipTapeSlider : MonoBehaviour {
         tSlide.localPosition = startPos;
         GetComponentInChildren<Collider>().enabled = true;
         tSlide.GetComponent<SpriteRenderer>().enabled = true;
+        tSlide.GetComponent<Image>().enabled = true;
         Returning = false;
     }
 
@@ -63,6 +65,7 @@ public class RipTapeSlider : MonoBehaviour {
         if (1.0f - (Vector3.Distance(tSlide.localPosition, endPos) / startDist) > 0.95f)
         {
             tSlide.GetComponent<SpriteRenderer>().enabled = false;
+            tSlide.GetComponent<Image>().enabled = false;
             Ripped = true;
         }
         while (tSlide.localPosition != startPos)
