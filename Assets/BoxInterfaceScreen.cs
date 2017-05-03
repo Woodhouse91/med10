@@ -98,7 +98,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     private void categoryDone()
     {
-        interactionDone = true;
         firstActivate = false;
         StartCoroutine(deactivateHint(nextSlideHint));
         StartCoroutine(FadeOutScreen());
@@ -106,7 +105,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     public void FlagIt(Transform target)
     {
-        interactionDone = true;
         StartCoroutine(deactivateHint(flagHint));
         int flagNum = FindTransform(target);
         LuxusSegmentHandler.FlagCategory(flagNum);
@@ -235,7 +233,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         if (activating)
             yield break;
         t = 0;
-        while (!activating && t < 1)
+        while (t < 1)
         {
             t += Time.deltaTime / activateTimer;
             myHint.position = Vector3.Lerp(orgPos, tarPos, t);
@@ -299,7 +297,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
             StartCoroutine(activateHint(flagHint));
             StartCoroutine(automaticDeactivate(flagHint));
         }
-        interactionDone = false;
         sliderHint.GetChild(3).GetComponent<hintDrawLineTo>().target = BB.transform;
         this.BB = BB;
         interactable = false;
@@ -325,10 +322,13 @@ public class BoxInterfaceScreen : MonoBehaviour {
     private IEnumerator waitforExpectedinteraction(Transform hint)
     {
         float t = 0;
+        interactionDone = false;
         while (t < interactionWaitTime)
         {
             t += Time.deltaTime;
             yield return null;
+            if (interactionDone)
+                yield break;
         }
         StartCoroutine(activateHint(hint));
     }
@@ -345,7 +345,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     public void ClickTextField(int childIndex)
     {
-        interactionDone = true;
         StartCoroutine(deactivateHint(markHint));
         for (int i = 0; i < tTextField.Length; i++)
         {
@@ -399,6 +398,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
                 categoryDoneBool = true;
                 isScrolling = true;
                 EventManager.CategoryDone();
+                interactionDone = true;
             }
         }
     }
