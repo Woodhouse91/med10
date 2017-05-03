@@ -11,7 +11,9 @@ public class hint_ActivateWorldHint : MonoBehaviour {
     private bool firstActivate = true;
     private float hintTimerStay = 1.5f;
     private float hintTimerReset = 10f;
-    private float activateTimer = 1f;
+    private float activateTimer = .33f;
+    private bool activateDone = false;
+    private bool deActivateDone = false;
 	// Use this for initialization
 	void Start () {
         myHint.gameObject.SetActive(true);
@@ -31,6 +33,7 @@ public class hint_ActivateWorldHint : MonoBehaviour {
     }
     private IEnumerator deactivate()
     {
+        deActivateDone = false;
         activating = false;
         Vector3 orgPos = myHint.position;
         Quaternion orgRot = myHint.rotation;
@@ -39,13 +42,16 @@ public class hint_ActivateWorldHint : MonoBehaviour {
         Vector3 orgScale = myHint.localScale;
         Vector3 tarScale = Vector3.zero;
         float t = 0;
-        while(t<hintTimerStay && !activating)
+        if (!activateDone)
         {
-            t += Time.deltaTime;
-            yield return null;
+            while(t<hintTimerStay && !activating)
+            {
+                t += Time.deltaTime;
+                yield return null;
+            }
+            if (activating)
+                yield break;
         }
-        if (activating)
-            yield break;
         t = 0;
         while (!activating && t < 1)
         {
@@ -55,23 +61,28 @@ public class hint_ActivateWorldHint : MonoBehaviour {
             myHint.localScale = Vector3.Lerp(orgScale, tarScale, t);
             yield return null;
         }
+        deActivateDone = true;
         yield break;
     }
     private IEnumerator activate()
     {
         activating = true;
+        activateDone = false;
         float t = 0;
-        if (!firstActivate)
+        if (!deActivateDone)
         {
-            while(activating && t < hintTimerReset)
+            if (!firstActivate)
             {
-                t += Time.deltaTime;
-                yield return null;
+                while(activating && t < hintTimerReset)
+                {
+                    t += Time.deltaTime;
+                    yield return null;
+                }
             }
+            if (!activating)
+                yield break;
+            firstActivate = false;
         }
-        if (!activating)
-            yield break;
-        firstActivate = false;
         Vector3 orgPos = myHint.position;
         Quaternion orgRot = myHint.rotation;
         Vector3 tarPos = myHintPosActive.position;
@@ -87,6 +98,7 @@ public class hint_ActivateWorldHint : MonoBehaviour {
             myHint.localScale = Vector3.Lerp(orgScale, tarScale, t);
             yield return null;
         }
+        activateDone = true;
         yield break;
     }
 }
