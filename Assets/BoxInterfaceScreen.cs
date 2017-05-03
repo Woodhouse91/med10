@@ -34,7 +34,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     private Transform currentHint = null;
     private bool activating = false;
     private float hintTimerStay = 0f;
-    private float activateTimer = 1f;
+    private float activateTimer = .33f;
     private float autoDisableTime = 8f;
     private bool firstActivate = true;
     private bool interactionDone = true;
@@ -214,6 +214,8 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     private IEnumerator deactivateHint(Transform myHint)
     {
+        if (myHint != currentHint)
+            yield break;
         activating = false;
         currentHint = null;
         Vector3 orgPos = myHint.position;

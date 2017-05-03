@@ -50,6 +50,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Quaternion xRot = Quaternion.AngleAxis(_xRot, Vector3.right);
     private static Quaternion yRot = Quaternion.AngleAxis(_yRot, Vector3.up);
     private static Quaternion zRot = Quaternion.AngleAxis(_zRot, Vector3.forward);
+    private const int maxChars = 10;
 
 
     // Use this for initialization
@@ -194,7 +195,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             scaledOffset += (scaleFactor);
             activeSegments[x].localScale += Vector3.up*scaleFactor;
             activeSegments[x].localRotation = Quaternion.Euler(90, -180, 0);
-            activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = FormatHandler.FormatCategory(s.CategoryString[x]);
+            activeSegments[x].GetChild(0).GetChild(0).GetComponent<TextMesh>().text = luxusFormat(FormatHandler.FormatCategory(s.CategoryString[x]));
             activeSegments[x].GetChild(0).GetChild(1).GetComponent<TextMesh>().text = FormatHandler.FormatCurrency(DataHandler.expenseData[13, s.CategoryInt[x]]);
             Vector3 texScale = activeSegments[x].GetChild(0).GetChild(0).localScale;
             texScale.x /= (scaleFactor+1);
@@ -207,19 +208,48 @@ public class LuxusSegmentHandler : MonoBehaviour {
         markObjGen(activeSegments.Count);
         ExposeTable();
     }
+    private string luxusFormat(string s)
+    {
+        if (s.Length > 10)
+        {
+            int charCount = 0;
+            string res = string.Empty;
+            if(s.Contains(" "))
+            {
+                int lastSpace = 0;
+                for(int x = 0; x<s.Length; ++x)
+                {
+                    charCount++;
+                    if (s[x] == ' ')
+                        lastSpace = x;
+                    if (charCount > maxChars && lastSpace!=0)
+                    {
+                        charCount = 0;
+                        s.Insert(lastSpace, "\b\n");
+                        lastSpace = 0;
+                    }
+                }
+            }
+            else
+            {
+                for (int x = 0; x < s.Length; ++x)
+                {
+                    charCount++;
+                    if (charCount > maxChars)
+                    {
+                        s.Insert(x, "-");
+                        charCount = 0;
+                    }
+                }
+            }
+        }
+        return s;
+    }
     private static void markObjGen(int c)
     {
         flagObj = new GameObject[c];
     }
-    private string formatCurrency(int val)
-    {
-        decimal moneyvalue = val;
-        string res = String.Format("{0:N}", moneyvalue);
-        res = res.Remove(res.Length - 3);
-        res = res.Replace(",", ".");
-        res += ",-";
-        return res;
-    }
+   
     private void ExposeTable()
     {
         StartCoroutine(moveTable());
