@@ -306,6 +306,7 @@ public class BoxBehaviour : MonoBehaviour {
             StartCoroutine(FallAndChildTo(model, target));
             yield break;
         }
+/*
         tarScale = defaultModelScale * (1f + moneyAtCrate[CrateMonth]*12f / DataHandler.tExpense); // times 12 because of single crate expanding
         StartCoroutine(pac.ExpandCrateAt_Cat_Month(EventManager.CurrentCategory, CrateMonth, moneyAtCrate[CrateMonth] * 12f / DataHandler.tExpense));
         while (ttt <= EventManager.scaleTime)
@@ -320,6 +321,7 @@ public class BoxBehaviour : MonoBehaviour {
                 model.localScale = Vector3.Lerp(defaultModelScale, tarScale, ttt / EventManager.scaleTime);
             yield return null;
         }
+        */
        StartCoroutine(FallAndChildTo(model, target));
         model.tag = "ModelOnShelf";
         //CreateBagsOfMoney(CrateMonth, target);

@@ -150,7 +150,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         // FADE LORTET HER PLZ
         //Fis.FadeOutScreen();
         EventManager.DisableAllMarkers();
-        
+        isScrolling = true;
         List<CanvasRenderer> fadeList = new List<CanvasRenderer>();
         fadeList.AddRange(transform.parent.GetComponentsInChildren<CanvasRenderer>());
         float t = 0;
@@ -173,7 +173,13 @@ public class BoxInterfaceScreen : MonoBehaviour {
 
     private void boxEmptied()
     {
-        StartCoroutine(waitForScaleOfModels());
+        //StartCoroutine(waitForScaleOfModels());
+        for (int i = 0; i < enabledTextFields; i++)
+        {
+            tTextField[i].GetComponent<Selectable>().enabled = false;
+        }
+        tTitle.gameObject.SetActive(true);
+        tNextSlidePlz.gameObject.SetActive(true);
     }
 
     private IEnumerator waitForScaleOfModels()
@@ -292,6 +298,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     }
     private void boxAtTable(BoxBehaviour BB)
     {
+        isScrolling = false;
         if (firstBox)
         {
             StartCoroutine(activateHint(flagHint));
@@ -299,7 +306,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         }
         sliderHint.GetChild(3).GetComponent<hintDrawLineTo>().target = BB.transform;
         this.BB = BB;
-        tTitle.gameObject.SetActive(true);
+        //tTitle.gameObject.SetActive(true);
         tSlider.gameObject.SetActive(true);
         tTitle.GetComponent<Text>().text = BB.GetComponentInChildren<TextMesh>().text;
         tMask.gameObject.SetActive(true);
@@ -370,7 +377,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
                 tTextField[i] = tFullTextField.GetChild(i);
             tTextField[i].gameObject.SetActive(false);
         }
-      
+        transform.localPosition = Vector3.zero;
         tMask.gameObject.SetActive(false);
         tTitle.gameObject.SetActive(false);
         tFullTextField.gameObject.SetActive(false);
