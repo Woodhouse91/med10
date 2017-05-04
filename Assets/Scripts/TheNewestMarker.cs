@@ -158,7 +158,6 @@ public class TheNewestMarker : MonoBehaviour
         {
             if (Vector3.Distance(transform.localPosition, startPos) < 0.01f && isClicking == true)
             {
-               
                 //waiting for OnDisable()
             }
             else
@@ -187,13 +186,13 @@ public class TheNewestMarker : MonoBehaviour
                     Bis.isScrolling = false;
                     if (clickTarget != null)
                     {
-                        LuxusSegmentHandler.HighlightCategory(Bis.FindTransform(hit.transform));
                         Bis.ClickTextField(clickTarget.GetSiblingIndex());
+                        LuxusSegmentHandler.HighlightCategory(clickTarget.GetSiblingIndex());
                         clickTarget = null;
                     }
                     else
                     {
-                      //  Bis.InheritVelocity(FollowVelocity);    
+                        //  Bis.InheritVelocity(FollowVelocity);    
                     }
                     break;
                 case HitTarget.SliderHorizontal:
