@@ -178,8 +178,8 @@ public class TheNewestMarker : MonoBehaviour
     private void OnDisable()
     {
         print(hitTarget);
-        try
-        {
+        //try
+        //{
             switch (hitTarget)
             {
                 case HitTarget.FullTextField:
@@ -214,8 +214,8 @@ public class TheNewestMarker : MonoBehaviour
                 default:
                     break;
             }
-        }
-        catch { }
+        //}
+        //catch { }
         hitTarget = HitTarget.None;
        
     }

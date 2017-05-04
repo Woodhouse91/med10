@@ -437,6 +437,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     public static void HighlightCategory(int cat)
     {
+        print(cat);
         if (prevHighlight == cat && flaggedList.Contains(cat))
         {
             setMat(cat, FlaggedMat);
@@ -485,7 +486,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
         {
             setEndMat(cat, NormalMat);
             Destroy(_luxusTables[cat].parent.GetChild(_luxusTables[cat].childCount - 1));
-            _flaggedTables.Remove(_luxusTables[cat]));
+            _flaggedTables.Remove(_luxusTables[cat]);
         }
         else // FLAG
         {
