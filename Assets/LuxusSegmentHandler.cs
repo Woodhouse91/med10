@@ -45,7 +45,8 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Quaternion xRot = Quaternion.AngleAxis(_xRot, Vector3.right);
     private static Quaternion yRot = Quaternion.AngleAxis(_yRot, Vector3.up);
     private static Quaternion zRot = Quaternion.AngleAxis(_zRot, Vector3.forward);
-    private const int maxChars = 10;
+    private const int maxChars = 5;
+    public static bool activeTable = false;
 
 
     // Use this for initialization
@@ -61,6 +62,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
         holder = GameObject.Find("Segmentholder").transform;
         EventManager.OnExcelDataLoaded += PoolSegments;
         EventManager.OnCategoryDone += ReleaseTable;
+        EventManager.OnCategoryFinished += ReleaseTable;
         _flaggedTables = new List<Transform>();
         staticStart();
 	}
@@ -75,14 +77,11 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     void Unsub()
     {
-        try
-        {
-            EventManager.OnBoxAtTable -= GenerateTable;
-            EventManager.OnRipTapeSliderDone -= MoveMoneyToTable;
-            EventManager.OnExcelDataLoaded -= PoolSegments;
-            EventManager.OnCategoryDone -= ReleaseTable;
-        }
-        catch { }
+        EventManager.OnBoxAtTable -= GenerateTable;
+        EventManager.OnRipTapeSliderDone -= MoveMoneyToTable;
+        EventManager.OnExcelDataLoaded -= PoolSegments;
+        EventManager.OnCategoryDone -= ReleaseTable;
+        EventManager.OnCategoryFinished -= ReleaseTable;
     }
     private void OnApplicationQuit()
     {
@@ -207,7 +206,8 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     private string luxusFormat(string s)
     {
-        if (s.Length > 10)
+        bool doBreak = false;
+        if (s.Length > maxChars)
         {
             int charCount = 0;
             string res = string.Empty;
@@ -219,11 +219,20 @@ public class LuxusSegmentHandler : MonoBehaviour {
                     charCount++;
                     if (s[x] == ' ')
                         lastSpace = x;
-                    if (charCount > maxChars && lastSpace!=0)
+                    if (charCount > maxChars)
                     {
+                        if (doBreak)
+                        {
+                            s = s.Substring(0, x);
+                            break;
+                        }
+                        if(lastSpace != 0)
+                            s = s.Insert(lastSpace, "\b\n");
+                        else
+                            s = s.Insert(charCount,"-\n");
                         charCount = 0;
-                        s.Insert(lastSpace, "\b\n");
                         lastSpace = 0;
+                        doBreak = true;
                     }
                 }
             }
@@ -234,8 +243,14 @@ public class LuxusSegmentHandler : MonoBehaviour {
                     charCount++;
                     if (charCount > maxChars)
                     {
-                        s.Insert(x, "-");
+                        if (doBreak)
+                        {
+                            s = s.Substring(0, x);
+                            break;
+                        }
+                        s = s.Insert(x, "-\n");
                         charCount = 0;
+                        doBreak = true;
                     }
                 }
             }
@@ -249,6 +264,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
    
     private void ExposeTable()
     {
+        activeTable = true;
         StartCoroutine(moveTable());
     }
     private IEnumerator moveTable()
@@ -282,6 +298,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     public void ReleaseTable()
     {
+        activeTable = false;
         releases++;
         prevHighlight = -1;
         for (int x =0; x<activeSegments.Count; ++x)

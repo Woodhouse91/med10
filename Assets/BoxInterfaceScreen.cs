@@ -44,6 +44,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     private float interactionWaitTime  = 15f;
     private bool showingHint = false;
     private bool firstBox = true;
+    private bool goToNextCat = false;
 
     // Use this for initialization
     void Start () {
@@ -347,9 +348,13 @@ public class BoxInterfaceScreen : MonoBehaviour {
     private IEnumerator waitforExpectedinteraction(Transform hint)
     {
         float t = 0;
+        if (interactionDone)
+            yield return new WaitForEndOfFrame();
         interactionDone = false;
         while (t < interactionWaitTime)
         {
+            if (interactionDone)
+                yield break;
             t += Time.deltaTime;
             yield return null;
             if (interactionDone)
@@ -418,13 +423,10 @@ public class BoxInterfaceScreen : MonoBehaviour {
     {
         if (categoryDoneBool == false)
         {
-            if (transform.localPosition.x < -0.50f)
-            {
-                categoryDoneBool = true;
-                isScrolling = true;
-                EventManager.CategoryDone();
-                interactionDone = true;
-            }
+            if (transform.localPosition.x < -.25f)
+                goToNextCat = true;
+            else
+                goToNextCat = false;
         }
     }
     
@@ -516,6 +518,14 @@ public class BoxInterfaceScreen : MonoBehaviour {
             {
                 transform.localPosition = Vector3.MoveTowards(transform.localPosition, ReturnToPos, Time.deltaTime);
             }
+        }
+        if (goToNextCat && !isScrolling)
+        {
+            goToNextCat = false;
+            categoryDoneBool = true;
+            isScrolling = true;
+            EventManager.CategoryDone();
+            interactionDone = true;
         }
         prevY[1] = prevY[0];
         prevY[0] = tFullTextField.localPosition.y;

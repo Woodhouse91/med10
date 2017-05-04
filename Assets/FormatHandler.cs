@@ -14,7 +14,7 @@ public class FormatHandler : MonoBehaviour {
         string res = String.Format("{0:N}", moneyvalue);
         res = res.Remove(res.Length - 3);
         res = res.Replace(",", ".");
-        res += ",-";
+        //res += ",-";
         return res;
     }
     public static string FormatCategory(string s)

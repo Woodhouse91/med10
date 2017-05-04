@@ -16,7 +16,6 @@ public class BarChatHandler : MonoBehaviour {
 	void Start () {
         bar = GameObject.Find("Barchartholder").transform;
         negMat = Resources.Load<Material>("negbarmat");
-        print(negMat);
         EventManager.OnExcelDataLoaded += generateData;
         EventManager.OnBoxAtTable += updateTable;
         EventManager.OnCategoryDone += updatePrevious;
