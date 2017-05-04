@@ -13,6 +13,9 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public Sprite Flagged, Unflagged;
     BoxBehaviour BB;
     PlaceAllCrates pac;
+
+    bool FinalForm = false;
+
     float[] prevY = new float[2]; 
     float scrollSpeed;
     bool velocityScrolling = false;
@@ -165,7 +168,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         }
        
         DisableHeleLortet();
-        tNextSlidePlz.transform.localPosition = Vector3.zero;
+        tNextSlidePlz.transform.localPosition = ReturnToPos;
         categoryDoneBool = false;
        
         yield return null;
@@ -428,19 +431,21 @@ public class BoxInterfaceScreen : MonoBehaviour {
 
     private void CategoryFinished() // HER SKAL DEN VISE ALLE FLAGGED CATEGORIES
     {
+        FinalForm = true;
         tTitle.gameObject.SetActive(true);
-        tSlider.gameObject.SetActive(true);
-        tTitle.GetComponent<Text>().text = "MARKEREDE UDGIFTER";
+        tSlider.gameObject.SetActive(false);
+        tTitle.GetComponent<Text>().text = "ALLE UDGIFTER";
         tMask.gameObject.SetActive(true);
+        tNextSlidePlz.gameObject.SetActive(false);
         tFullTextField.gameObject.SetActive(true);
-        enabledTextFields = FlaggedItem.Count;
+        enabledTextFields = DataHandler.BudgetCategories.Count;
         tTextfieldplaceInt = enabledTextFields;
         if (tTextfieldplaceInt < 3)
             tTextfieldplaceInt = 3;
         for (int i = 0; i < enabledTextFields; i++)
         {
             tTextField[i].gameObject.SetActive(true);
-            stringSize(tTextField[i].GetComponentInChildren<Text>(), FormatHandler.FormatCategory(DataHandler.BudgetCategories[FlaggedItem[i]]));
+            stringSize(tTextField[i].GetComponentInChildren<Text>(), FormatHandler.FormatCategory(DataHandler.BudgetCategories[i]));
             tTextField[i].GetComponent<Selectable>().enabled = false;
         }
         UpdateImages();
