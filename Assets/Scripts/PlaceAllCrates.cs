@@ -92,7 +92,7 @@ public class PlaceAllCrates : MonoBehaviour {
             {
                 GameObject flag = Instantiate(flagObj, TempFlagList[i]).gameObject;
                 flag.transform.localScale = new Vector3(0.1f/originCrateSize.x,0.1f / originCrateSize.y, 0.1f / originCrateSize.z); //gives the flag a size of vector3.one * 0.1 in world space
-                flag.transform.localPosition = new Vector3(0.5f-TempFlagList[i].childCount*0.1f,0.075f,0.37f);
+                flag.transform.localPosition = new Vector3(0.4f-TempFlagList[i].childCount*0.1f,0.075f,0.37f);
                 flag.transform.rotation = TempFlagList[i].rotation * Quaternion.AngleAxis(-70.0f,Vector3.up);
             }
         }
