@@ -47,7 +47,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         pac = FindObjectOfType<PlaceAllCrates>();
         FlaggedItem = new List<int>();
         DisableHeleLortet();
-        ReturnToPos = new Vector3(0,0,0.001f); // START POSITION
+        ReturnToPos = new Vector3(0,0,-0.001f); // START POSITION
         EventManager.OnBoxAtTable += boxAtTable;
         EventManager.OnBoxEmptied += boxEmptied;
         EventManager.OnCategoryDone += categoryDone;
@@ -352,12 +352,12 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public void ClickTextField(int childIndex)
     {
         StartCoroutine(deactivateHint(markHint));
-        for (int i = 0; i < tTextField.Length; i++)
+        for (int i = 0; i < enabledTextFields; i++)
         {
-            if(childIndex == i && tTextField[i].GetComponentInChildren<Selectable>().enabled == false)
-                tTextField[i].GetComponentInChildren<Selectable>().enabled = true;
+            if(childIndex == i && tTextField[i].GetComponent<Selectable>().enabled == false)
+                tTextField[i].GetComponent<Selectable>().enabled = true;
             else
-                tTextField[i].GetComponentInChildren<Selectable>().enabled = false;
+                tTextField[i].GetComponent<Selectable>().enabled = false;
         }
     }
     private void DisableHeleLortet() //CHILD DEPENDING

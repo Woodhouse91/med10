@@ -439,6 +439,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     public static void HighlightCategory(int cat)
     {
+        print(cat);
         if (prevHighlight == cat && flaggedList.Contains(cat))
         {
             setMat(cat, FlaggedMat);
