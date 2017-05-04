@@ -450,6 +450,8 @@ public class BoxInterfaceScreen : MonoBehaviour {
     private void CategoryFinished() // HER SKAL DEN VISE ALLE FLAGGED CATEGORIES
     {
         FinalForm = true;
+        isScrolling = false;
+        //transform.localPosition = ReturnToPos;
         tTitle.gameObject.SetActive(true);
         tSlider.gameObject.SetActive(false);
         tTitle.GetComponent<Text>().text = "ALLE UDGIFTER";

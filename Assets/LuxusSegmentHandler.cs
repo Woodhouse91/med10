@@ -45,7 +45,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static Quaternion xRot = Quaternion.AngleAxis(_xRot, Vector3.right);
     private static Quaternion yRot = Quaternion.AngleAxis(_yRot, Vector3.up);
     private static Quaternion zRot = Quaternion.AngleAxis(_zRot, Vector3.forward);
-    private const int maxChars = 5;
+    private const int maxChars = 9;
     public static bool activeTable = false;
 
 
@@ -214,7 +214,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             if(s.Contains(" "))
             {
                 int lastSpace = 0;
-                for(int x = 0; x<s.Length; ++x)
+                for(int x = 0; x<s.Length-1; ++x)
                 {
                     charCount++;
                     if (s[x] == ' ')
@@ -227,7 +227,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
                             break;
                         }
                         if(lastSpace != 0)
-                            s = s.Insert(lastSpace, "\b\n");
+                            s = s.Insert(lastSpace, "\b\b\n");
                         else
                             s = s.Insert(charCount,"-\n");
                         charCount = 0;
@@ -238,7 +238,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             }
             else
             {
-                for (int x = 0; x < s.Length; ++x)
+                for (int x = 0; x < s.Length-1; ++x)
                 {
                     charCount++;
                     if (charCount > maxChars)
