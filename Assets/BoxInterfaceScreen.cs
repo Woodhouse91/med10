@@ -499,7 +499,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
         if (!isScrolling && tFullTextField.gameObject.activeSelf)
         {
             scrollSpeed = tFullTextField.localPosition.y - prevY[1];
-            tFullTextField.localPosition += ((Vector3.up / SPRINGBOUYS)  * scrollSpeed) / Time.deltaTime;
+            tFullTextField.localPosition += ((Vector3.up / SPRINGBOUYS)  * scrollSpeed / (Time.deltaTime*5f));
             for (int i = 0; i < enabledTextFields; i++)
             {
                 tTextField[i].transform.localPosition -= Vector3.right * tTextField[i].transform.localPosition.x * 5f * Time.deltaTime;
@@ -532,5 +532,6 @@ public class BoxInterfaceScreen : MonoBehaviour {
         }
         prevY[1] = prevY[0];
         prevY[0] = tFullTextField.localPosition.y;
+
 	}
 }

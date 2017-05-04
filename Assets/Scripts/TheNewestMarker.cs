@@ -176,7 +176,6 @@ public class TheNewestMarker : MonoBehaviour
 
     private void OnDisable()
     {
-        print(hitTarget);
         //try
         //{
             switch (hitTarget)

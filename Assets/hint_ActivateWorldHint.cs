@@ -8,7 +8,7 @@ public class hint_ActivateWorldHint : MonoBehaviour {
     private Transform myHint, myHintPosActive, myHintPosDeactive;
     private bool firstActivate = true;
     private float hintTimerStay = 10f;
-    private float hintTimerReset = 10f;
+    private float hintTimerReset = 8f;
     private float activateTimer = .33f;
     private float timer = 0;
     public bool LuxusHint = false;
@@ -27,6 +27,7 @@ public class hint_ActivateWorldHint : MonoBehaviour {
     }
     private void Update()
     {
+
         if (prevState != isActive)
         {
             if (isActive)

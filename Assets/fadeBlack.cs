@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class fadeBlack : MonoBehaviour {
 
-    MeshRenderer mat;
+    MeshRenderer mat, screenInFaceMat;
     public float fadeTime;
     GameObject global;
 
@@ -13,22 +13,21 @@ public class fadeBlack : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         mat = GetComponent <MeshRenderer>();
+        screenInFaceMat = GameObject.Find("ScreenInFace").GetComponent<MeshRenderer>();
         mat.enabled = true;
+
         global = GameObject.Find("Global Components");
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            StartCoroutine(FadeOut());
-        }
 	}
 
     private IEnumerator FadeOut()
     {
         float t = 0f;
-        while(t<1f)
+        screenInFaceMat.enabled = false;
+        while (t<1f)
         {
             t += Time.deltaTime / fadeTime;
             mat.material.SetFloat("_Fade", 1-t*t);

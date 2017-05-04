@@ -197,7 +197,7 @@ public class DataAppLauncher : MonoBehaviour
         sr.Close();
         //if (File.Exists(Application.streamingAssetsPath + completedDataFileName))
         //    File.Delete(Application.streamingAssetsPath + completedDataFileName);
-        print("TODO: Delete file at this print-line");
+       
         yield break;
     }
 }

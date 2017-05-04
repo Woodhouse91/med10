@@ -97,10 +97,8 @@ public class EventManager : MonoBehaviour {
     public static void CategoryDone()
     {
         _currentCategory++;
-        print("Curcat: " + _currentCategory);
         if(_currentCategory >= DataHandler.tCombinedCategories)
         {
-            print("you are finnished!");
             FinalForm = true;
             if (OnCategoryFinished != null)
                 OnCategoryFinished();
