@@ -16,14 +16,9 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static List<int> flaggedList;
     private static GameObject flagPref;
     private static GameObject[] flagObj;
-    public static List<Transform> luxusTables
-    {
-        get
-        {
-            return _luxusTables;
-        }
-    }
-    private static List<Transform> _luxusTables;
+    private static Transform[] _luxusTables;
+    private static GameObject[] _luxusFlags;
+    private static List<Transform> _flaggedTables;
     private static float RotAngle = 55f;
     private static float slideTime = 2f;
     private static float rotTime = 1.5f;
@@ -57,7 +52,6 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private void Start ()
     {
         targetWall = GameObject.Find("Tavlefar").transform;
-        _luxusTables = new List<Transform>();
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
         activeSegments = new List<Transform>();
@@ -67,10 +61,12 @@ public class LuxusSegmentHandler : MonoBehaviour {
         holder = GameObject.Find("Segmentholder").transform;
         EventManager.OnExcelDataLoaded += PoolSegments;
         EventManager.OnCategoryDone += ReleaseTable;
+        _flaggedTables = new List<Transform>();
         staticStart();
 	}
     private static void staticStart()
     {
+
         flagPref = Resources.Load<GameObject>("flagObj");
         MarkedMat = Resources.Load<Material>("MarkedSectionMat");
         NormalMat = Resources.Load<Material>("SectionMat");
@@ -189,6 +185,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
         {
             activeSegments.Add(segment[0]);
             segment.Remove(segment[0]);
+            _luxusTables[s.CategoryInt[x]] = activeSegments[x];
             activeSegments[x].SetParent(holder);
             scaleFactor = buildMoneyList(s.CategoryInt[x])/billsPerColumn;
             activeSegments[x].localPosition = (offset * x) + offset * scaledOffset + offset * (scaleFactor/2f);
@@ -436,6 +433,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             segment.Add(Instantiate(segmentPrefab));
             segment[x].gameObject.SetActive(false);
         }
+        _luxusTables = new Transform[DataHandler.BudgetCategories.Count];
     }
     public static void HighlightCategory(int cat)
     {
@@ -463,18 +461,41 @@ public class LuxusSegmentHandler : MonoBehaviour {
     {
         if (flaggedList.Contains(cat))
         {
-            setMat(cat, NormalMat);
+            if (prevHighlight != cat)
+                setMat(cat, NormalMat);
+            else
+                setMat(cat, MarkedMat);
             flaggedList.Remove(cat);
+            _flaggedTables.Remove(activeSegments[cat]);
             Destroy(flagObj[cat]);
             return;
         }
         flagObj[cat] = Instantiate(flagPref, activeSegments[cat].position, activeSegments[0].parent.rotation*xRot*yRot*zRot);
-        flagObj[cat].transform.SetParent(activeSegments[0].parent);
+        flagObj[cat].transform.SetParent(activeSegments[cat].parent);
         flagObj[cat].transform.localScale = flagScale;
         flagObj[cat].transform.SetAsLastSibling();
         flaggedList.Add(cat);
-        if(prevHighlight!=cat)
+        _flaggedTables.Add(activeSegments[cat]);
+        if (prevHighlight!=cat)
             setMat(cat, FlaggedMat);
+    }
+    public static void EndGameFlag(int cat)
+    {
+        if (_flaggedTables.Contains(_luxusTables[cat])) //DEFLAG
+        {
+            setEndMat(cat, NormalMat);
+            Destroy(_luxusTables[cat].parent.GetChild(_luxusTables[cat].childCount - 1));
+            _flaggedTables.Remove(_luxusTables[cat]));
+        }
+        else // FLAG
+        {
+            GameObject flag = Instantiate(flagPref, _flaggedTables[cat].position, _flaggedTables[cat].parent.rotation * xRot * yRot * zRot);
+            flag.transform.SetParent(_flaggedTables[cat].parent);
+            flag.transform.localScale = flagScale;
+            flag.transform.SetAsLastSibling();
+            _flaggedTables.Add(activeSegments[cat]);
+            setEndMat(cat, FlaggedMat);
+        }
     }
     private static void setMat(int cat, Material dst)
     {
@@ -482,6 +503,14 @@ public class LuxusSegmentHandler : MonoBehaviour {
         for (int i = 0; i < 2; i++)
         {
             activeSegments[cat].GetChild(i).GetComponent<MeshRenderer>().material = dst;
+        }
+    }
+    private static void setEndMat(int cat, Material dst)
+    {
+        _luxusTables[cat].GetComponent<MeshRenderer>().material = dst;
+        for (int i = 0; i < 2; i++)
+        {
+            _luxusTables[cat].GetChild(i).GetComponent<MeshRenderer>().material = dst;
         }
     }
 }
