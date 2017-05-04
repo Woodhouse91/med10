@@ -13,7 +13,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     public Sprite Flagged, Unflagged;
     BoxBehaviour BB;
     PlaceAllCrates pac;
-
+    ShowFlaggedLast SFL;
     bool FinalForm = false;
 
     float[] prevY = new float[2]; 
@@ -49,6 +49,7 @@ public class BoxInterfaceScreen : MonoBehaviour {
     void Start () {
         pac = FindObjectOfType<PlaceAllCrates>();
         FlaggedItem = new List<int>();
+        SFL = FindObjectOfType<ShowFlaggedLast>();
         DisableHeleLortet();
         ReturnToPos = new Vector3(0,0,-0.001f); // START POSITION
         EventManager.OnBoxAtTable += boxAtTable;
@@ -109,12 +110,27 @@ public class BoxInterfaceScreen : MonoBehaviour {
     {
         StartCoroutine(deactivateHint(flagHint));
         int flagNum = FindTransform(target);
-        LuxusSegmentHandler.FlagCategory(flagNum);
-        if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
-            FlaggedItem.Add(BB.CategoryInt[flagNum]);
+
+        if(FinalForm)
+        {
+            if (!FlaggedItem.Contains(flagNum))
+                FlaggedItem.Add(flagNum);
+            else
+                FlaggedItem.Remove(flagNum);
+            pac.FlagCategory(flagNum);
+            //flagNum = category -1;
+            //LuxusSegmentHandler.EndGameFlag(flagNum);
+            SFL.RefreshFlaggedList();
+        }
         else
-            FlaggedItem.Remove(BB.CategoryInt[flagNum]);
-        pac.FlagCategory(BB.CategoryInt[flagNum]);
+        {
+            LuxusSegmentHandler.FlagCategory(flagNum);
+            if (!FlaggedItem.Contains(BB.CategoryInt[flagNum]))
+                FlaggedItem.Add(BB.CategoryInt[flagNum]);
+            else
+                FlaggedItem.Remove(BB.CategoryInt[flagNum]);
+            pac.FlagCategory(BB.CategoryInt[flagNum]);
+        }
         UpdateImages();
     }
     private void UpdateImages()

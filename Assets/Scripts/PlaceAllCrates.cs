@@ -11,6 +11,7 @@ public class PlaceAllCrates : MonoBehaviour {
     public float AngleRotate;
     public GameObject Crate, MonthCrate;
     BoxInterfaceScreen bis;
+    cardBoardManager cBM;
     Vector3 originCrateSize;
     GameObject flagObj;
     bool firstCratesPlaced = false;
@@ -18,6 +19,7 @@ public class PlaceAllCrates : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        cBM = FindObjectOfType<cardBoardManager>();
         bis = FindObjectOfType<BoxInterfaceScreen>();
         originCrateSize = Crate.transform.lossyScale;
         EventManager.OnExcelDataLoaded += InitiateStart;
@@ -66,11 +68,20 @@ public class PlaceAllCrates : MonoBehaviour {
         if (flagObj == null)
             flagObj = Resources.Load("flagObj",typeof(GameObject)) as GameObject;
         List<Transform> TempFlagList = new List<Transform>();
+        int CurrentCategoryCalculated = -1;
+        for (int i = 0; i < cBM.differentCatsList.Count; i++)
+        {
+            if(DataHandler.expenseData[0,category] == cBM.differentCatsList[i])
+            {
+                CurrentCategoryCalculated = i;
+            }
+        }
         for (int i = 1; i < 13; i++)
         {
             if (DataHandler.expenseData[i, category] > 0)
             {
-                TempFlagList.Add(GetCrate(EventManager.CurrentCategory, i-1)); // eventmanager.currentcategory = category
+                TempFlagList.Add(GetCrate(CurrentCategoryCalculated, i - 1));
+                //TempFlagList.Add(GetCrate(EventManager.CurrentCategory, i-1)); // eventmanager.currentcategory = category
             }
         }
 

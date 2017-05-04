@@ -10,6 +10,7 @@ public class cardBoardManager : MonoBehaviour {
     public GameObject CardBoxPrefab;
     public AnimationCurve AC;
     public Vector3 OffsetBoxToTable;
+    public List<int> differentCatsList;
     public float TimeForBoxToTable;
     // Use this for initialization
 	void Start () {
@@ -79,7 +80,8 @@ public class cardBoardManager : MonoBehaviour {
         } // finds the correct number of rows
 
         budgetCatCount = differentCats.Count;
-        //budgetCatCount = 1; //test
+        differentCatsList = new List<int>();
+
         for (int h = 0; h < i; h++)
         {
             for (int w = 0; w < i - h; w++)
@@ -91,9 +93,10 @@ public class cardBoardManager : MonoBehaviour {
                     GameObject box = Instantiate(CardBoxPrefab, transform);
                     box.transform.localPosition = initialPos + nextRight * w + nextUp * h;
                     box.transform.rotation = transform.rotation;
-                    CardBoxList.Add(box);
+                    //CardBoxList.Add(box);
                     CardBoxList.Insert(0, box);
                     PaintBox(box,differentCats[differentCats.Count-budgetCatCount]);
+                    differentCatsList.Insert(0,differentCats[differentCats.Count - budgetCatCount]);
                     budgetCatCount--;
                 }
             }
