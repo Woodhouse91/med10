@@ -16,14 +16,14 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private static List<int> flaggedList;
     private static GameObject flagPref;
     private static GameObject[] flagObj;
-    public static List<Transform> completedSegments
+    public static List<Transform> luxusTables
     {
         get
         {
-            return _completedSegments;
+            return _luxusTables;
         }
     }
-    private static List<Transform> _completedSegments;
+    private static List<Transform> _luxusTables;
     private static float RotAngle = 55f;
     private static float slideTime = 2f;
     private static float rotTime = 1.5f;
@@ -57,7 +57,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     private void Start ()
     {
         targetWall = GameObject.Find("Tavlefar").transform;
-        _completedSegments = new List<Transform>();
+        _luxusTables = new List<Transform>();
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
         activeSegments = new List<Transform>();
@@ -439,20 +439,25 @@ public class LuxusSegmentHandler : MonoBehaviour {
     }
     public static void HighlightCategory(int cat)
     {
-        if (prevHighlight != -1)
+        if (prevHighlight == cat && flaggedList.Contains(cat))
         {
-            if (!flaggedList.Contains(prevHighlight))
-                setMat(prevHighlight, NormalMat);
-            else
-                setMat(prevHighlight, FlaggedMat);
-        }
-        if (prevHighlight == cat)
-        {
+            setMat(cat, FlaggedMat);
             prevHighlight = -1;
-            return;
         }
-        prevHighlight = cat;
-        setMat(cat, MarkedMat);
+        else if (prevHighlight == cat)
+        {
+            setMat(cat, NormalMat);
+            prevHighlight = -1;
+        }
+        else if (prevHighlight != cat)
+        {
+            if (prevHighlight != -1 && flaggedList.Contains(prevHighlight))
+                setMat(prevHighlight, FlaggedMat);
+            else
+                setMat(prevHighlight, NormalMat);
+            setMat(cat, MarkedMat);
+            prevHighlight = cat;
+        }
     }
     public static void FlagCategory(int cat)
     {
