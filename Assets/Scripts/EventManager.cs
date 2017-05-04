@@ -41,6 +41,9 @@ public class EventManager : MonoBehaviour {
             return _table;
         }
     }
+
+    public static bool FinalForm { get; private set; }
+
     public static void StartScale()
     {
         if (OnStartScale != null)
@@ -98,6 +101,7 @@ public class EventManager : MonoBehaviour {
         if(_currentCategory >= DataHandler.tCombinedCategories)
         {
             print("you are finnished!");
+            FinalForm = true;
             if (OnCategoryFinished != null)
                 OnCategoryFinished();
         }

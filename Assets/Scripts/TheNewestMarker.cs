@@ -187,7 +187,8 @@ public class TheNewestMarker : MonoBehaviour
                     if (clickTarget != null)
                     {
                         Bis.ClickTextField(clickTarget.GetSiblingIndex());
-                        //LuxusSegmentHandler.HighlightCategory(clickTarget.GetSiblingIndex());
+                        if(!EventManager.FinalForm)
+                            LuxusSegmentHandler.HighlightCategory(clickTarget.GetSiblingIndex());
                         clickTarget = null;
                     }
                     else
