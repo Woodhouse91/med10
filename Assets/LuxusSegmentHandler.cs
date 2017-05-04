@@ -501,16 +501,16 @@ public class LuxusSegmentHandler : MonoBehaviour {
         if (_flaggedTables.Contains(_luxusTables[cat])) //DEFLAG
         {
             setEndMat(cat, NormalMat);
-            Destroy(_luxusTables[cat].parent.GetChild(_luxusTables[cat].childCount - 1));
+            Destroy(_luxusTables[cat].parent.GetChild(_luxusTables[cat].parent.childCount - 1).gameObject);
             _flaggedTables.Remove(_luxusTables[cat]);
         }
         else // FLAG
         {
-            GameObject flag = Instantiate(flagPref, _flaggedTables[cat].position, _flaggedTables[cat].parent.rotation * xRot * yRot * zRot);
-            flag.transform.SetParent(_flaggedTables[cat].parent);
+            GameObject flag = Instantiate(flagPref, _luxusTables[cat].position, _luxusTables[cat].parent.rotation * xRot * yRot * zRot);
+            flag.transform.SetParent(_luxusTables[cat].parent);
             flag.transform.localScale = flagScale;
             flag.transform.SetAsLastSibling();
-            _flaggedTables.Add(activeSegments[cat]);
+            _flaggedTables.Add(_luxusTables[cat]);
             setEndMat(cat, FlaggedMat);
         }
     }

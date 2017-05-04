@@ -120,8 +120,9 @@ public class BoxInterfaceScreen : MonoBehaviour {
                 FlaggedItem.Remove(flagNum);
             pac.FlagCategory(flagNum);
             //flagNum = category -1;
-            //LuxusSegmentHandler.EndGameFlag(flagNum);
-            SFL.RefreshFlaggedList();
+            print(flagNum);
+            LuxusSegmentHandler.EndGameFlag(flagNum);
+            SFL.RefreshFlaggedList(FlaggedItem);
         }
         else
         {

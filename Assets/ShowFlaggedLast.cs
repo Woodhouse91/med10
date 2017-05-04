@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class ShowFlaggedLast : MonoBehaviour {
 
     Canvas canvas;
-    List<int> flaggedList;
     GameObject TextField;
     Vector3 StartPos;
     // Use this for initialization
@@ -20,46 +19,42 @@ public class ShowFlaggedLast : MonoBehaviour {
     void LastStart()
     {
         StartCoroutine(DeactivateActivate());
-        flaggedList = FindObjectOfType<BoxInterfaceScreen>().FlaggedItem;
+        List<int> flaggedList = FindObjectOfType<BoxInterfaceScreen>().FlaggedItem;
         if (flaggedList.Count == 0)
-            return;
-        TextField.GetComponentInChildren<Text>().text = FormatHandler.FormatCategory(DataHandler.BudgetCategories[flaggedList[0]]);
-        for (int i = 1; i < flaggedList.Count; i++)
         {
-            GameObject tf = Instantiate(TextField, transform);
-            tf.GetComponentInChildren<Text>().text = FormatHandler.FormatCategory(DataHandler.BudgetCategories[flaggedList[i]]);
+            TextField.GetComponentInChildren<Text>().text = "Ingen markerede";
+            return;
+        }
+        for (int i = 0; i < flaggedList.Count; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(true);
+            transform.GetChild(i).GetComponentInChildren<Text>().text = FormatHandler.FormatCategory(DataHandler.BudgetCategories[flaggedList[i]]);
             if(i>7)
                 canvas.transform.localPosition += Vector3.up * 0.12f * 0.34f;
         }
     }
-    public void RefreshFlaggedList()
+    public void RefreshFlaggedList(List<int> newFlaggedList)
     {
-        List<int> newFlaggedList = FindObjectOfType<BoxInterfaceScreen>().FlaggedItem;
-        int difference = newFlaggedList.Count - flaggedList.Count;
-        //difference = +1 hvis der kommer en ny på listen eller -1 hvis der bliver fjernet en.
-        if (difference > 0)
+        int difference = newFlaggedList.Count - transform.childCount;
+        if(newFlaggedList.Count == 0)
         {
-            for (int i = transform.childCount; i < newFlaggedList.Count; i++)
-            {
-                GameObject tf = Instantiate(TextField, transform);
-            }
-        }
-        else if (difference < 0)
-        {
-            for (int i = transform.childCount; i > newFlaggedList.Count; i--)
-            {
-                Destroy(transform.GetChild(transform.childCount - 1));
-            }
-        }
-        else
+            transform.GetChild(0).GetComponentInChildren<Text>().text = "Ingen markerede";
             return;
+        }
+       
         canvas.transform.localPosition = StartPos;
-        flaggedList = newFlaggedList;
-        for (int i = 0; i < flaggedList.Count; i++)
+       
+        for (int i = 0; i < newFlaggedList.Count; i++)
         {
-            GetComponentInChildren<Text>().text = FormatHandler.FormatCategory(DataHandler.BudgetCategories[flaggedList[i]]);
+            print(newFlaggedList[i]);
+            transform.GetChild(i).gameObject.SetActive(true);
+            transform.GetChild(i).GetComponentInChildren<Text>().text = FormatHandler.FormatCategory(DataHandler.BudgetCategories[newFlaggedList[i]]);
             if (i > 7)
                 canvas.transform.localPosition += Vector3.up * 0.12f * 0.34f;
+        }
+        for (int i = newFlaggedList.Count; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
         }
     }
 
