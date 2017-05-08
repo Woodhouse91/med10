@@ -7,7 +7,7 @@ public class ViveController : MonoBehaviour {
     {
         get
         {
-            return SteamVR_Controller.Input(1);
+            return SteamVR_Controller.Input(3);
         }
     }
 

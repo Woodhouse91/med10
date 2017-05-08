@@ -52,7 +52,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
     // Use this for initialization
     private void Start ()
     {
-        targetWall = GameObject.Find("Tavlefar").transform;
+       
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
         activeSegments = new List<Transform>();
@@ -320,6 +320,8 @@ public class LuxusSegmentHandler : MonoBehaviour {
 
     private IEnumerator doRelease(Transform obj, int s)
     {
+        if(targetWall==null)
+            targetWall = GameObject.Find("Tavlefar").transform;
         bills = new List<List<Transform>>();
         coins = new List<List<Transform>>();
         Vector3 orgPos = obj.position;
@@ -328,7 +330,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
         Vector3 target = targetWall.position - targetWall.right * (defaultLeft-luxusOffset) + targetWall.forward*hangHeight + targetWall.up*0.02f;
         for (int x = 0; x < s; ++x)
         {
-            luxusOffset += obj.GetChild(x).GetComponent<MeshCollider>().bounds.size.x;
+            luxusOffset += obj.GetChild(x).GetComponent<BoxCollider>().bounds.size.x *2f;
         }
         if (luxusOffset > 2.9f)
         {
@@ -337,7 +339,7 @@ public class LuxusSegmentHandler : MonoBehaviour {
             target = targetWall.position - targetWall.right * (defaultLeft - luxusOffset) + targetWall.forward * hangHeight + targetWall.up * 0.02f;
             for (int x = 0; x < s; ++x)
             {
-                luxusOffset += obj.GetChild(x).GetComponent<MeshCollider>().bounds.size.x;
+                luxusOffset += obj.GetChild(x).GetComponent<BoxCollider>().bounds.size.x * 2f;
             }
         }
         Quaternion tarRot = targetWall.rotation*Quaternion.AngleAxis(90, Vector3.right)*Quaternion.AngleAxis(90, Vector3.up)*Quaternion.AngleAxis(-90, Vector3.forward);

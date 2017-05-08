@@ -19,7 +19,23 @@ public class BarChatHandler : MonoBehaviour {
         EventManager.OnExcelDataLoaded += generateData;
         EventManager.OnBoxAtTable += updateTable;
         EventManager.OnCategoryDone += updatePrevious;
+        EventManager.OnCategoryFinished += updatePrevious;
 	}
+    private void Unsub()
+    {
+        EventManager.OnExcelDataLoaded -= generateData;
+        EventManager.OnBoxAtTable -= updateTable;
+        EventManager.OnCategoryDone -= updatePrevious;
+        EventManager.OnCategoryFinished -= updatePrevious;
+    }
+    private void OnApplicationQuit()
+    {
+        Unsub();
+    }
+    private void OnDestroy()
+    {
+        Unsub();
+    }
 
     private void updatePrevious()
     {

@@ -33,6 +33,20 @@ public class FormatHandler : MonoBehaviour {
             }
             s = s.Substring(0, id);
         }
+        else if (s.Contains("aftalenr."))
+        {
+            int id = 0;
+            s = s.Replace("aftalenr.", "<");
+            for (int x = 0; x < s.Length; ++x)
+            {
+                if (s[x] == '<')
+                {
+                    id = x - 5;
+                    break;
+                }
+            }
+            s = s.Substring(0, id);
+        }
         s.Trim('\n');
         return s;
     }
